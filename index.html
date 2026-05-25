@@ -459,7 +459,16 @@
     }catch(e){ speakerEl.classList.remove('playing'); }
   }
 
-  var onlineAudio=null;
+  var onlineAudio=null, onlineGuard=null, roundTimers=[];
+  function clearRoundTimers(){ for(var i=0;i<roundTimers.length;i++) clearTimeout(roundTimers[i]); roundTimers=[]; }
+  // Halt every pending game sound/timer on navigation so audio never bleeds onto the home screen.
+  function stopGameAudio(){
+    clearRoundTimers();
+    if(onlineGuard){ clearTimeout(onlineGuard); onlineGuard=null; }
+    if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
+    if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
+    speakerEl.classList.remove('playing');
+  }
   function speakOnline(text){
     try{
       if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
@@ -469,7 +478,7 @@
       speakerEl.classList.add('playing');
       var fellBack=false, started=false;
       function fallback(){ if(fellBack) return; fellBack=true; clearTimeout(guard); speakerEl.classList.remove('playing'); speakLocal(text); }
-      var guard=setTimeout(function(){ if(!started) fallback(); }, 1500); // never start? use the local engine
+      var guard=setTimeout(function(){ if(!started) fallback(); }, 1500); onlineGuard=guard; // never start? use the local engine
       a.addEventListener('playing', function(){ started=true; clearTimeout(guard); });
       a.addEventListener('ended', function(){ clearTimeout(guard); speakerEl.classList.remove('playing'); });
       a.addEventListener('error', fallback);   // network/load failure -> local engine
@@ -527,7 +536,7 @@
       b.addEventListener('click', function(){ onPick(b,item); });
       cardsEl.appendChild(b);
     });
-    if(speakNow!==false) setTimeout(function(){ playItem(target); }, 350);
+    if(speakNow!==false) roundTimers.push(setTimeout(function(){ playItem(target); }, 350));
   }
   function onPick(btn,item){
     if(locked) return;
@@ -535,12 +544,12 @@
       locked=true; btn.classList.add('correct');
       streak=Math.min(MAX_STARS,streak+1); paintStars();
       playItem(target);   // repeat the correct answer as a reward
-      setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900);
-      setTimeout(function(){ if(streak>=MAX_STARS) streak=0; paintStars(); newRound(true); },1600);
+      roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900));
+      roundTimers.push(setTimeout(function(){ if(streak>=MAX_STARS) streak=0; paintStars(); newRound(true); },1600));
     } else {
       btn.classList.add('wrong');
-      setTimeout(function(){ btn.classList.remove('wrong'); },460);
-      setTimeout(function(){ playItem(item); },250);   // say what they actually tapped
+      roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); },460));
+      roundTimers.push(setTimeout(function(){ playItem(item); },250));   // say what they actually tapped
     }
   }
 
@@ -587,11 +596,11 @@
   function launchGame(type){
     G=GAMESBYTYPE[type]; if(!G) return;
     promptEl.textContent=G.prompt;
-    if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} pickVoice(); }
+    stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
     streak=0; paintStars(); queue=[]; lastKey=null;
     showScreen('game'); newRound(true);
   }
-  function goHome(){ if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} } speakerEl.classList.remove('playing'); voicePanel.classList.remove('open'); showScreen('home'); }
+  function goHome(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('home'); }
 
   for(var k=0;k<tiles.length;k++){ (function(t){ t.addEventListener('click', function(){ launchGame(t.getAttribute('data-game')); }); })(tiles[k]); }
   homeBtn.addEventListener('click', goHome);
