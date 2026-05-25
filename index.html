@@ -19,6 +19,7 @@
 <style>
   :root{ --bg1:#fef6e4; --bg2:#ffe8d6; --ink:#3b3a52; --soft:#7a7894; --good:#7bd389; --shadow:rgba(59,58,82,.18); }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  button{ touch-action:manipulation; }
   html,body{height:100%;margin:0;}
   body{
     font-family:'Quicksand',sans-serif; color:var(--ink);
@@ -76,6 +77,39 @@
   .tile.t3{background:linear-gradient(160deg,#b5ead7,#7ccfa6);}
   .tile.t4{background:linear-gradient(160deg,#c9b1ff,#a98cf0);}
   .tile:active{ transform:translateY(6px); box-shadow:0 3px 0 var(--shadow),0 6px 12px rgba(0,0,0,.12); }
+
+  /* MODE SELECT (home) */
+  .modegrid{ width:100%; flex:1; min-height:0; display:flex; flex-direction:column; gap:clamp(12px,3.5vw,20px); padding:2px; }
+  .modecard{ flex:1; border:none; border-radius:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; padding:14px; box-shadow:0 9px 0 var(--shadow), 0 14px 24px rgba(0,0,0,.12); transition:transform .12s, box-shadow .12s; }
+  body.arabic .modecard{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+  .modecard:active{ transform:translateY(6px); box-shadow:0 3px 0 var(--shadow),0 6px 12px rgba(0,0,0,.12); }
+  .modecard .emoji{ font-size:clamp(44px,12vw,72px); line-height:1; filter:drop-shadow(0 3px 0 rgba(0,0,0,.14)); }
+  .modecard .name{ font-size:clamp(24px,7vw,38px); text-shadow:0 2px 0 rgba(0,0,0,.12); }
+  .modecard .desc{ font-size:clamp(13px,3.6vw,17px); font-weight:600; opacity:.96; text-align:center; max-width:90%; text-shadow:0 1px 0 rgba(0,0,0,.1); }
+  .m-play{ background:linear-gradient(160deg,#ff9aa2,#ff7a92); }
+  .m-learn{ background:linear-gradient(160deg,#7fd8d4,#4fb8c9); }
+
+  /* MENU / LEARN shared top title */
+  .menutitle{ flex:1; text-align:center; margin:0; font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(20px,5.5vw,28px); color:var(--ink); }
+  body.arabic .menutitle{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+
+  /* LEARN grid */
+  .learnhint{ z-index:2; font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(14px,3.8vw,18px); color:var(--soft); margin:2px 0 8px; text-align:center; }
+  body.arabic .learnhint{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+  .learnGrid{ z-index:2; flex:1; width:100%; min-height:0; display:grid; gap:clamp(6px,1.6vw,12px); grid-template-columns:repeat(var(--cols,4),minmax(0,1fr)); grid-auto-rows:1fr; }
+  .learnGrid.scroll{ grid-auto-rows:var(--rowh,90px); overflow-y:auto; align-content:start; -webkit-overflow-scrolling:touch; }
+  .lcard{ border:none; border-radius:clamp(12px,3vw,22px); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:calc(var(--cell,60px)*0.46); line-height:1; min-width:0; min-height:0; overflow:hidden; box-shadow:0 5px 0 var(--shadow), 0 8px 14px rgba(0,0,0,.12); transition:transform .12s ease, box-shadow .12s ease; }
+  body.arabic .lcard{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+  .lcard:active{ transform:translateY(4px); box-shadow:0 2px 0 var(--shadow),0 4px 8px rgba(0,0,0,.12); }
+  .lcard .lring{ position:absolute; inset:-6px; border-radius:inherit; border:5px solid #ffd166; opacity:0; pointer-events:none; }
+  .lcard.speaking{ overflow:visible; transform:scale(1.07); z-index:3; box-shadow:0 8px 0 var(--shadow), 0 12px 22px rgba(0,0,0,.2); }
+  .lcard.speaking .lring{ animation:lring 1s ease-out infinite; }
+  @keyframes lring{ 0%{opacity:.85;transform:scale(.9)} 100%{opacity:0;transform:scale(1.15)} }
+  .lcard .cardEmoji{ font-size:calc(var(--cell,60px)*0.5); line-height:1; }
+  .lcard .cardShape{ width:60%; height:60%; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 3px 0 rgba(0,0,0,.12)); }
+  .lcard .cardShape svg{ width:100%; height:100%; }
+  .lcard.swatch{ box-shadow:0 5px 0 var(--shadow), 0 8px 14px rgba(0,0,0,.12), inset 0 0 0 3px rgba(255,255,255,.7), inset 0 0 0 4px rgba(0,0,0,.12); }
+  .lcap{ position:absolute; left:0; right:0; bottom:5%; text-align:center; font-size:calc(var(--cell,60px)*0.16); font-weight:700; padding:0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   /* GAME */
   .gametop{ width:100%; display:flex; align-items:center; gap:8px; z-index:3; margin-bottom:4px; }
@@ -154,6 +188,7 @@
     *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
     .blob{ animation:none; }
     .speaker.playing .ring{ animation:none; opacity:0; }
+    .lcard.speaking .lring{ animation:none; opacity:0; }
     .confetti{ display:none; }
   }
 </style>
@@ -172,6 +207,18 @@
         <button class="langpill" data-lang="ar">العربية</button>
         <button class="langpill" data-lang="hy">Հայերեն</button>
       </div>
+    </div>
+    <div class="modegrid">
+      <button class="modecard m-learn" data-mode="learn"><span class="emoji">&#x1F4DA;</span><span class="name" id="learnName"></span><span class="desc" id="learnDesc"></span></button>
+      <button class="modecard m-play" data-mode="play"><span class="emoji">&#x1F3AE;</span><span class="name" id="playName"></span><span class="desc" id="playDesc"></span></button>
+    </div>
+  </div>
+
+  <!-- MENU (choose a category) -->
+  <div class="screen" id="menu">
+    <div class="gametop">
+      <button class="homebtn" id="menuBack"></button>
+      <h2 class="menutitle" id="menuTitle"></h2>
     </div>
     <div class="grid">
       <button class="tile t0" data-game="letters"><span class="emoji">&#x1F524;</span><span class="name"></span></button>
@@ -210,6 +257,16 @@
         <p class="vp-tip" id="voiceTip"></p>
       </div>
     </div>
+  </div>
+
+  <!-- LEARN (tap to hear) -->
+  <div class="screen" id="learn">
+    <div class="gametop">
+      <button class="homebtn" id="learnBack"></button>
+      <h2 class="menutitle" id="learnTitle"></h2>
+    </div>
+    <p class="learnhint" id="learnHint"></p>
+    <div class="learnGrid" id="learnGrid"></div>
   </div>
 </div>
 
@@ -359,6 +416,7 @@
       tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', numbers:'Numbers'},
       prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear'},
       home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
+      play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it',
       vp:{ title:'Choose a voice', note:'These are the voices installed on this device. Pick one, then tap Test.', test:emo(0x1F50A)+' Test', done:'Done', tip:'Your choice is saved on this device. If none sound right, try a different browser or add a voice in your device settings.' }
     },
     ar:{
@@ -367,6 +425,7 @@
       tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', numbers:'أرقام'},
       prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه'},
       home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
+      play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها',
       vp:{ title:'اختر الصوت', note:'هذه الأصوات مثبّتة على هذا الجهاز. اختر صوتاً ثم اضغط استماع.', test:emo(0x1F50A)+' استماع', done:'تم', tip:'تم حفظ اختيارك على هذا الجهاز. إذا لم يناسبك أي صوت، جرّب متصفحاً آخر أو أضف صوتاً عربياً من إعدادات جهازك.' }
     },
     hy:{
@@ -375,6 +434,7 @@
       tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', numbers:'Թվեր'},
       prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես'},
       home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
+      play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար',
       vp:{ title:'Ընտրիր ձայնը', note:'Սրանք այս սարքում տեղադրված ձայներն են։ Ընտրիր մեկը և սեղմիր Փորձել։', test:emo(0x1F50A)+' Փորձել', done:'Լավ', tip:'Քո ընտրությունը պահվեց այս սարքում։ Եթե ոչ մի ձայն հարմար չէ, փորձիր այլ դիտարկիչ կամ ավելացրու ձայն սարքի կարգավորումներից։' }
     }
   };
@@ -489,6 +549,13 @@
       vpNow=document.getElementById('vpNow');
   var tiles=document.querySelectorAll('.tile');
   var langPills=document.querySelectorAll('.langpill');
+  var modeCards=document.querySelectorAll('.modecard');
+  var menuBack=document.getElementById('menuBack'), menuTitle=document.getElementById('menuTitle'),
+      learnBack=document.getElementById('learnBack'), learnTitle=document.getElementById('learnTitle'),
+      learnHint=document.getElementById('learnHint'), learnGrid=document.getElementById('learnGrid'),
+      playName=document.getElementById('playName'), learnName=document.getElementById('learnName'),
+      playDesc=document.getElementById('playDesc'), learnDesc=document.getElementById('learnDesc');
+  var MODE='play';
 
   var LANG='en', GAMESBYTYPE=null, G=null, target=null, locked=false, streak=0, MAX_STARS=10, chosenVoice=null;
 
@@ -705,7 +772,11 @@
     document.body.classList.toggle('arabic', LANG==='ar');
     document.body.classList.toggle('armenian', LANG==='hy');
     subtitleEl.textContent = T.subtitle;
-    homeBtn.textContent = T.home;
+    homeBtn.textContent = T.back;
+    menuBack.textContent = T.back;
+    learnBack.textContent = T.back;
+    playName.textContent = T.play; learnName.textContent = T.learn;
+    playDesc.textContent = T.playDesc; learnDesc.textContent = T.learnDesc;
     newSetBtn.textContent = T.newRound;
     voiceBtn.textContent = T.voice;
     vpTitle.textContent = T.vp.title;
@@ -718,6 +789,76 @@
     pickVoice();
   }
 
+  // ---- learn mode (every item on screen, tap to hear) ----
+  var LEARN_PALETTE=['#ff7a92','#4fb8c9','#ffae42','#7ccfa6','#a98cf0','#ff9f68','#5fb0e0','#f178b6','#67c587','#b794f6','#ffc14d','#7ed0c4'];
+  function isLight(hex){ var h=String(hex).replace('#',''); if(h.length===3){h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];} var r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (0.299*r+0.587*g+0.114*b)>150; }
+  var learnSpeakTimer=null, learnSpeakingEl=null;
+  function clearLearnSpeak(){ if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; } if(learnSpeakingEl){ learnSpeakingEl.classList.remove('speaking'); learnSpeakingEl=null; } }
+  function learnSpeak(item, el){
+    if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; }
+    if(learnSpeakingEl && learnSpeakingEl!==el) learnSpeakingEl.classList.remove('speaking');
+    el.classList.add('speaking'); learnSpeakingEl=el;
+    playItem(item);
+    learnSpeakTimer=setTimeout(function(){ el.classList.remove('speaking'); if(learnSpeakingEl===el) learnSpeakingEl=null; learnSpeakTimer=null; }, 1600);
+  }
+  function buildLearn(type){
+    var g=GAMESBYTYPE[type]; if(!g) return;
+    clearLearnSpeak();
+    learnGrid.innerHTML='';
+    g.items.forEach(function(item,idx){
+      var b=document.createElement('button'); b.className='lcard';
+      var ring=document.createElement('span'); ring.className='lring'; b.appendChild(ring);
+      var capColor='#fff';
+      if(item.render.type==='color'){
+        b.classList.add('swatch'); applyContent(b,item);
+        capColor=isLight(item.render.color)?'#3b3a52':'#fff';
+      } else {
+        b.style.background=LEARN_PALETTE[idx%LEARN_PALETTE.length]; applyContent(b,item);
+      }
+      var showCap = (type==='animals'||type==='shapes') || (type==='numbers' && item.say && item.render && item.say!==item.render.label);
+      if(showCap && item.say){ var cap=document.createElement('span'); cap.className='lcap'; cap.textContent=item.say; cap.style.color=capColor; b.appendChild(cap); }
+      b.setAttribute('aria-label', item.say||item.key||'');
+      (function(it,btn){ btn.addEventListener('click', function(){ learnSpeak(it,btn); }); })(item,b);
+      learnGrid.appendChild(b);
+    });
+  }
+  function layoutLearn(){
+    var n=learnGrid.children.length; if(!n) return;
+    var W=learnGrid.clientWidth, H=learnGrid.clientHeight; if(W<=0||H<=0) return;
+    var gap=parseFloat(getComputedStyle(learnGrid).rowGap)||10;
+    var bestCols=1, bestCell=0;
+    for(var cols=1; cols<=n; cols++){
+      var rows=Math.ceil(n/cols);
+      var cw=(W-(cols-1)*gap)/cols, ch=(H-(rows-1)*gap)/rows;
+      var cell=Math.min(cw,ch);
+      if(cell>bestCell){ bestCell=cell; bestCols=cols; }
+    }
+    var MINCELL=56, TARGET=90;
+    if(bestCell<MINCELL){
+      // Too cramped to fit everything: use comfortable tiles and let the grid scroll.
+      var sc=Math.max(2, Math.floor((W+gap)/(TARGET+gap)));
+      var cellW=Math.floor((W-(sc-1)*gap)/sc);
+      learnGrid.classList.add('scroll');
+      learnGrid.style.setProperty('--cols', sc);
+      learnGrid.style.setProperty('--rowh', cellW+'px');
+      learnGrid.style.setProperty('--cell', cellW+'px');
+    } else {
+      learnGrid.classList.remove('scroll');
+      learnGrid.style.setProperty('--cols', bestCols);
+      learnGrid.style.setProperty('--cell', Math.floor(bestCell)+'px');
+    }
+  }
+  function openLearn(type){
+    if(!GAMESBYTYPE[type]) return;
+    stopGameAudio();
+    learnTitle.textContent=I18N[LANG].tiles[type];
+    learnHint.textContent=I18N[LANG].learnHint;
+    buildLearn(type);
+    showScreen('learn');
+    layoutLearn(); requestAnimationFrame(layoutLearn);
+  }
+  window.addEventListener('resize', function(){ if(document.getElementById('learn').classList.contains('active')) layoutLearn(); });
+
   // ---- navigation ----
   function showScreen(id){ var sc=document.querySelectorAll('.screen'); for(var i=0;i<sc.length;i++) sc[i].classList.remove('active'); document.getElementById(id).classList.add('active'); }
   function launchGame(type){
@@ -728,9 +869,14 @@
     showScreen('game'); newRound(true);
   }
   function goHome(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('home'); }
+  function goMenu(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('menu'); }
+  function chooseMode(mode){ MODE=(mode==='learn')?'learn':'play'; menuTitle.textContent=(MODE==='learn')?I18N[LANG].learn:I18N[LANG].play; showScreen('menu'); }
 
-  for(var k=0;k<tiles.length;k++){ (function(t){ t.addEventListener('click', function(){ launchGame(t.getAttribute('data-game')); }); })(tiles[k]); }
-  homeBtn.addEventListener('click', goHome);
+  for(var k=0;k<tiles.length;k++){ (function(t){ t.addEventListener('click', function(){ var type=t.getAttribute('data-game'); if(MODE==='learn') openLearn(type); else launchGame(type); }); })(tiles[k]); }
+  homeBtn.addEventListener('click', goMenu);
+  menuBack.addEventListener('click', goHome);
+  learnBack.addEventListener('click', goMenu);
+  for(var mc=0;mc<modeCards.length;mc++){ (function(c){ c.addEventListener('click', function(){ chooseMode(c.getAttribute('data-mode')); }); })(modeCards[mc]); }
   for(var p=0;p<langPills.length;p++){ (function(b){ b.addEventListener('click', function(){ applyLang(b.getAttribute('data-lang')); }); })(langPills[p]); }
 
   // ---- init ----
