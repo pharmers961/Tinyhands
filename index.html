@@ -422,6 +422,7 @@
   function voiceKey(){ return 'tinyTapsVoice_'+LANG; }
   function getSavedVoiceURI(){ try{ return window.localStorage.getItem(voiceKey()); }catch(e){ return null; } }
   function saveVoiceURI(u){ try{ window.localStorage.setItem(voiceKey(),u); }catch(e){} }
+  function removeSavedVoice(){ try{ window.localStorage.removeItem(voiceKey()); }catch(e){} }
   function langPref(v){ return !!v.lang && v.lang.toLowerCase().indexOf(LANG)===0; }
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;
@@ -449,9 +450,8 @@
     if(!('speechSynthesis' in window)) return false;
     return window.speechSynthesis.getVoices().some(function(v){ return !!v.lang && v.lang.toLowerCase().indexOf(code)===0; });
   }
-  // Default to an on-device voice matched to the language (fast, offline, no third-party call).
-  // Use the Google online voice only when the device has no matching voice, or when explicitly chosen.
-  function usingOnline(){ var s=getSavedVoiceURI(); if(s==='__online__') return true; if(s) return false; return !hasVoiceFor(LANG); }
+  // Default to the Google online voice for all languages, unless the user explicitly picked a device voice.
+  function usingOnline(){ var s=getSavedVoiceURI(); return !s || s==='__online__'; }
 
   function langName(code){ return code==='ar' ? 'Arabic' : code==='hy' ? 'Armenian' : 'English'; }
   function updateNow(){
@@ -604,11 +604,11 @@
   function vpSample(){ return target ? target.say : (LANG==='ar'?'\u0627':LANG==='hy'?'\u0531':'B'); }
   voiceBtn.addEventListener('click', function(){ populateVoices(); updateNow(); voiceTip.textContent=''; voicePanel.classList.add('open'); });
   voiceSelect.addEventListener('change', function(){
-    if(voiceSelect.value==='__online__'){ saveVoiceURI('__online__'); updateNow(); speak(vpSample()); return; }
+    if(voiceSelect.value==='__online__'){ removeSavedVoice(); updateNow(); speak(vpSample()); return; }
     var v=voiceByURI(voiceSelect.value); if(v){ chosenVoice=v; saveVoiceURI(v.voiceURI); updateNow(); speak(vpSample()); }
   });
   voiceTest.addEventListener('click', function(){
-    if(voiceSelect.value==='__online__'){ saveVoiceURI('__online__'); }
+    if(voiceSelect.value==='__online__'){ removeSavedVoice(); }
     else { var v=voiceByURI(voiceSelect.value); if(v){ chosenVoice=v; saveVoiceURI(v.voiceURI); } }
     updateNow(); speak(vpSample()); voiceTip.textContent=I18N[LANG].vp.tip;
   });
