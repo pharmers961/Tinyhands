@@ -19,6 +19,7 @@
 <style>
   :root{ --bg1:#fef6e4; --bg2:#ffe8d6; --ink:#3b3a52; --soft:#7a7894; --good:#7bd389; --shadow:rgba(59,58,82,.18); }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  button{ touch-action:manipulation; }
   html,body{height:100%;margin:0;}
   body{
     font-family:'Quicksand',sans-serif; color:var(--ink);
@@ -96,10 +97,14 @@
   .learnhint{ z-index:2; font-family:'Fredoka',sans-serif; font-weight:600; font-size:clamp(14px,3.8vw,18px); color:var(--soft); margin:2px 0 8px; text-align:center; }
   body.arabic .learnhint{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
   .learnGrid{ z-index:2; flex:1; width:100%; min-height:0; display:grid; gap:clamp(6px,1.6vw,12px); grid-template-columns:repeat(var(--cols,4),minmax(0,1fr)); grid-auto-rows:1fr; }
-  .lcard{ border:none; border-radius:clamp(12px,3vw,22px); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:calc(var(--cell,60px)*0.46); line-height:1; min-width:0; min-height:0; overflow:hidden; box-shadow:0 5px 0 var(--shadow), 0 8px 14px rgba(0,0,0,.12); transition:transform .1s, box-shadow .1s; }
+  .learnGrid.scroll{ grid-auto-rows:var(--rowh,90px); overflow-y:auto; align-content:start; -webkit-overflow-scrolling:touch; }
+  .lcard{ border:none; border-radius:clamp(12px,3vw,22px); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:calc(var(--cell,60px)*0.46); line-height:1; min-width:0; min-height:0; overflow:hidden; box-shadow:0 5px 0 var(--shadow), 0 8px 14px rgba(0,0,0,.12); transition:transform .12s ease, box-shadow .12s ease; }
   body.arabic .lcard{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
   .lcard:active{ transform:translateY(4px); box-shadow:0 2px 0 var(--shadow),0 4px 8px rgba(0,0,0,.12); }
-  .lcard.playing{ animation:pop .5s ease; }
+  .lcard .lring{ position:absolute; inset:-6px; border-radius:inherit; border:5px solid #ffd166; opacity:0; pointer-events:none; }
+  .lcard.speaking{ overflow:visible; transform:scale(1.07); z-index:3; box-shadow:0 8px 0 var(--shadow), 0 12px 22px rgba(0,0,0,.2); }
+  .lcard.speaking .lring{ animation:lring 1s ease-out infinite; }
+  @keyframes lring{ 0%{opacity:.85;transform:scale(.9)} 100%{opacity:0;transform:scale(1.15)} }
   .lcard .cardEmoji{ font-size:calc(var(--cell,60px)*0.5); line-height:1; }
   .lcard .cardShape{ width:60%; height:60%; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 3px 0 rgba(0,0,0,.12)); }
   .lcard .cardShape svg{ width:100%; height:100%; }
@@ -183,6 +188,7 @@
     *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
     .blob{ animation:none; }
     .speaker.playing .ring{ animation:none; opacity:0; }
+    .lcard.speaking .lring{ animation:none; opacity:0; }
     .confetti{ display:none; }
   }
 </style>
@@ -786,12 +792,22 @@
   // ---- learn mode (every item on screen, tap to hear) ----
   var LEARN_PALETTE=['#ff7a92','#4fb8c9','#ffae42','#7ccfa6','#a98cf0','#ff9f68','#5fb0e0','#f178b6','#67c587','#b794f6','#ffc14d','#7ed0c4'];
   function isLight(hex){ var h=String(hex).replace('#',''); if(h.length===3){h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];} var r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (0.299*r+0.587*g+0.114*b)>150; }
+  var learnSpeakTimer=null, learnSpeakingEl=null;
+  function clearLearnSpeak(){ if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; } if(learnSpeakingEl){ learnSpeakingEl.classList.remove('speaking'); learnSpeakingEl=null; } }
+  function learnSpeak(item, el){
+    if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; }
+    if(learnSpeakingEl && learnSpeakingEl!==el) learnSpeakingEl.classList.remove('speaking');
+    el.classList.add('speaking'); learnSpeakingEl=el;
+    playItem(item);
+    learnSpeakTimer=setTimeout(function(){ el.classList.remove('speaking'); if(learnSpeakingEl===el) learnSpeakingEl=null; learnSpeakTimer=null; }, 1600);
+  }
   function buildLearn(type){
     var g=GAMESBYTYPE[type]; if(!g) return;
-    var showCap=(type==='animals'||type==='shapes');
+    clearLearnSpeak();
     learnGrid.innerHTML='';
     g.items.forEach(function(item,idx){
       var b=document.createElement('button'); b.className='lcard';
+      var ring=document.createElement('span'); ring.className='lring'; b.appendChild(ring);
       var capColor='#fff';
       if(item.render.type==='color'){
         b.classList.add('swatch'); applyContent(b,item);
@@ -799,9 +815,10 @@
       } else {
         b.style.background=LEARN_PALETTE[idx%LEARN_PALETTE.length]; applyContent(b,item);
       }
+      var showCap = (type==='animals'||type==='shapes') || (type==='numbers' && item.say && item.render && item.say!==item.render.label);
       if(showCap && item.say){ var cap=document.createElement('span'); cap.className='lcap'; cap.textContent=item.say; cap.style.color=capColor; b.appendChild(cap); }
       b.setAttribute('aria-label', item.say||item.key||'');
-      (function(it,btn){ btn.addEventListener('click', function(){ playItem(it); btn.classList.remove('playing'); void btn.offsetWidth; btn.classList.add('playing'); }); })(item,b);
+      (function(it,btn){ btn.addEventListener('click', function(){ learnSpeak(it,btn); }); })(item,b);
       learnGrid.appendChild(b);
     });
   }
@@ -816,8 +833,20 @@
       var cell=Math.min(cw,ch);
       if(cell>bestCell){ bestCell=cell; bestCols=cols; }
     }
-    learnGrid.style.setProperty('--cols', bestCols);
-    learnGrid.style.setProperty('--cell', Math.floor(bestCell)+'px');
+    var MINCELL=56, TARGET=90;
+    if(bestCell<MINCELL){
+      // Too cramped to fit everything: use comfortable tiles and let the grid scroll.
+      var sc=Math.max(2, Math.floor((W+gap)/(TARGET+gap)));
+      var cellW=Math.floor((W-(sc-1)*gap)/sc);
+      learnGrid.classList.add('scroll');
+      learnGrid.style.setProperty('--cols', sc);
+      learnGrid.style.setProperty('--rowh', cellW+'px');
+      learnGrid.style.setProperty('--cell', cellW+'px');
+    } else {
+      learnGrid.classList.remove('scroll');
+      learnGrid.style.setProperty('--cols', bestCols);
+      learnGrid.style.setProperty('--cell', Math.floor(bestCell)+'px');
+    }
   }
   function openLearn(type){
     if(!GAMESBYTYPE[type]) return;
