@@ -203,8 +203,8 @@
       </div>
     </div>
     <div class="modegrid">
-      <button class="modecard m-play" data-mode="play"><span class="emoji">&#x1F3AE;</span><span class="name" id="playName"></span><span class="desc" id="playDesc"></span></button>
       <button class="modecard m-learn" data-mode="learn"><span class="emoji">&#x1F4DA;</span><span class="name" id="learnName"></span><span class="desc" id="learnDesc"></span></button>
+      <button class="modecard m-play" data-mode="play"><span class="emoji">&#x1F3AE;</span><span class="name" id="playName"></span><span class="desc" id="playDesc"></span></button>
     </div>
   </div>
 
@@ -788,7 +788,7 @@
   function isLight(hex){ var h=String(hex).replace('#',''); if(h.length===3){h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];} var r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16); return (0.299*r+0.587*g+0.114*b)>150; }
   function buildLearn(type){
     var g=GAMESBYTYPE[type]; if(!g) return;
-    var showCap=(type==='animals'||type==='colors'||type==='shapes');
+    var showCap=(type==='animals'||type==='shapes');
     learnGrid.innerHTML='';
     g.items.forEach(function(item,idx){
       var b=document.createElement('button'); b.className='lcard';
