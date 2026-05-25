@@ -2,8 +2,17 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Tiny Taps — Little Learning Games</title>
+<meta name="description" content="Little learning games for toddlers — letters, numbers, animals, colors and shapes in English, Arabic and Armenian." />
+<meta name="theme-color" content="#fef6e4" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon-180.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Tiny Taps" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700&family=Cairo:wght@600;700&family=Fredoka:wght@500;600;700&family=Noto+Sans+Armenian:wght@500;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
@@ -132,6 +141,21 @@
   .vp-tip{font-size:12px; color:var(--soft); margin:14px 0 0; line-height:1.45; min-height:16px;}
   .vp-now{font-size:12px; color:var(--soft); margin:10px 0 0; min-height:14px; line-height:1.4;}
   .vp-now.warn{color:#c0392b; font-weight:700;}
+
+  /* keyboard / switch-access focus */
+  :focus{ outline:none; }
+  :focus-visible{ outline:4px solid #2b2a3d; outline-offset:3px; }
+
+  /* celebration */
+  .confetti{ position:absolute; top:-26px; width:12px; height:16px; border-radius:3px; z-index:30; pointer-events:none; opacity:.95; animation:confettiFall 1.6s ease-in forwards; }
+  @keyframes confettiFall{ 0%{ transform:translateY(0) rotate(0); opacity:1; } 100%{ transform:translateY(115vh) rotate(540deg); opacity:0; } }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    .blob{ animation:none; }
+    .speaker.playing .ring{ animation:none; opacity:0; }
+    .confetti{ display:none; }
+  }
 </style>
 </head>
 <body>
@@ -328,7 +352,7 @@
       subtitle:'Little learning games \u00b7 ages 20\u201336 months',
       tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', numbers:'Numbers'},
       prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear'},
-      home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', langBtn:'العربية',
+      home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
       vp:{ title:'Choose a voice', note:'These are the voices installed on this device. Pick one, then tap Test.', test:emo(0x1F50A)+' Test', done:'Done', tip:'Your choice is saved on this device. If none sound right, try a different browser or add a voice in your device settings.' }
     },
     ar:{
@@ -336,7 +360,7 @@
       subtitle:'ألعاب تعليمية صغيرة \u00b7 للأعمار ٢٠–٣٦ شهراً',
       tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', numbers:'أرقام'},
       prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه'},
-      home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', langBtn:'English',
+      home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
       vp:{ title:'اختر الصوت', note:'هذه الأصوات مثبّتة على هذا الجهاز. اختر صوتاً ثم اضغط استماع.', test:emo(0x1F50A)+' استماع', done:'تم', tip:'تم حفظ اختيارك على هذا الجهاز. إذا لم يناسبك أي صوت، جرّب متصفحاً آخر أو أضف صوتاً عربياً من إعدادات جهازك.' }
     },
     hy:{
@@ -344,7 +368,7 @@
       subtitle:'Փոքրիկ ուսուցողական խաղեր \u00b7 20\u201336 ամսական',
       tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', numbers:'Թվեր'},
       prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես'},
-      home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', langBtn:'English',
+      home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
       vp:{ title:'Ընտրիր ձայնը', note:'Սրանք այս սարքում տեղադրված ձայներն են։ Ընտրիր մեկը և սեղմիր Փորձել։', test:emo(0x1F50A)+' Փորձել', done:'Լավ', tip:'Քո ընտրությունը պահվեց այս սարքում։ Եթե ոչ մի ձայն հարմար չէ, փորձիր այլ դիտարկիչ կամ ավելացրու ձայն սարքի կարգավորումներից։' }
     }
   };
@@ -398,7 +422,6 @@
   function voiceKey(){ return 'tinyTapsVoice_'+LANG; }
   function getSavedVoiceURI(){ try{ return window.localStorage.getItem(voiceKey()); }catch(e){ return null; } }
   function saveVoiceURI(u){ try{ window.localStorage.setItem(voiceKey(),u); }catch(e){} }
-  function removeSavedVoice(){ try{ window.localStorage.removeItem(voiceKey()); }catch(e){} }
   function langPref(v){ return !!v.lang && v.lang.toLowerCase().indexOf(LANG)===0; }
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;
@@ -426,8 +449,9 @@
     if(!('speechSynthesis' in window)) return false;
     return window.speechSynthesis.getVoices().some(function(v){ return !!v.lang && v.lang.toLowerCase().indexOf(code)===0; });
   }
-  // Default to the Google online voice for all languages, unless the user explicitly picked a device voice.
-  function usingOnline(){ return !getSavedVoiceURI(); }
+  // Default to an on-device voice matched to the language (fast, offline, no third-party call).
+  // Use the Google online voice only when the device has no matching voice, or when explicitly chosen.
+  function usingOnline(){ var s=getSavedVoiceURI(); if(s==='__online__') return true; if(s) return false; return !hasVoiceFor(LANG); }
 
   function langName(code){ return code==='ar' ? 'Arabic' : code==='hy' ? 'Armenian' : 'English'; }
   function updateNow(){
@@ -468,6 +492,7 @@
     if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
     if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
     speakerEl.classList.remove('playing');
+    var cf=document.querySelectorAll('.confetti'); for(var i=0;i<cf.length;i++){ if(cf[i].parentNode) cf[i].parentNode.removeChild(cf[i]); }
   }
   function speakOnline(text){
     try{
@@ -533,6 +558,7 @@
       var b=document.createElement('button'); b.className='card c'+i;
       var glow=document.createElement('span'); glow.className='glow'; b.appendChild(glow);
       applyContent(b,item);
+      b.setAttribute('aria-label', item.say||item.key||'');
       b.addEventListener('click', function(){ onPick(b,item); });
       cardsEl.appendChild(b);
     });
@@ -540,16 +566,35 @@
   }
   function onPick(btn,item){
     if(locked) return;
+    clearRoundTimers();   // drop any pending sound from a prior tap before scheduling new ones
     if(item.key===target.key){
       locked=true; btn.classList.add('correct');
       streak=Math.min(MAX_STARS,streak+1); paintStars();
       playItem(target);   // repeat the correct answer as a reward
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900));
-      roundTimers.push(setTimeout(function(){ if(streak>=MAX_STARS) streak=0; paintStars(); newRound(true); },1600));
+      roundTimers.push(setTimeout(function(){
+        if(streak>=MAX_STARS){ celebrate(); streak=0; paintStars(); roundTimers.push(setTimeout(function(){ newRound(true); },1400)); }
+        else { paintStars(); newRound(true); }
+      },1600));
     } else {
       btn.classList.add('wrong');
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); },460));
       roundTimers.push(setTimeout(function(){ playItem(item); },250));   // say what they actually tapped
+      roundTimers.push(setTimeout(function(){ if(!locked) playItem(target); },1300));   // then remind them of the target
+    }
+  }
+  function celebrate(){
+    speak(I18N[LANG].cheer);
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var stage=document.querySelector('.stage'); if(!stage) return;
+    var colors=['#ff7a92','#4fb8c9','#ffae42','#7ccfa6','#a98cf0','#ffd166'];
+    for(var i=0;i<24;i++){
+      var c=document.createElement('span'); c.className='confetti';
+      c.style.left=(Math.random()*100)+'%';
+      c.style.background=colors[i%colors.length];
+      c.style.animationDelay=(Math.random()*0.35)+'s';
+      stage.appendChild(c);
+      (function(el){ setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },2100); })(c);
     }
   }
 
@@ -559,11 +604,11 @@
   function vpSample(){ return target ? target.say : (LANG==='ar'?'\u0627':LANG==='hy'?'\u0531':'B'); }
   voiceBtn.addEventListener('click', function(){ populateVoices(); updateNow(); voiceTip.textContent=''; voicePanel.classList.add('open'); });
   voiceSelect.addEventListener('change', function(){
-    if(voiceSelect.value==='__online__'){ removeSavedVoice(); updateNow(); speak(vpSample()); return; }
+    if(voiceSelect.value==='__online__'){ saveVoiceURI('__online__'); updateNow(); speak(vpSample()); return; }
     var v=voiceByURI(voiceSelect.value); if(v){ chosenVoice=v; saveVoiceURI(v.voiceURI); updateNow(); speak(vpSample()); }
   });
   voiceTest.addEventListener('click', function(){
-    if(voiceSelect.value==='__online__'){ removeSavedVoice(); }
+    if(voiceSelect.value==='__online__'){ saveVoiceURI('__online__'); }
     else { var v=voiceByURI(voiceSelect.value); if(v){ chosenVoice=v; saveVoiceURI(v.voiceURI); } }
     updateNow(); speak(vpSample()); voiceTip.textContent=I18N[LANG].vp.tip;
   });
@@ -575,6 +620,8 @@
     try{ window.localStorage.setItem('tinyTapsLang', LANG); }catch(e){}
     var T = I18N[LANG];
     document.documentElement.setAttribute('dir', T.dir);
+    document.documentElement.setAttribute('lang', LANG);
+    speakerEl.setAttribute('aria-label', T.replay);
     document.body.classList.toggle('arabic', LANG==='ar');
     document.body.classList.toggle('armenian', LANG==='hy');
     subtitleEl.textContent = T.subtitle;

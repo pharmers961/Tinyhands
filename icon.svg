@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Tiny Taps">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#ff7a92"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
+  <rect x="102.4" y="102.4" width="307.2" height="307.2" rx="73.7" fill="#ffffff"/>
+  <g transform="translate(142.35,142.35) scale(2.273)">
+    <polygon fill="#ffcf33" points="50,7 61,38 94,38 67,58 78,90 50,70 22,90 33,58 6,38 39,38"/>
+  </g>
+</svg>
