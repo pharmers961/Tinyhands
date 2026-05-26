@@ -876,7 +876,8 @@
     if(item.key===target.key){
       locked=true; btn.classList.add('correct');
       streak=Math.min(MAX_STARS,streak+1); paintStars();
-      playItem(target);   // repeat the correct answer as a reward
+      playDing();   // instant "correct!" chime
+      roundTimers.push(setTimeout(function(){ playItem(target); }, 450));   // then reinforce with the word
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
         if(streak>=MAX_STARS){ celebrate(); streak=0; paintStars(); roundTimers.push(setTimeout(function(){ newRound(true); },1400)); }
@@ -888,6 +889,25 @@
       roundTimers.push(setTimeout(function(){ playItem(item); },250));   // say what they actually tapped
       roundTimers.push(setTimeout(function(){ if(!locked) playItem(target); },1300));   // then remind them of the target
     }
+  }
+  // short cheerful two-note chime for correct answers (synthesized, no audio file)
+  var audioCtx=null;
+  function playDing(){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      if(!audioCtx) audioCtx=new AC();
+      if(audioCtx.state==='suspended'){ try{ audioCtx.resume(); }catch(e){} }
+      var now=audioCtx.currentTime;
+      [{f:880,t:0},{f:1318.5,t:0.11}].forEach(function(n){
+        var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+        o.type='sine'; o.frequency.value=n.f; o.connect(g); g.connect(audioCtx.destination);
+        var s=now+n.t;
+        g.gain.setValueAtTime(0.0001, s);
+        g.gain.exponentialRampToValueAtTime(0.28, s+0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, s+0.38);
+        o.start(s); o.stop(s+0.42);
+      });
+    }catch(e){}
   }
   function celebrate(){
     speak(I18N[LANG].cheer);
@@ -1085,7 +1105,7 @@
       b.addEventListener('click', function(){ onCountPick(b,num); });
       countCardsEl.appendChild(b);
     });
-    if(speakNow!==false) roundTimers.push(setTimeout(function(){ playItem(countItem); }, 350));
+    // no narration: the child counts the objects themselves
   }
   function onCountPick(btn,num){
     if(countLocked) return;
@@ -1093,7 +1113,7 @@
     if(num===countN){
       countLocked=true; btn.classList.add('correct');
       countStreak=Math.min(MAX_STARS,countStreak+1); paintCountStars();
-      playItem(countItem);
+      playDing();
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(countCardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
         if(countStreak>=MAX_STARS){ celebrate(); countStreak=0; paintCountStars(); roundTimers.push(setTimeout(function(){ newCountRound(true); },1400)); }
@@ -1102,8 +1122,6 @@
     } else {
       btn.classList.add('wrong');
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); },460));
-      roundTimers.push(setTimeout(function(){ playItem(GAMESBYTYPE.numbers.items[num-1]); },250));
-      roundTimers.push(setTimeout(function(){ if(!countLocked) playItem(countItem); },1300));
     }
   }
   function launchCount(){
@@ -1139,7 +1157,7 @@
     var first=memFirst; memFirst=null;
     if(first===b) return;
     if(first._item.key===b._item.key){
-      memLock=true;
+      memLock=true; playDing();
       roundTimers.push(setTimeout(function(){
         first.classList.add('matched'); b.classList.add('matched'); memLock=false; memMatched++;
         if(memMatched>=MEM_PAIRS){ celebrate(); roundTimers.push(setTimeout(newMemoryBoard,1600)); }
@@ -1220,8 +1238,9 @@
   function approveTrace(){
     traceApproved=true;
     traceCheckEl.classList.add('show');
+    playDing();
     var items=traceItems(), it=items[traceIdx];
-    if(it) playItem(it);
+    roundTimers.push(setTimeout(function(){ if(it) playItem(it); }, 300));
     roundTimers.push(setTimeout(function(){ var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } }, 1200));
   }
   function setTraceSwitch(){
