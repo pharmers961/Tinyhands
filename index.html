@@ -199,7 +199,12 @@
   .tile.t7{ background:linear-gradient(160deg,#80cbc4,#4db6ac); }
   #menu .playonly{ display:none; }
   #menu.show-games .playonly{ display:flex; }
-  #menu.show-games .grid{ grid-template-rows:repeat(5,1fr); }
+  /* Learn shows 5 tiles (numbers fills the last row); Play shows 8 equal tiles */
+  #menu:not(.show-games) .tile.t4{ grid-column:1 / -1; }
+  #menu.show-games .grid{ grid-template-rows:repeat(4,1fr); }
+  /* truly-centered, larger screen titles */
+  .gametop{ position:relative; }
+  .menutitle{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); margin:0; text-align:center; pointer-events:none; font-size:clamp(24px,7vw,36px); }
 
   /* counting */
   .countObjects{ z-index:2; width:100%; flex:0 0 auto; min-height:84px; max-height:36%; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(3px,1.4vw,12px); padding:4px 10px; overflow:hidden; }
@@ -266,10 +271,10 @@
       <button class="tile t1" data-game="animals"><span class="emoji">&#x1F436;</span><span class="name"></span></button>
       <button class="tile t2" data-game="colors"><span class="emoji">&#x1F3A8;</span><span class="name"></span></button>
       <button class="tile t3" data-game="shapes"><span class="emoji">&#x1F537;</span><span class="name"></span></button>
-      <button class="tile t4 span2" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
+      <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
       <button class="tile t5 playonly" data-game="count"><span class="emoji">&#x1F9EE;</span><span class="name"></span></button>
       <button class="tile t6 playonly" data-game="memory"><span class="emoji">&#x1F9E0;</span><span class="name"></span></button>
-      <button class="tile t7 span2 playonly" data-game="trace"><span class="emoji">&#x270F;&#xFE0F;</span><span class="name"></span></button>
+      <button class="tile t7 playonly" data-game="trace"><span class="emoji">&#x270F;&#xFE0F;</span><span class="name"></span></button>
     </div>
   </div>
 
@@ -1183,7 +1188,7 @@
   }
   function launchMemory(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
-    memoryTitleEl.textContent=I18N[LANG].prompts.memory;
+    memoryTitleEl.textContent=I18N[LANG].tiles.memory;
     newMemoryBoard(); showScreen('memory');
   }
 
@@ -1222,7 +1227,7 @@
     var dpr=window.devicePixelRatio||1, W=Math.round(r.width*dpr), H=Math.round(r.height*dpr);
     traceGlyphCanvas.width=W; traceGlyphCanvas.height=H; tcanvas.width=W; tcanvas.height=H;
     tctx=tcanvas.getContext('2d');
-    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=Math.max(10,Math.round(W*0.045)); tctx.strokeStyle='#ff7a92';
+    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=Math.max(12,Math.round(W*0.06)); tctx.strokeStyle='#ff7a92';
     var items=traceItems(), it=(items&&items[traceIdx])||null;
     if(it) buildGlyph(it.render.label);
   }
@@ -1237,17 +1242,21 @@
     clearTrace();
     roundTimers.push(setTimeout(function(){ playItem(it); },200));
   }
+  function inkAt(d,W,H,x,y){ if(x<0||y<0||x>=W||y>=H) return false; return d[(y*W+x)*4+3]>30; }
   function evaluateTrace(){
     if(traceApproved || !tctx || glyphArea<8 || !glyphMaskData) return;
     var W=tcanvas.width, H=tcanvas.height;
     var ink=tctx.getImageData(0,0,W,H).data;
-    var covered=0, i;
-    for(i=0;i<glyphPts.length;i+=2){ if(ink[(glyphPts[i+1]*W+glyphPts[i])*4+3]>30) covered++; }
+    var r=Math.max(3, Math.round(W*0.03)), covered=0, i;   // count a letter pixel covered if ink is nearby
+    for(i=0;i<glyphPts.length;i+=2){
+      var gx=glyphPts[i], gy=glyphPts[i+1];
+      if(inkAt(ink,W,H,gx,gy)||inkAt(ink,W,H,gx-r,gy)||inkAt(ink,W,H,gx+r,gy)||inkAt(ink,W,H,gx,gy-r)||inkAt(ink,W,H,gx,gy+r)) covered++;
+    }
     var coverage=covered/glyphArea;
     var step=Math.max(4, Math.round(W/110)), inkTot=0, inkOn=0, x, y;
     for(y=0;y<H;y+=step){ for(x=0;x<W;x+=step){ var p=(y*W+x)*4+3; if(ink[p]>30){ inkTot++; if(glyphMaskData[p]>30) inkOn++; } } }
     var precision = inkTot? inkOn/inkTot : 0;
-    if(coverage>=0.5 && inkTot>=12 && precision>=0.25) approveTrace();
+    if(coverage>=0.5 && inkTot>=10 && precision>=0.2) approveTrace();
   }
   function approveTrace(){
     traceApproved=true;
