@@ -193,16 +193,18 @@
     .confetti{ display:none; }
   }
 
-  /* ===== extra game modes ===== */
-  .modegrid{ display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:clamp(8px,2.2vw,14px); align-content:stretch; }
-  .modegrid .span2{ grid-column:1 / -1; }
-  .modecard{ flex:initial; padding:8px; gap:3px; border-radius:24px; }
-  .modecard .emoji{ font-size:clamp(28px,7.5vw,48px); }
-  .modecard .name{ font-size:clamp(16px,4.6vw,26px); }
-  .modecard .desc{ font-size:clamp(10px,2.7vw,14px); max-width:96%; }
-  .m-count{ background:linear-gradient(160deg,#ffd166,#ffae42); }
-  .m-memory{ background:linear-gradient(160deg,#c9b1ff,#a98cf0); }
-  .m-trace{ background:linear-gradient(160deg,#b5ead7,#7ccfa6); }
+  /* ===== extra game modes (tiles under Play) ===== */
+  .tile.t5{ background:linear-gradient(160deg,#ffb088,#ff8a5c); }
+  .tile.t6{ background:linear-gradient(160deg,#b39ddb,#9575cd); }
+  .tile.t7{ background:linear-gradient(160deg,#80cbc4,#4db6ac); }
+  #menu .playonly{ display:none; }
+  #menu.show-games .playonly{ display:flex; }
+  /* Learn shows 5 tiles (numbers fills the last row); Play shows 8 equal tiles */
+  #menu:not(.show-games) .tile.t4{ grid-column:1 / -1; }
+  #menu.show-games .grid{ grid-template-rows:repeat(4,1fr); }
+  /* truly-centered, larger screen titles */
+  .gametop{ position:relative; }
+  .menutitle{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); margin:0; text-align:center; pointer-events:none; font-size:clamp(24px,7vw,36px); }
 
   /* counting */
   .countObjects{ z-index:2; width:100%; flex:0 0 auto; min-height:84px; max-height:36%; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(3px,1.4vw,12px); padding:4px 10px; overflow:hidden; }
@@ -231,6 +233,10 @@
   body.armenian .traceGlyph{ font-family:'Noto Sans Armenian','Fredoka',sans-serif; }
   .traceBox canvas{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; cursor:crosshair; border-radius:26px; background:rgba(255,255,255,.45); box-shadow:inset 0 0 0 3px rgba(123,121,148,.22); }
   .traceSpeaker{ width:58px; height:58px; font-size:26px; box-shadow:0 6px 0 var(--shadow),0 8px 14px rgba(0,0,0,.12); }
+  #traceGlyphCanvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; border-radius:26px; background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 3px rgba(123,121,148,.22); }
+  #traceCanvas{ background:transparent !important; box-shadow:none; }
+  .traceCheck{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:min(46vw,240px); line-height:1; color:var(--good); text-shadow:0 6px 16px rgba(0,0,0,.25); opacity:0; pointer-events:none; z-index:4; }
+  .traceCheck.show{ animation:check .5s cubic-bezier(.34,1.56,.64,1) forwards; }
 </style>
 </head>
 <body>
@@ -251,9 +257,6 @@
     <div class="modegrid">
       <button class="modecard m-learn" data-mode="learn"><span class="emoji">&#x1F4DA;</span><span class="name" id="learnName"></span><span class="desc" id="learnDesc"></span></button>
       <button class="modecard m-play" data-mode="play"><span class="emoji">&#x1F3AE;</span><span class="name" id="playName"></span><span class="desc" id="playDesc"></span></button>
-      <button class="modecard m-count" data-mode="count"><span class="emoji">&#x1F522;</span><span class="name" id="countName"></span><span class="desc" id="countDesc"></span></button>
-      <button class="modecard m-memory" data-mode="memory"><span class="emoji">&#x1F9E0;</span><span class="name" id="memoryName"></span><span class="desc" id="memoryDesc"></span></button>
-      <button class="modecard m-trace span2" data-mode="trace"><span class="emoji">&#x270F;&#xFE0F;</span><span class="name" id="traceName"></span><span class="desc" id="traceDesc"></span></button>
     </div>
   </div>
 
@@ -268,7 +271,10 @@
       <button class="tile t1" data-game="animals"><span class="emoji">&#x1F436;</span><span class="name"></span></button>
       <button class="tile t2" data-game="colors"><span class="emoji">&#x1F3A8;</span><span class="name"></span></button>
       <button class="tile t3" data-game="shapes"><span class="emoji">&#x1F537;</span><span class="name"></span></button>
-      <button class="tile t4 span2" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
+      <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
+      <button class="tile t5 playonly" data-game="count"><span class="emoji">&#x1F9EE;</span><span class="name"></span></button>
+      <button class="tile t6 playonly" data-game="memory"><span class="emoji">&#x1F9E0;</span><span class="name"></span></button>
+      <button class="tile t7 playonly" data-game="trace"><span class="emoji">&#x270F;&#xFE0F;</span><span class="name"></span></button>
     </div>
   </div>
 
@@ -343,8 +349,9 @@
     </div>
     <div class="traceStage" id="traceStage">
       <div class="traceBox" id="traceBox">
-        <div class="traceGlyph" id="traceGlyph"></div>
+        <canvas id="traceGlyphCanvas"></canvas>
         <canvas id="traceCanvas"></canvas>
+        <div class="traceCheck" id="traceCheck">&#x2713;</div>
       </div>
     </div>
     <div class="bottombar">
@@ -498,7 +505,7 @@
     en:{
       dir:'ltr',
       subtitle:'Little learning games \u00b7 ages 20\u201336 months',
-      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', numbers:'Numbers'},
+      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
       prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', count:'How many?', memory:'Find the matching pairs!'},
       home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
       count:'Count', countDesc:'Count and tap the number', memory:'Memory', memoryDesc:'Find the matching pairs', trace:'Trace', traceDesc:'Trace letters and numbers', clear:'Clear', next:'Next \u25b6',
@@ -508,7 +515,7 @@
     ar:{
       dir:'rtl',
       subtitle:'ألعاب تعليمية صغيرة \u00b7 للأعمار ٢٠–٣٦ شهراً',
-      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', numbers:'أرقام'},
+      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
       prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
       home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
       count:'عُدّ', countDesc:'عُدّ واضغط الرقم', memory:'ذاكرة', memoryDesc:'جد البطاقات المتطابقة', trace:'تتبّع', traceDesc:'تتبّع الحروف والأرقام', clear:'مسح', next:'◀ التالي',
@@ -518,7 +525,7 @@
     hy:{
       dir:'ltr',
       subtitle:'Փոքրիկ ուսուցողական խաղեր \u00b7 20\u201336 ամսական',
-      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', numbers:'Թվեր'},
+      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
       prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
       home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
       count:'Հաշվիր', countDesc:'Հաշվիր և սեղմիր թիվը', memory:'Հիշողություն', memoryDesc:'Գտիր զույգերը', trace:'Գծիր', traceDesc:'Գծիր տառերն ու թվերը', clear:'Մաքրել', next:'Հաջորդ ▶',
@@ -874,7 +881,8 @@
     if(item.key===target.key){
       locked=true; btn.classList.add('correct');
       streak=Math.min(MAX_STARS,streak+1); paintStars();
-      playItem(target);   // repeat the correct answer as a reward
+      playDing();   // instant "correct!" chime
+      roundTimers.push(setTimeout(function(){ playItem(target); }, 450));   // then reinforce with the word
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
         if(streak>=MAX_STARS){ celebrate(); streak=0; paintStars(); roundTimers.push(setTimeout(function(){ newRound(true); },1400)); }
@@ -886,6 +894,36 @@
       roundTimers.push(setTimeout(function(){ playItem(item); },250));   // say what they actually tapped
       roundTimers.push(setTimeout(function(){ if(!locked) playItem(target); },1300));   // then remind them of the target
     }
+  }
+  // playful "magic sparkle" jingle for correct answers (synthesized, no audio file)
+  var audioCtx=null;
+  function playDing(){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      if(!audioCtx) audioCtx=new AC();
+      if(audioCtx.state==='suspended'){ try{ audioCtx.resume(); }catch(e){} }
+      var now=audioCtx.currentTime;
+      var master=audioCtx.createGain(); master.gain.value=0.5; master.connect(audioCtx.destination);
+      // quick ascending C-major arpeggio with a high shimmer on top — celesta/music-box feel
+      var notes=[
+        {f:523.25, t:0.00, d:0.45},  // C5
+        {f:659.25, t:0.07, d:0.45},  // E5
+        {f:783.99, t:0.14, d:0.50},  // G5
+        {f:1046.50,t:0.22, d:0.65},  // C6
+        {f:1567.98,t:0.32, d:0.60}   // G6 sparkle
+      ];
+      notes.forEach(function(n,i){
+        var s=now+n.t, vol=(i===4)?0.15:0.22;
+        [['triangle',n.f,vol],['sine',n.f*2,vol*0.3]].forEach(function(osc){
+          var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+          o.type=osc[0]; o.frequency.value=osc[1]; o.connect(g); g.connect(master);
+          g.gain.setValueAtTime(0.0001, s);
+          g.gain.exponentialRampToValueAtTime(osc[2], s+0.015);
+          g.gain.exponentialRampToValueAtTime(0.0001, s+n.d);
+          o.start(s); o.stop(s+n.d+0.05);
+        });
+      });
+    }catch(e){}
   }
   function celebrate(){
     speak(I18N[LANG].cheer);
@@ -932,11 +970,11 @@
     homeBtn.textContent = T.back;
     menuBack.textContent = T.back;
     learnBack.textContent = T.back;
+    countBack.textContent = T.back;
+    memoryBack.textContent = T.back;
+    traceBack.textContent = T.back;
     playName.textContent = T.play; learnName.textContent = T.learn;
     playDesc.textContent = T.playDesc; learnDesc.textContent = T.learnDesc;
-    countName.textContent = T.count; countDescEl.textContent = T.countDesc;
-    memoryName.textContent = T.memory; memoryDescEl.textContent = T.memoryDesc;
-    traceName.textContent = T.trace; traceDescEl.textContent = T.traceDesc;
     traceClearBtn.textContent = T.clear; traceNextBtn.textContent = T.next;
     newSetBtn.textContent = T.newRound;
     voiceBtn.textContent = T.voice;
@@ -1032,13 +1070,19 @@
   function goHome(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('home'); }
   function goMenu(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('menu'); }
   function chooseMode(mode){
-    if(mode==='count'){ launchCount(); return; }
-    if(mode==='memory'){ launchMemory(); return; }
-    if(mode==='trace'){ launchTrace(); return; }
-    MODE=(mode==='learn')?'learn':'play'; menuTitle.textContent=(MODE==='learn')?I18N[LANG].learn:I18N[LANG].play; showScreen('menu');
+    MODE=(mode==='learn')?'learn':'play';
+    menuTitle.textContent=(MODE==='learn')?I18N[LANG].learn:I18N[LANG].play;
+    menuEl.classList.toggle('show-games', MODE==='play');
+    showScreen('menu');
   }
 
-  for(var k=0;k<tiles.length;k++){ (function(t){ t.addEventListener('click', function(){ var type=t.getAttribute('data-game'); if(MODE==='learn') openLearn(type); else launchGame(type); }); })(tiles[k]); }
+  for(var k=0;k<tiles.length;k++){ (function(t){ t.addEventListener('click', function(){
+    var type=t.getAttribute('data-game');
+    if(type==='count'){ launchCount(); return; }
+    if(type==='memory'){ launchMemory(); return; }
+    if(type==='trace'){ launchTrace(); return; }
+    if(MODE==='learn') openLearn(type); else launchGame(type);
+  }); })(tiles[k]); }
   homeBtn.addEventListener('click', goMenu);
   menuBack.addEventListener('click', goHome);
   learnBack.addEventListener('click', goMenu);
@@ -1047,12 +1091,11 @@
 
   // ===== extra game modes (count / memory / trace) =====
   var gid=function(x){ return document.getElementById(x); };
-  var countName=gid('countName'), countDescEl=gid('countDesc'), memoryName=gid('memoryName'), memoryDescEl=gid('memoryDesc'),
-      traceName=gid('traceName'), traceDescEl=gid('traceDesc'),
+  var menuEl=gid('menu'),
       countBack=gid('countBack'), countStarsEl=gid('countStars'), countPromptEl=gid('countPrompt'),
       countObjectsEl=gid('countObjects'), countCardsEl=gid('countCards'),
       memoryBack=gid('memoryBack'), memoryTitleEl=gid('memoryTitle'), memGrid=gid('memGrid'),
-      traceBack=gid('traceBack'), traceBox=gid('traceBox'), traceGlyphEl=gid('traceGlyph'), tcanvas=gid('traceCanvas'),
+      traceBack=gid('traceBack'), traceBox=gid('traceBox'), traceGlyphCanvas=gid('traceGlyphCanvas'), traceCheckEl=gid('traceCheck'), tcanvas=gid('traceCanvas'),
       traceClearBtn=gid('traceClear'), traceNextBtn=gid('traceNext'), traceSpeakerBtn=gid('traceSpeaker'),
       traceLettersBtn=gid('traceLetters'), traceNumbersBtn=gid('traceNumbers');
 
@@ -1081,7 +1124,7 @@
       b.addEventListener('click', function(){ onCountPick(b,num); });
       countCardsEl.appendChild(b);
     });
-    if(speakNow!==false) roundTimers.push(setTimeout(function(){ playItem(countItem); }, 350));
+    // no narration: the child counts the objects themselves
   }
   function onCountPick(btn,num){
     if(countLocked) return;
@@ -1089,7 +1132,7 @@
     if(num===countN){
       countLocked=true; btn.classList.add('correct');
       countStreak=Math.min(MAX_STARS,countStreak+1); paintCountStars();
-      playItem(countItem);
+      playDing();
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(countCardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
         if(countStreak>=MAX_STARS){ celebrate(); countStreak=0; paintCountStars(); roundTimers.push(setTimeout(function(){ newCountRound(true); },1400)); }
@@ -1098,8 +1141,6 @@
     } else {
       btn.classList.add('wrong');
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); },460));
-      roundTimers.push(setTimeout(function(){ playItem(GAMESBYTYPE.numbers.items[num-1]); },250));
-      roundTimers.push(setTimeout(function(){ if(!countLocked) playItem(countItem); },1300));
     }
   }
   function launchCount(){
@@ -1135,7 +1176,7 @@
     var first=memFirst; memFirst=null;
     if(first===b) return;
     if(first._item.key===b._item.key){
-      memLock=true;
+      memLock=true; playDing();
       roundTimers.push(setTimeout(function(){
         first.classList.add('matched'); b.classList.add('matched'); memLock=false; memMatched++;
         if(memMatched>=MEM_PAIRS){ celebrate(); roundTimers.push(setTimeout(newMemoryBoard,1600)); }
@@ -1147,40 +1188,92 @@
   }
   function launchMemory(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
-    memoryTitleEl.textContent=I18N[LANG].prompts.memory;
+    memoryTitleEl.textContent=I18N[LANG].tiles.memory;
     newMemoryBoard(); showScreen('memory');
   }
 
   // ---- tracing ----
-  var tctx=null, tdrawing=false, tlast=null, traceSet='letters', traceIdx=0;
+  var tctx=null, tdrawing=false, tlast=null, traceSet='letters', traceIdx=0, traceApproved=false;
+  var gmaskCanvas=document.createElement('canvas'), glyphPts=[], glyphArea=0, glyphMaskData=null;
   function traceItems(){ return (traceSet==='numbers') ? GAMESBYTYPE.numbers.items : GAMESBYTYPE.letters.items; }
+  function traceFont(px){
+    var fam = (LANG==='ar') ? '"Baloo Bhaijaan 2","Cairo",sans-serif' : (LANG==='hy') ? '"Noto Sans Armenian","Fredoka",sans-serif' : '"Fredoka",sans-serif';
+    return '700 '+px+'px '+fam;
+  }
+  function drawGlyphTo(ctx,W,H,color,text){
+    ctx.clearRect(0,0,W,H);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    var px=Math.round(H*0.62); ctx.font=traceFont(px);
+    var w=ctx.measureText(text).width;
+    if(w>W*0.9){ px=Math.max(8,Math.round(px*(W*0.9)/w)); ctx.font=traceFont(px); }
+    ctx.fillStyle=color; ctx.fillText(text,W/2,H/2);
+    return px;
+  }
+  function buildGlyph(text){
+    var W=tcanvas.width, H=tcanvas.height; if(W<2) return;
+    drawGlyphTo(traceGlyphCanvas.getContext('2d'), W, H, 'rgba(123,121,148,0.22)', text);
+    gmaskCanvas.width=W; gmaskCanvas.height=H;
+    var mctx=gmaskCanvas.getContext('2d');
+    var px=drawGlyphTo(mctx, W, H, '#000', text);
+    mctx.lineWidth=Math.max(3, Math.round(px*0.10)); mctx.lineJoin='round'; mctx.strokeStyle='#000'; mctx.strokeText(text, W/2, H/2);
+    glyphMaskData=mctx.getImageData(0,0,W,H).data;
+    glyphPts=[]; var step=Math.max(4, Math.round(W/120));
+    for(var y=0;y<H;y+=step){ for(var x=0;x<W;x+=step){ if(glyphMaskData[(y*W+x)*4+3]>40) glyphPts.push(x,y); } }
+    glyphArea=glyphPts.length/2;
+  }
   function sizeTraceCanvas(){
     if(!traceBox) return;
     var r=traceBox.getBoundingClientRect(); if(r.width<2||r.height<2) return;
-    var dpr=window.devicePixelRatio||1;
-    tcanvas.width=Math.round(r.width*dpr); tcanvas.height=Math.round(r.height*dpr);
+    var dpr=window.devicePixelRatio||1, W=Math.round(r.width*dpr), H=Math.round(r.height*dpr);
+    traceGlyphCanvas.width=W; traceGlyphCanvas.height=H; tcanvas.width=W; tcanvas.height=H;
     tctx=tcanvas.getContext('2d');
-    tctx.setTransform(dpr,0,0,dpr,0,0);
-    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=14; tctx.strokeStyle='#ff7a92';
-    traceGlyphEl.style.fontSize=Math.round(r.height*0.66)+'px';
+    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=Math.max(12,Math.round(W*0.06)); tctx.strokeStyle='#ff7a92';
+    var items=traceItems(), it=(items&&items[traceIdx])||null;
+    if(it) buildGlyph(it.render.label);
   }
-  function clearTrace(){ if(!tctx) return; tctx.save(); tctx.setTransform(1,0,0,1,0,0); tctx.clearRect(0,0,tcanvas.width,tcanvas.height); tctx.restore(); }
+  function clearTrace(){ if(tctx) tctx.clearRect(0,0,tcanvas.width,tcanvas.height); }
+  function hideCheck(){ traceCheckEl.classList.remove('show'); }
   function showTrace(){
     var items=traceItems(); if(!items||!items.length) return;
     if(traceIdx>=items.length) traceIdx=0;
     var it=items[traceIdx];
-    traceGlyphEl.textContent=it.render.label;
+    traceApproved=false; hideCheck();
+    if(tctx) buildGlyph(it.render.label);
     clearTrace();
     roundTimers.push(setTimeout(function(){ playItem(it); },200));
+  }
+  function inkAt(d,W,H,x,y){ if(x<0||y<0||x>=W||y>=H) return false; return d[(y*W+x)*4+3]>30; }
+  function evaluateTrace(){
+    if(traceApproved || !tctx || glyphArea<8 || !glyphMaskData) return;
+    var W=tcanvas.width, H=tcanvas.height;
+    var ink=tctx.getImageData(0,0,W,H).data;
+    var r=Math.max(3, Math.round(W*0.03)), covered=0, i;   // count a letter pixel covered if ink is nearby
+    for(i=0;i<glyphPts.length;i+=2){
+      var gx=glyphPts[i], gy=glyphPts[i+1];
+      if(inkAt(ink,W,H,gx,gy)||inkAt(ink,W,H,gx-r,gy)||inkAt(ink,W,H,gx+r,gy)||inkAt(ink,W,H,gx,gy-r)||inkAt(ink,W,H,gx,gy+r)) covered++;
+    }
+    var coverage=covered/glyphArea;
+    var step=Math.max(4, Math.round(W/110)), inkTot=0, inkOn=0, x, y;
+    for(y=0;y<H;y+=step){ for(x=0;x<W;x+=step){ var p=(y*W+x)*4+3; if(ink[p]>30){ inkTot++; if(glyphMaskData[p]>30) inkOn++; } } }
+    var precision = inkTot? inkOn/inkTot : 0;
+    if(coverage>=0.5 && inkTot>=10 && precision>=0.2) approveTrace();
+  }
+  function approveTrace(){
+    traceApproved=true;
+    traceCheckEl.classList.add('show');
+    playDing();
+    var items=traceItems(), it=items[traceIdx];
+    roundTimers.push(setTimeout(function(){ if(it) playItem(it); }, 300));
+    roundTimers.push(setTimeout(function(){ var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } }, 1200));
   }
   function setTraceSwitch(){
     traceLettersBtn.classList.toggle('active', traceSet==='letters');
     traceNumbersBtn.classList.toggle('active', traceSet==='numbers');
   }
-  function tpos(e){ var r=tcanvas.getBoundingClientRect(); return { x:(e.clientX-r.left), y:(e.clientY-r.top) }; }
-  tcanvas.addEventListener('pointerdown', function(e){ if(!tctx) sizeTraceCanvas(); if(!tctx) return; tdrawing=true; tlast=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(tlast.x+0.1,tlast.y+0.1); tctx.stroke(); try{ tcanvas.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
+  function tpos(e){ var r=tcanvas.getBoundingClientRect(); return { x:(e.clientX-r.left)*(tcanvas.width/r.width), y:(e.clientY-r.top)*(tcanvas.height/r.height) }; }
+  tcanvas.addEventListener('pointerdown', function(e){ if(!tctx) sizeTraceCanvas(); if(!tctx||traceApproved) return; tdrawing=true; tlast=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(tlast.x+0.1,tlast.y+0.1); tctx.stroke(); try{ tcanvas.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
   tcanvas.addEventListener('pointermove', function(e){ if(!tdrawing||!tctx) return; var p=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(p.x,p.y); tctx.stroke(); tlast=p; e.preventDefault(); });
-  function endTraceStroke(){ tdrawing=false; }
+  function endTraceStroke(){ if(tdrawing){ tdrawing=false; evaluateTrace(); } }
   tcanvas.addEventListener('pointerup', endTraceStroke);
   tcanvas.addEventListener('pointercancel', endTraceStroke);
   tcanvas.addEventListener('pointerleave', endTraceStroke);
@@ -1189,12 +1282,15 @@
     traceSet='letters'; traceIdx=0; setTraceSwitch();
     showScreen('trace');
     requestAnimationFrame(function(){ sizeTraceCanvas(); showTrace(); });
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){
+      if(gid('trace').classList.contains('active')){ var it=traceItems()[traceIdx]; if(it&&tctx) buildGlyph(it.render.label); }
+    }); }
   }
 
   // ---- wiring for new modes ----
-  countBack.addEventListener('click', goHome);
-  memoryBack.addEventListener('click', goHome);
-  traceBack.addEventListener('click', goHome);
+  countBack.addEventListener('click', goMenu);
+  memoryBack.addEventListener('click', goMenu);
+  traceBack.addEventListener('click', goMenu);
   traceClearBtn.addEventListener('click', clearTrace);
   traceNextBtn.addEventListener('click', function(){ var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } });
   traceSpeakerBtn.addEventListener('click', function(){ var items=traceItems(); if(items&&items[traceIdx]) playItem(items[traceIdx]); });
@@ -1203,8 +1299,7 @@
   window.addEventListener('resize', function(){ if(gid('trace').classList.contains('active')) sizeTraceCanvas(); });
 
   // ---- init ----
-  var startLang='en'; try{ startLang=window.localStorage.getItem('tinyTapsLang')||'en'; }catch(e){}
-  applyLang(startLang);
+  applyLang('en');   // always open in English; language can be switched on the home screen
 })();
 </script>
 </body>
