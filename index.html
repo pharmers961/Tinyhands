@@ -1276,8 +1276,7 @@
   window.addEventListener('resize', function(){ if(gid('trace').classList.contains('active')) sizeTraceCanvas(); });
 
   // ---- init ----
-  var startLang='en'; try{ startLang=window.localStorage.getItem('tinyTapsLang')||'en'; }catch(e){}
-  applyLang(startLang);
+  applyLang('en');   // always open in English; language can be switched on the home screen
 })();
 </script>
 </body>
