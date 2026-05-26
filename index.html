@@ -231,6 +231,10 @@
   body.armenian .traceGlyph{ font-family:'Noto Sans Armenian','Fredoka',sans-serif; }
   .traceBox canvas{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; cursor:crosshair; border-radius:26px; background:rgba(255,255,255,.45); box-shadow:inset 0 0 0 3px rgba(123,121,148,.22); }
   .traceSpeaker{ width:58px; height:58px; font-size:26px; box-shadow:0 6px 0 var(--shadow),0 8px 14px rgba(0,0,0,.12); }
+  #traceGlyphCanvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; border-radius:26px; background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 3px rgba(123,121,148,.22); }
+  #traceCanvas{ background:transparent !important; box-shadow:none; }
+  .traceCheck{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:min(46vw,240px); line-height:1; color:var(--good); text-shadow:0 6px 16px rgba(0,0,0,.25); opacity:0; pointer-events:none; z-index:4; }
+  .traceCheck.show{ animation:check .5s cubic-bezier(.34,1.56,.64,1) forwards; }
 </style>
 </head>
 <body>
@@ -343,8 +347,9 @@
     </div>
     <div class="traceStage" id="traceStage">
       <div class="traceBox" id="traceBox">
-        <div class="traceGlyph" id="traceGlyph"></div>
+        <canvas id="traceGlyphCanvas"></canvas>
         <canvas id="traceCanvas"></canvas>
+        <div class="traceCheck" id="traceCheck">&#x2713;</div>
       </div>
     </div>
     <div class="bottombar">
@@ -1052,7 +1057,7 @@
       countBack=gid('countBack'), countStarsEl=gid('countStars'), countPromptEl=gid('countPrompt'),
       countObjectsEl=gid('countObjects'), countCardsEl=gid('countCards'),
       memoryBack=gid('memoryBack'), memoryTitleEl=gid('memoryTitle'), memGrid=gid('memGrid'),
-      traceBack=gid('traceBack'), traceBox=gid('traceBox'), traceGlyphEl=gid('traceGlyph'), tcanvas=gid('traceCanvas'),
+      traceBack=gid('traceBack'), traceBox=gid('traceBox'), traceGlyphCanvas=gid('traceGlyphCanvas'), traceCheckEl=gid('traceCheck'), tcanvas=gid('traceCanvas'),
       traceClearBtn=gid('traceClear'), traceNextBtn=gid('traceNext'), traceSpeakerBtn=gid('traceSpeaker'),
       traceLettersBtn=gid('traceLetters'), traceNumbersBtn=gid('traceNumbers');
 
@@ -1152,35 +1157,82 @@
   }
 
   // ---- tracing ----
-  var tctx=null, tdrawing=false, tlast=null, traceSet='letters', traceIdx=0;
+  var tctx=null, tdrawing=false, tlast=null, traceSet='letters', traceIdx=0, traceApproved=false;
+  var gmaskCanvas=document.createElement('canvas'), glyphPts=[], glyphArea=0, glyphMaskData=null;
   function traceItems(){ return (traceSet==='numbers') ? GAMESBYTYPE.numbers.items : GAMESBYTYPE.letters.items; }
+  function traceFont(px){
+    var fam = (LANG==='ar') ? '"Baloo Bhaijaan 2","Cairo",sans-serif' : (LANG==='hy') ? '"Noto Sans Armenian","Fredoka",sans-serif' : '"Fredoka",sans-serif';
+    return '700 '+px+'px '+fam;
+  }
+  function drawGlyphTo(ctx,W,H,color,text){
+    ctx.clearRect(0,0,W,H);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    var px=Math.round(H*0.62); ctx.font=traceFont(px);
+    var w=ctx.measureText(text).width;
+    if(w>W*0.9){ px=Math.max(8,Math.round(px*(W*0.9)/w)); ctx.font=traceFont(px); }
+    ctx.fillStyle=color; ctx.fillText(text,W/2,H/2);
+    return px;
+  }
+  function buildGlyph(text){
+    var W=tcanvas.width, H=tcanvas.height; if(W<2) return;
+    drawGlyphTo(traceGlyphCanvas.getContext('2d'), W, H, 'rgba(123,121,148,0.22)', text);
+    gmaskCanvas.width=W; gmaskCanvas.height=H;
+    var mctx=gmaskCanvas.getContext('2d');
+    var px=drawGlyphTo(mctx, W, H, '#000', text);
+    mctx.lineWidth=Math.max(3, Math.round(px*0.10)); mctx.lineJoin='round'; mctx.strokeStyle='#000'; mctx.strokeText(text, W/2, H/2);
+    glyphMaskData=mctx.getImageData(0,0,W,H).data;
+    glyphPts=[]; var step=Math.max(4, Math.round(W/120));
+    for(var y=0;y<H;y+=step){ for(var x=0;x<W;x+=step){ if(glyphMaskData[(y*W+x)*4+3]>40) glyphPts.push(x,y); } }
+    glyphArea=glyphPts.length/2;
+  }
   function sizeTraceCanvas(){
     if(!traceBox) return;
     var r=traceBox.getBoundingClientRect(); if(r.width<2||r.height<2) return;
-    var dpr=window.devicePixelRatio||1;
-    tcanvas.width=Math.round(r.width*dpr); tcanvas.height=Math.round(r.height*dpr);
+    var dpr=window.devicePixelRatio||1, W=Math.round(r.width*dpr), H=Math.round(r.height*dpr);
+    traceGlyphCanvas.width=W; traceGlyphCanvas.height=H; tcanvas.width=W; tcanvas.height=H;
     tctx=tcanvas.getContext('2d');
-    tctx.setTransform(dpr,0,0,dpr,0,0);
-    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=14; tctx.strokeStyle='#ff7a92';
-    traceGlyphEl.style.fontSize=Math.round(r.height*0.66)+'px';
+    tctx.lineCap='round'; tctx.lineJoin='round'; tctx.lineWidth=Math.max(10,Math.round(W*0.045)); tctx.strokeStyle='#ff7a92';
+    var items=traceItems(), it=(items&&items[traceIdx])||null;
+    if(it) buildGlyph(it.render.label);
   }
-  function clearTrace(){ if(!tctx) return; tctx.save(); tctx.setTransform(1,0,0,1,0,0); tctx.clearRect(0,0,tcanvas.width,tcanvas.height); tctx.restore(); }
+  function clearTrace(){ if(tctx) tctx.clearRect(0,0,tcanvas.width,tcanvas.height); }
+  function hideCheck(){ traceCheckEl.classList.remove('show'); }
   function showTrace(){
     var items=traceItems(); if(!items||!items.length) return;
     if(traceIdx>=items.length) traceIdx=0;
     var it=items[traceIdx];
-    traceGlyphEl.textContent=it.render.label;
+    traceApproved=false; hideCheck();
+    if(tctx) buildGlyph(it.render.label);
     clearTrace();
     roundTimers.push(setTimeout(function(){ playItem(it); },200));
+  }
+  function evaluateTrace(){
+    if(traceApproved || !tctx || glyphArea<8 || !glyphMaskData) return;
+    var W=tcanvas.width, H=tcanvas.height;
+    var ink=tctx.getImageData(0,0,W,H).data;
+    var covered=0, i;
+    for(i=0;i<glyphPts.length;i+=2){ if(ink[(glyphPts[i+1]*W+glyphPts[i])*4+3]>30) covered++; }
+    var coverage=covered/glyphArea;
+    var step=Math.max(4, Math.round(W/110)), inkTot=0, inkOn=0, x, y;
+    for(y=0;y<H;y+=step){ for(x=0;x<W;x+=step){ var p=(y*W+x)*4+3; if(ink[p]>30){ inkTot++; if(glyphMaskData[p]>30) inkOn++; } } }
+    var precision = inkTot? inkOn/inkTot : 0;
+    if(coverage>=0.5 && inkTot>=12 && precision>=0.25) approveTrace();
+  }
+  function approveTrace(){
+    traceApproved=true;
+    traceCheckEl.classList.add('show');
+    var items=traceItems(), it=items[traceIdx];
+    if(it) playItem(it);
+    roundTimers.push(setTimeout(function(){ var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } }, 1200));
   }
   function setTraceSwitch(){
     traceLettersBtn.classList.toggle('active', traceSet==='letters');
     traceNumbersBtn.classList.toggle('active', traceSet==='numbers');
   }
-  function tpos(e){ var r=tcanvas.getBoundingClientRect(); return { x:(e.clientX-r.left), y:(e.clientY-r.top) }; }
-  tcanvas.addEventListener('pointerdown', function(e){ if(!tctx) sizeTraceCanvas(); if(!tctx) return; tdrawing=true; tlast=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(tlast.x+0.1,tlast.y+0.1); tctx.stroke(); try{ tcanvas.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
+  function tpos(e){ var r=tcanvas.getBoundingClientRect(); return { x:(e.clientX-r.left)*(tcanvas.width/r.width), y:(e.clientY-r.top)*(tcanvas.height/r.height) }; }
+  tcanvas.addEventListener('pointerdown', function(e){ if(!tctx) sizeTraceCanvas(); if(!tctx||traceApproved) return; tdrawing=true; tlast=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(tlast.x+0.1,tlast.y+0.1); tctx.stroke(); try{ tcanvas.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
   tcanvas.addEventListener('pointermove', function(e){ if(!tdrawing||!tctx) return; var p=tpos(e); tctx.beginPath(); tctx.moveTo(tlast.x,tlast.y); tctx.lineTo(p.x,p.y); tctx.stroke(); tlast=p; e.preventDefault(); });
-  function endTraceStroke(){ tdrawing=false; }
+  function endTraceStroke(){ if(tdrawing){ tdrawing=false; evaluateTrace(); } }
   tcanvas.addEventListener('pointerup', endTraceStroke);
   tcanvas.addEventListener('pointercancel', endTraceStroke);
   tcanvas.addEventListener('pointerleave', endTraceStroke);
