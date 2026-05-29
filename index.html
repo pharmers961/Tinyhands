@@ -1101,13 +1101,15 @@
 
   // ---- counting ----
   var COUNT_EMOJI=[0x1F34E,0x2B50,0x1F436,0x1F388,0x1F353,0x1F420,0x1F338,0x1F36A,0x1F431,0x1F430];
-  var countStreak=0, countLocked=false, countN=0, countItem=null;
+  var countStreak=0, countLocked=false, countN=0, countItem=null, countRecent=[];
   for(var cs=0;cs<MAX_STARS;cs++){ var st=document.createElement('span'); st.className='star'; st.textContent=emo(0x2B50); countStarsEl.appendChild(st); }
   function paintCountStars(){ var n=countStarsEl.children; for(var i=0;i<n.length;i++){ if(i<countStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
   function newCountRound(speakNow){
     countLocked=false;
     var nums=GAMESBYTYPE.numbers.items;
-    countN=1+Math.floor(Math.random()*5);
+    // pick 1..5 but avoid repeating recent answers so it feels more random
+    do{ countN=1+Math.floor(Math.random()*5); }while(countRecent.indexOf(countN)>=0);
+    countRecent.push(countN); if(countRecent.length>2) countRecent.shift();
     countItem=nums[countN-1];
     var glyph=emo(COUNT_EMOJI[Math.floor(Math.random()*COUNT_EMOJI.length)]);
     countObjectsEl.innerHTML='';
@@ -1146,7 +1148,7 @@
   function launchCount(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
     countPromptEl.textContent=I18N[LANG].prompts.count;
-    countStreak=0; paintCountStars();
+    countStreak=0; countRecent=[]; paintCountStars();
     showScreen('count'); newCountRound(true);
   }
 
