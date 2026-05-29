@@ -1198,6 +1198,7 @@
   // ---- tracing ----
   var tctx=null, tdrawing=false, tlast=null, traceSet='letters', traceIdx=0, traceApproved=false;
   var gmaskCanvas=document.createElement('canvas'), glyphPts=[], glyphArea=0, glyphMaskData=null;
+  var glyphComp=[], glyphCompArea=[], glyphCompCount=0;
   function traceItems(){ return (traceSet==='numbers') ? GAMESBYTYPE.numbers.items : GAMESBYTYPE.letters.items; }
   function traceFont(px){
     var fam = (LANG==='ar') ? '"Baloo Bhaijaan 2","Cairo",sans-serif' : (LANG==='hy') ? '"Noto Sans Armenian","Fredoka",sans-serif' : '"Fredoka",sans-serif';
@@ -1223,6 +1224,30 @@
     glyphPts=[]; var step=Math.max(4, Math.round(W/120));
     for(var y=0;y<H;y+=step){ for(var x=0;x<W;x+=step){ if(glyphMaskData[(y*W+x)*4+3]>40) glyphPts.push(x,y); } }
     glyphArea=glyphPts.length/2;
+    buildGlyphComponents(step);
+  }
+  // Label the glyph's separate pieces (e.g. the body of "ba" vs. its dot) so each can be checked independently.
+  function buildGlyphComponents(step){
+    var n=glyphPts.length/2, k;
+    glyphComp=new Array(n); glyphCompArea=[]; glyphCompCount=0;
+    var cells=new Array(n), cellMap={};
+    for(k=0;k<n;k++){ var cx=Math.round(glyphPts[2*k]/step), cy=Math.round(glyphPts[2*k+1]/step); cells[k]=[cx,cy]; cellMap[cx+','+cy]=k; glyphComp[k]=-1; }
+    var comp=0;
+    for(k=0;k<n;k++){
+      if(glyphComp[k]!==-1) continue;
+      var stack=[k]; glyphComp[k]=comp; var area=0;
+      while(stack.length){
+        var cur=stack.pop(); area++;
+        var ccx=cells[cur][0], ccy=cells[cur][1];
+        for(var dx=-1;dx<=1;dx++){ for(var dy=-1;dy<=1;dy++){
+          if(!dx&&!dy) continue;
+          var nb=cellMap[(ccx+dx)+','+(ccy+dy)];
+          if(nb!==undefined && glyphComp[nb]===-1){ glyphComp[nb]=comp; stack.push(nb); }
+        } }
+      }
+      glyphCompArea[comp]=area; comp++;
+    }
+    glyphCompCount=comp;
   }
   function sizeTraceCanvas(){
     if(!traceBox) return;
@@ -1251,15 +1276,19 @@
     var W=tcanvas.width, H=tcanvas.height;
     var ink=tctx.getImageData(0,0,W,H).data;
     var r=Math.max(3, Math.round(W*0.03)), covered=0, i;   // count a letter pixel covered if ink is nearby
+    var coveredComp=new Array(glyphCompCount); for(i=0;i<glyphCompCount;i++) coveredComp[i]=0;
     for(i=0;i<glyphPts.length;i+=2){
       var gx=glyphPts[i], gy=glyphPts[i+1];
-      if(inkAt(ink,W,H,gx,gy)||inkAt(ink,W,H,gx-r,gy)||inkAt(ink,W,H,gx+r,gy)||inkAt(ink,W,H,gx,gy-r)||inkAt(ink,W,H,gx,gy+r)) covered++;
+      if(inkAt(ink,W,H,gx,gy)||inkAt(ink,W,H,gx-r,gy)||inkAt(ink,W,H,gx+r,gy)||inkAt(ink,W,H,gx,gy-r)||inkAt(ink,W,H,gx,gy+r)){ covered++; coveredComp[glyphComp[i/2]]++; }
     }
     var coverage=covered/glyphArea;
     var step=Math.max(4, Math.round(W/110)), inkTot=0, inkOn=0, x, y;
     for(y=0;y<H;y+=step){ for(x=0;x<W;x+=step){ var p=(y*W+x)*4+3; if(ink[p]>30){ inkTot++; if(glyphMaskData[p]>30) inkOn++; } } }
     var precision = inkTot? inkOn/inkTot : 0;
-    if(coverage>=0.5 && inkTot>=10 && precision>=0.2) approveTrace();
+    // Each meaningful piece of the glyph (e.g. a dot like the one under "ba") must be traced too, not just the big body.
+    var partsOk=true, minPart=Math.max(3, Math.round(glyphArea*0.01));
+    for(i=0;i<glyphCompCount;i++){ if(glyphCompArea[i]>=minPart && coveredComp[i]/glyphCompArea[i] < 0.35){ partsOk=false; break; } }
+    if(coverage>=0.5 && inkTot>=10 && precision>=0.2 && partsOk) approveTrace();
   }
   function approveTrace(){
     traceApproved=true;
