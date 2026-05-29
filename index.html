@@ -1100,7 +1100,8 @@
       traceLettersBtn=gid('traceLetters'), traceNumbersBtn=gid('traceNumbers');
 
   // ---- counting ----
-  var COUNT_EMOJI=[0x1F34E,0x2B50,0x1F436,0x1F388,0x1F353,0x1F420,0x1F338,0x1F36A,0x1F431,0x1F430];
+  // no star here: it would clash with the reward stars at the top of the screen
+  var COUNT_EMOJI=[0x1F34E,0x1F436,0x1F388,0x1F353,0x1F420,0x1F338,0x1F36A,0x1F431,0x1F430];
   var countStreak=0, countLocked=false, countN=0, countItem=null, countRecent=[];
   for(var cs=0;cs<MAX_STARS;cs++){ var st=document.createElement('span'); st.className='star'; st.textContent=emo(0x2B50); countStarsEl.appendChild(st); }
   function paintCountStars(){ var n=countStarsEl.children; for(var i=0;i<n.length;i++){ if(i<countStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
