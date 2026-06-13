@@ -973,14 +973,27 @@
     else { setAttribution('auto'); speak(item.say); }
   }
   // Resolution order: the selected person's own recording -> built-in family clip -> device/online TTS.
+  // Which person's recording (if any) should play for this word?
+  // - A specific person selected in "Whose voice?": use their recording, else fall back.
+  // - "Family"/auto (the default): let ANY saved recording override the built-in sound,
+  //   preferring the most recently added voice. This makes a fresh recording "just work"
+  //   without the parent having to also switch the active voice.
+  function resolveVoicePerson(lang,key){
+    if(activePersonId && activePersonId!=='auto'){
+      return hasCustom(lang,activePersonId,key) ? activePersonId : null;
+    }
+    for(var i=persons.length-1;i>=0;i--){ if(hasCustom(lang,persons[i].id,key)) return persons[i].id; }
+    return null;
+  }
   function playItem(item){
     if(!item) return;
     var lang=LANG, key=item.key;
-    if(activePersonId && activePersonId!=='auto' && hasCustom(lang,activePersonId,key)){
-      setAttribution(activePersonId);
+    var pid=resolveVoicePerson(lang,key);
+    if(pid){
+      setAttribution(pid);
       stopAllAudio();
-      idbGet(customKey(lang,activePersonId,key)).then(function(blob){
-        if(blob) playBlob(blob, 'cust|'+customKey(lang,activePersonId,key));
+      idbGet(customKey(lang,pid,key)).then(function(blob){
+        if(blob) playBlob(blob, 'cust|'+customKey(lang,pid,key));
         else fallbackBuiltin(lang,key,item);
       }).catch(function(){ fallbackBuiltin(lang,key,item); });
       return;
