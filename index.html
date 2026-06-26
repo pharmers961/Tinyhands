@@ -1504,7 +1504,7 @@
   var CORRECT_KEY='tinyTapsCorrect', STICKERS_KEY='tinyTapsStickers', SEEN_KEY='tinyTapsSeen';
   function totalCorrect(){ return +(lsGet(CORRECT_KEY)||0)||0; }
   function bumpCorrect(){ lsSet(CORRECT_KEY, String(totalCorrect()+1)); }
-  function cardCount(){ var c=totalCorrect(); return c<12 ? 2 : c<30 ? 3 : 4; }
+  function cardCount(){ return 3; }   // quiz always shows 3 choices
   var STICKER_SET=['\u{1F31F}','\u{1F984}','\u{1F420}','\u{1F308}','\u{1F98B}','\u{1F353}','\u{1F422}','\u{1F33B}','\u{1F680}','\u{1F42C}','\u{1F388}','\u{1F996}','\u{1F340}','⭐','\u{1F431}','\u{1F989}'];
   function loadStickers(){ try{ var a=JSON.parse(lsGet(STICKERS_KEY)); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
   function awardSticker(){ var s=loadStickers(); s.push(STICKER_SET[s.length % STICKER_SET.length]); lsSet(STICKERS_KEY, JSON.stringify(s)); }
