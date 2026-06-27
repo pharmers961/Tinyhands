@@ -28,6 +28,16 @@
   body[data-theme="jungle"]{ --bg1:#eef7df; --bg2:#dcf0cf; --ink:#234d2a; --soft:#5e8059; --shadow:rgba(35,77,42,.18); --g1:rgba(180,225,120,.45); --g2:rgba(140,210,160,.5); --g3:rgba(220,225,120,.4); }
   body[data-theme="candy"]{ --bg1:#fff0f6; --bg2:#ffe1ec; --ink:#5a2342; --soft:#a06a85; --shadow:rgba(90,35,66,.16); --g1:rgba(255,170,210,.5); --g2:rgba(200,180,255,.5); --g3:rgba(255,210,150,.45); }
   body[data-theme="contrast"]{ --bg1:#ffffff; --bg2:#f2f2f2; --ink:#000000; --soft:#222222; --shadow:rgba(0,0,0,.35); --g1:rgba(0,0,0,.04); --g2:rgba(0,0,0,.04); --g3:rgba(0,0,0,.04); --surface:#ffffff; --surface2:#ffffff; --chip:#e7e7e7; --panelink:#000000; }
+  /* Bedtime (dark): chrome that uses translucent-white backgrounds would hide light text — recolor it */
+  body[data-theme="bedtime"]{ --soft:#c4c3e4; }
+  body[data-theme="bedtime"] .langpill{ background:rgba(255,255,255,.14); color:#eef0ff; }
+  body[data-theme="bedtime"] .langpill.active{ background:#eef0ff; color:#20223a; }
+  body[data-theme="bedtime"] .homebtn{ background:rgba(255,255,255,.16); color:#eef0ff; }
+  body[data-theme="bedtime"] .mini{ background:rgba(255,255,255,.14); color:#eef0ff; }
+  body[data-theme="bedtime"] .fab{ background:rgba(255,255,255,.18); }
+  body[data-theme="bedtime"] .speaker{ background:#3a3c5e; color:#eef0ff; }
+  body[data-theme="bedtime"] .home-head h1{ color:#ffffff; }
+  body[data-theme="bedtime"] .traceBox canvas, body[data-theme="bedtime"] #traceGlyphCanvas{ background:rgba(255,255,255,.10); }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   button{ touch-action:manipulation; }
   html,body{height:100%;margin:0;}
@@ -286,6 +296,7 @@
   .fab{ position:absolute; top:12px; z-index:6; border:none; background:rgba(255,255,255,.88); border-radius:50%; width:48px; height:48px; font-size:23px; cursor:pointer; box-shadow:0 5px 0 rgba(59,58,82,.14); display:flex; align-items:center; justify-content:center; }
   .fab.right{ right:12px; } .fab.left{ left:12px; }
   .fab.left2{ left:12px; top:68px; }
+  .fab.right2{ right:12px; top:68px; }
   .fab:active{ transform:translateY(3px); box-shadow:none; }
 
   /* settings: language show/hide toggles */
@@ -422,6 +433,7 @@
     <button class="fab left" id="grownupsFab" aria-label="For grown-ups">&#x1F46A;</button>
     <button class="fab right" id="stickerFab" aria-label="My stickers">&#x1F381;</button>
     <button class="fab left2" id="songsFab" aria-label="Songs">&#x1F3B5;</button>
+    <button class="fab right2" id="settingsFab" aria-label="Settings">&#x2699;&#xFE0F;</button>
     <div class="home-head">
       <h1>Tiny Taps</h1>
       <p id="subtitle"></p>
@@ -2366,6 +2378,7 @@
     gid('studioBack').addEventListener('click', function(){ stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); });
     // home corner buttons
     gid('grownupsFab').addEventListener('click', openParent);
+    gid('settingsFab').addEventListener('click', openSettings);
     gid('stickerFab').addEventListener('click', openStickers);
     gid('songsFab').addEventListener('click', openSongs);
     // parent menu
