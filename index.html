@@ -474,7 +474,9 @@
   .ppBody p{ margin:0 0 8px; }
   .homefoot{ position:absolute; bottom:6px; left:0; right:0; text-align:center; z-index:3; }
   .homefoot button{ background:none; border:none; color:var(--soft); font-family:'Quicksand',sans-serif; font-size:12px; font-weight:600; text-decoration:underline; cursor:pointer; padding:6px 12px; opacity:.85; }
+  .homefoot .footsep{ color:var(--soft); font-size:12px; opacity:.7; }
   .pm-priv{ background:#e6e2f5; }
+  .pm-terms{ background:#f5ecdd; }
 
   /* parent gate */
   .gateNums{ display:flex; justify-content:center; gap:12px; margin:14px 0 16px; }
@@ -561,7 +563,7 @@
     <div class="hint" id="homeHint"><span class="hand">&#x1F447;</span><span class="htxt"></span></div>
     <div class="mascot" id="mascot">&#x1F423;</div>
     <!-- CalOPPA: the privacy policy must be conspicuously reachable from the home page, outside the parent gate -->
-    <div class="homefoot"><button id="privacyLink">Privacy</button></div>
+    <div class="homefoot"><button id="privacyLink">Privacy</button><span class="footsep">·</span><button id="termsLink">Terms</button></div>
   </div>
 
   <!-- MENU (choose a category) -->
@@ -726,6 +728,7 @@
         <button class="pmbtn pm-prof" id="pmProfiles"><span class="pmemo">&#x1F9D2;</span>Children</button>
         <button class="pmbtn pm-back" id="pmBackup"><span class="pmemo">&#x1F4BE;</span>Backup</button>
         <button class="pmbtn pm-priv" id="pmPrivacy"><span class="pmemo">&#x1F512;</span>Privacy</button>
+        <button class="pmbtn pm-terms" id="pmTerms"><span class="pmemo">&#x1F4C4;</span>Terms</button>
       </div>
       <button class="mini sheet-close" id="parentClose">Done</button>
     </div>
@@ -738,6 +741,16 @@
       <p class="sheet-sub" id="ppUpdated"></p>
       <div class="ppBody" id="ppBody"></div>
       <button class="mini sheet-close" id="ppClose"></button>
+    </div>
+  </div>
+
+  <!-- TERMS OF USE -->
+  <div class="sheet" id="termsSheet">
+    <div class="sheet-card" style="max-width:520px;">
+      <h2 id="ptTitle"></h2>
+      <p class="sheet-sub" id="ptUpdated"></p>
+      <div class="ppBody" id="ptBody"></div>
+      <button class="mini sheet-close" id="ptClose"></button>
     </div>
   </div>
 
@@ -1142,9 +1155,10 @@
       link:'Privacy', title:'Privacy Policy', updated:'Effective date: July 10, 2026',
       sections:[
         ['The short version','Tiny Hands runs entirely on your device. We do not collect, receive, transmit, sell, or share any personal information — and we could not even if we wanted to, because the app has no server and makes no network requests. Everything it saves stays in your device’s own storage.'],
-        ['Who we are','Tiny Hands is a free learning app for young children. For privacy questions or requests, contact: akram.aboukhalil@gmail.com.'],
+        ['Who we are','Tiny Hands is a learning app for young children. For privacy questions or requests, contact: akram.aboukhalil@gmail.com.'],
         ['Information stored on your device','If you choose to use these features, the app stores locally: a child’s first name or nickname, names and optional photos of family members you add, voice recordings you make in the recording studio, learning progress, and settings. All of it lives only in this browser’s storage on this device. It is never uploaded anywhere.'],
         ['What we never do','No accounts. No analytics. No advertising. No tracking cookies. No third-party services — fonts, sounds and pictures are built into the app itself. We do not sell or share personal information as those terms are defined in the California Consumer Privacy Act, and we never have.'],
+        ['Payments (if you ever buy something)','The app currently has no paid features. If paid features are offered in the future, payment will be handled by your app store or a dedicated payment processor — the app itself will never see or store card numbers, purchases will only be possible for a grown-up behind the parent gate, and this policy will be updated before any payment feature launches. The processor’s handling of your payment information is described in its own privacy policy.'],
         ['Children’s privacy','Tiny Hands is made for young children to use together with their grown-ups. Because the app makes no network connections, no personal information is collected from children over the internet (COPPA, 16 CFR Part 312). The microphone is used only if a grown-up starts a recording behind the parent gate and grants the browser’s microphone permission; recordings are saved only on this device and can be played back or deleted at any time in the recording studio.'],
         ['Your rights and parental controls','You can review everything the app knows in the grown-ups area (Children, Progress, Record voices) and delete it at any time: delete individual recordings in the studio, remove a child in the Children screen, or use “Delete everything” in Backup & data to erase all app data at once. Clearing this site’s data in your browser does the same. California residents have rights under the CCPA/CPRA to know, delete, correct, and opt out of sale or sharing — because we hold no data about you on any server, every one of these rights is satisfied directly on your device, and there is nothing for us to disclose, sell, or delete remotely. California minors’ right to remove posted content (Bus. & Prof. Code §22581): the app never posts or publishes anything, and the deletion controls above remove any content a child created.'],
         ['“Do Not Track” and third parties','We do not track anyone over time or across websites, so the app behaves the same whether or not your browser sends a “Do Not Track” or Global Privacy Control signal. No third party collects personal information through this app.'],
@@ -1158,9 +1172,10 @@
       link:'Privacidad', title:'Política de privacidad', updated:'Fecha de entrada en vigor: 10 de julio de 2026',
       sections:[
         ['La versión corta','Tiny Hands funciona por completo en tu dispositivo. No recopilamos, recibimos, transmitimos, vendemos ni compartimos información personal — y no podríamos hacerlo aunque quisiéramos, porque la app no tiene servidor y no realiza conexiones de red. Todo lo que guarda permanece en el almacenamiento de tu dispositivo.'],
-        ['Quiénes somos','Tiny Hands es una app educativa gratuita para niños pequeños. Para preguntas o solicitudes de privacidad: akram.aboukhalil@gmail.com.'],
+        ['Quiénes somos','Tiny Hands es una app educativa para niños pequeños. Para preguntas o solicitudes de privacidad: akram.aboukhalil@gmail.com.'],
         ['Información guardada en tu dispositivo','Si eliges usar estas funciones, la app guarda localmente: el nombre o apodo del peque, nombres y fotos opcionales de familiares que añadas, grabaciones de voz hechas en el estudio, el progreso de aprendizaje y los ajustes. Todo vive solo en el almacenamiento de este navegador, en este dispositivo. Nunca se sube a ningún sitio.'],
         ['Lo que nunca hacemos','Sin cuentas. Sin analítica. Sin publicidad. Sin cookies de rastreo. Sin servicios de terceros: las fuentes, sonidos e imágenes están integrados en la propia app. No vendemos ni compartimos información personal según define esos términos la Ley de Privacidad del Consumidor de California (CCPA), y nunca lo hemos hecho.'],
+        ['Pagos (si algún día compras algo)','Actualmente la app no tiene funciones de pago. Si en el futuro se ofrecen, el pago lo gestionará tu tienda de aplicaciones o un procesador de pagos dedicado: la app nunca verá ni guardará números de tarjeta, las compras solo podrá hacerlas un adulto tras el control parental, y esta política se actualizará antes de lanzar cualquier función de pago. El tratamiento de tus datos de pago se describe en la política de privacidad del procesador.'],
         ['Privacidad de los niños','Tiny Hands está pensada para que los niños la usen con sus adultos. Como la app no realiza conexiones de red, no se recopila información personal de niños por internet (COPPA, 16 CFR Parte 312). El micrófono solo se usa si un adulto inicia una grabación tras el control parental y concede el permiso del navegador; las grabaciones se guardan solo en este dispositivo y pueden reproducirse o borrarse en cualquier momento en el estudio.'],
         ['Tus derechos y controles parentales','Puedes revisar todo lo que la app conoce en la zona para adultos (Niños, Progreso, Grabar voces) y borrarlo cuando quieras: borra grabaciones individuales en el estudio, quita a un peque en la pantalla Niños o usa «Borrar todo» en Copia y datos para eliminar todos los datos de una vez. Borrar los datos de este sitio en tu navegador tiene el mismo efecto. Los residentes de California tienen derechos bajo la CCPA/CPRA a saber, borrar, corregir y excluirse de la venta o compartición de datos: como no guardamos ningún dato tuyo en ningún servidor, todos esos derechos se ejercen directamente en tu dispositivo y no hay nada que podamos revelar, vender o borrar de forma remota. Derecho de los menores de California a retirar contenido publicado (Bus. & Prof. Code §22581): la app nunca publica nada, y los controles de borrado anteriores eliminan cualquier contenido creado por un menor.'],
         ['«Do Not Track» y terceros','No rastreamos a nadie a lo largo del tiempo ni entre sitios web, así que la app se comporta igual tanto si tu navegador envía la señal «Do Not Track» o Global Privacy Control como si no. Ningún tercero recopila información personal a través de esta app.'],
@@ -1174,9 +1189,10 @@
       link:'Confidentialité', title:'Politique de confidentialité', updated:'En vigueur au 10 juillet 2026',
       sections:[
         ['En bref','Tiny Hands fonctionne entièrement sur votre appareil. Nous ne collectons, ne recevons, ne transmettons, ne vendons ni ne partageons aucune information personnelle — et nous ne le pourrions pas même si nous le voulions, car l’app n’a pas de serveur et n’effectue aucune connexion réseau. Tout ce qu’elle enregistre reste dans le stockage de votre appareil.'],
-        ['Qui sommes-nous','Tiny Hands est une app d’apprentissage gratuite pour les jeunes enfants. Questions ou demandes : akram.aboukhalil@gmail.com.'],
+        ['Qui sommes-nous','Tiny Hands est une app d’apprentissage pour les jeunes enfants. Questions ou demandes : akram.aboukhalil@gmail.com.'],
         ['Informations stockées sur votre appareil','Si vous choisissez d’utiliser ces fonctions, l’app stocke localement : le prénom ou surnom de l’enfant, les noms et photos facultatives des proches que vous ajoutez, les enregistrements vocaux du studio, les progrès d’apprentissage et les réglages. Tout cela ne vit que dans le stockage de ce navigateur, sur cet appareil. Rien n’est jamais envoyé nulle part.'],
         ['Ce que nous ne faisons jamais','Pas de comptes. Pas de statistiques. Pas de publicité. Pas de cookies de suivi. Pas de services tiers : polices, sons et images sont intégrés à l’app. Nous ne vendons ni ne partageons d’informations personnelles au sens du California Consumer Privacy Act, et nous ne l’avons jamais fait.'],
+        ['Paiements (si vous achetez un jour quelque chose)','L’app n’a actuellement aucune fonction payante. Si des fonctions payantes sont proposées à l’avenir, le paiement sera géré par votre boutique d’applications ou un prestataire de paiement dédié : l’app elle-même ne verra ni ne stockera jamais de numéros de carte, seuls les adultes pourront acheter derrière le contrôle parental, et cette politique sera mise à jour avant tout lancement. Le traitement de vos données de paiement est décrit dans la politique du prestataire.'],
         ['Vie privée des enfants','Tiny Hands est conçue pour être utilisée par les enfants avec leurs adultes. Comme l’app n’effectue aucune connexion réseau, aucune information personnelle d’enfant n’est collectée par internet (COPPA, 16 CFR partie 312). Le micro n’est utilisé que si un adulte lance un enregistrement derrière le contrôle parental et accorde l’autorisation du navigateur ; les enregistrements restent sur cet appareil et peuvent être écoutés ou supprimés à tout moment dans le studio.'],
         ['Vos droits et le contrôle parental','Vous pouvez consulter tout ce que l’app connaît dans l’espace parents (Enfants, Progrès, Enregistrer des voix) et le supprimer à tout moment : supprimez des enregistrements dans le studio, retirez un enfant dans l’écran Enfants, ou utilisez « Tout effacer » dans Sauvegarde et données. Effacer les données de ce site dans votre navigateur a le même effet. Les résidents de Californie disposent des droits CCPA/CPRA (accès, suppression, rectification, refus de vente ou de partage) : comme nous ne détenons aucune donnée sur aucun serveur, ces droits s’exercent directement sur votre appareil. Droit des mineurs californiens au retrait de contenus publiés (§22581) : l’app ne publie jamais rien, et les commandes de suppression ci-dessus effacent tout contenu créé par un enfant.'],
         ['« Do Not Track » et tiers','Nous ne suivons personne dans le temps ni entre les sites : l’app se comporte de la même façon que votre navigateur envoie ou non un signal « Do Not Track » ou Global Privacy Control. Aucun tiers ne collecte d’informations personnelles via cette app.'],
@@ -1190,9 +1206,10 @@
       link:'الخصوصية', title:'سياسة الخصوصية', updated:'تاريخ السريان: 10 يوليو 2026',
       sections:[
         ['الخلاصة','يعمل تطبيق Tiny Hands بالكامل على جهازك. نحن لا نجمع أو نستقبل أو نرسل أو نبيع أو نشارك أي معلومات شخصية — ولا نستطيع ذلك حتى لو أردنا، لأن التطبيق بلا خادم ولا يجري أي اتصالات بالشبكة. كل ما يحفظه يبقى في تخزين جهازك فقط.'],
-        ['من نحن','Tiny Hands تطبيق تعليمي مجاني للأطفال الصغار. للأسئلة أو الطلبات المتعلقة بالخصوصية: akram.aboukhalil@gmail.com.'],
+        ['من نحن','Tiny Hands تطبيق تعليمي للأطفال الصغار. للأسئلة أو الطلبات المتعلقة بالخصوصية: akram.aboukhalil@gmail.com.'],
         ['المعلومات المحفوظة على جهازك','إذا اخترت استخدام هذه الميزات، يحفظ التطبيق محلياً: اسم الطفل أو لقبه، وأسماء أفراد العائلة وصورهم الاختيارية، والتسجيلات الصوتية من الاستوديو، وتقدم التعلم، والإعدادات. كل ذلك يبقى في تخزين هذا المتصفح على هذا الجهاز فقط، ولا يُرفع إلى أي مكان.'],
         ['ما لا نفعله أبداً','لا حسابات. لا تحليلات. لا إعلانات. لا ملفات تعقب. لا خدمات طرف ثالث — فالخطوط والأصوات والصور مدمجة في التطبيق نفسه. نحن لا نبيع المعلومات الشخصية ولا نشاركها بالمعنى الوارد في قانون خصوصية المستهلك في كاليفورنيا (CCPA)، ولم نفعل ذلك قط.'],
+        ['المدفوعات (إذا اشتريت شيئاً يوماً ما)','لا يحتوي التطبيق حالياً على ميزات مدفوعة. إذا طُرحت ميزات مدفوعة مستقبلاً، فسيتولى الدفع متجر التطبيقات أو معالج دفع مخصص — ولن يرى التطبيق نفسه أرقام البطاقات أو يخزنها أبداً، ولن يتمكن من الشراء إلا شخص بالغ خلف بوابة الوالدين، وستُحدَّث هذه السياسة قبل إطلاق أي ميزة دفع. وتوضح سياسة خصوصية المعالج كيفية تعامله مع بيانات الدفع.'],
         ['خصوصية الأطفال','صُمم Tiny Hands ليستخدمه الأطفال مع ذويهم. ولأن التطبيق لا يجري أي اتصالات بالشبكة، فلا تُجمع أي معلومات شخصية من الأطفال عبر الإنترنت (COPPA). لا يُستخدم الميكروفون إلا إذا بدأ شخص بالغ التسجيل خلف بوابة الوالدين ومنح إذن المتصفح؛ وتُحفظ التسجيلات على هذا الجهاز فقط ويمكن تشغيلها أو حذفها في أي وقت من الاستوديو.'],
         ['حقوقك وأدوات الرقابة الأبوية','يمكنك مراجعة كل ما يعرفه التطبيق في قسم الكبار (الأطفال، التقدم، تسجيل الأصوات) وحذفه في أي وقت: احذف تسجيلات بعينها من الاستوديو، أو أزل طفلاً من شاشة الأطفال، أو استخدم «حذف كل شيء» في النسخ الاحتياطي. مسح بيانات هذا الموقع من المتصفح يؤدي الغرض نفسه. ولسكان كاليفورنيا حقوق بموجب CCPA/CPRA (المعرفة والحذف والتصحيح ورفض البيع أو المشاركة): ولأننا لا نحتفظ بأي بيانات عنك على أي خادم، تُمارس هذه الحقوق كلها مباشرة على جهازك. أما حق القاصرين في كاليفورنيا في إزالة المحتوى المنشور (§22581) فالتطبيق لا ينشر شيئاً مطلقاً، وأدوات الحذف أعلاه تزيل أي محتوى أنشأه الطفل.'],
         ['«Do Not Track» والأطراف الثالثة','نحن لا نتتبع أحداً عبر الوقت أو بين المواقع، لذا يعمل التطبيق بالطريقة نفسها سواء أرسل متصفحك إشارة «Do Not Track» أم لا. ولا يجمع أي طرف ثالث معلومات شخصية عبر هذا التطبيق.'],
@@ -1206,9 +1223,10 @@
       link:'Գաղտնիություն', title:'Գաղտնիության քաղաքականություն', updated:'Ուժի մեջ է՝ 2026թ. հուլիսի 10-ից',
       sections:[
         ['Համառոտաբար','Tiny Hands-ը ամբողջությամբ աշխատում է ձեր սարքում: Մենք չենք հավաքում, ստանում, ուղարկում, վաճառում կամ կիսվում որևէ անձնական տվյալ — և չէինք կարող, անգամ եթե ուզենայինք, քանի որ հավելվածը չունի սերվեր և ցանցային կապեր չի հաստատում: Բոլոր տվյալները մնում են ձեր սարքի հիշողության մեջ:'],
-        ['Ովքեր ենք մենք','Tiny Hands-ը անվճար ուսուցողական հավելված է փոքրիկների համար: Գաղտնիության հարցերի համար՝ akram.aboukhalil@gmail.com:'],
+        ['Ովքեր ենք մենք','Tiny Hands-ը ուսուցողական հավելված է փոքրիկների համար: Գաղտնիության հարցերի համար՝ akram.aboukhalil@gmail.com:'],
         ['Ձեր սարքում պահվող տվյալները','Եթե ոգտագործեք այս հնարավորությունները, հավելվածը տեղայնորեն պահում է՝ երեխայի անունը կամ մականունը, ձեր ավելացրած հարազատների անուններն ու կամավոր լուսանկարները, ձայնագրությունները, ուսումնական առաջընթացը և կարգավորումները: Բոլորը մնում են միայն այս սարքի բրաուզերի հիշողության մեջ և երբեք ուրևէ տեղ չեն ուղարկվում:'],
         ['Ինչ մենք երբեք չենք անում','Ոչ հաշիվներ, ոչ վերլուծություն, ոչ գովազդ, ոչ հետևող քուքիներ, ոչ երրորդ կողմերի ծառայություններ — տառատեսակները, ձայներն ու նկարները ներկառուցված են հենց հավելվածի մեջ: Մենք չենք վաճառում կամ կիսում անձնական տվյալներ այնպես, ինչպես սահմանված է Կալիֆորնիայի սպառողների գաղտնիության օրենքում (CCPA), և երբեք չենք արել:'],
+        ['Վճարումներ (եթե երբևէ ինչ-որ բան գնեք)','Հավելվածն այժմ վճարովի գործառույթներ չունի: Եթե ապագայում առաջարկվեն, վճարումը կկատարվի ձեր հավելվածների խանութի կամ վճարային մշակողի միջոցով — հավելվածն ինքը երբեք չի տեսնի ու չի պահի քարտի համարներ, գնումներ կարող է կատարել միայն մեծահասակը ծնողական արգելակի հետևում, և այս քաղաքականությունը կթարմացվի նախքան որևէ վճարային գործառույթի թողարկումը:'],
         ['Երեխաների գաղտնիությունը','Tiny Hands-ը նախատեսված է փոքրիկների համար՝ մեծահասակների հետ միասին օգտագործելու համար: Քանի որ հավելվածը ցանցային կապեր չի հաստատում, երեխաներից անձնական տվյալներ համացանցով չեն հավաքվում (COPPA): Միկրոֆոնն օգտագործվում է միայն այն դեպքում, երբ մեծահասակը ծնողական արգելակի հետևում սկսում է ձայնագրումը և թույլ տալիս բրաուզերին. ձայնագրությունները պահվում են միայն այս սարքում և ցանկացած պահի կարող են լսվել կամ ջնջվել ստուդիայում:'],
         ['Ձեր իրավունքները և ծնողական վերահսկողությունը','Մեծահասակների բաժնում (Երեխաներ, Առաջընթաց, Ձայնագրել) կարող եք տեսնել ամեն ինչ և ջնջել ցանկացած պահ՝ ջնջեք առանձին ձայնագրություններ ստուդիայում, հեռացրեք երեխային «Երեխաներ» էջից կամ օգտագործեք «Ջնջել ամեն ինչ» կոճակը Պահուստի բաժնում: Բրաուզերի տվյալները մաքրելն էլ նույն արդյունքն ունի: Կալիֆորնիայի բնակիչների CCPA/CPRA իրավունքներն ամբողջությամբ իրականացվում են անմիջապես ձեր սարքում, քանի որ մենք ոչ մի սերվերում ձեր մասին տվյալ չունենք:'],
         ['«Do Not Track» և երրորդ կողմեր','Մենք ոչ մեկին չենք հետևում ոչ ժամանակի, ոչ կայքերի միջև: հավելվածն աշխատում է նույն կերպ՝ անկախ «Do Not Track» ազդանշանից: Ոչ մի երրորդ կողմ այս հավելվածի միջոցով անձնական տվյալներ չի հավաքում:'],
@@ -1216,6 +1234,103 @@
         ['Սարքի ձայները (տեքստից խոսք)','Բառերը արտասանվում են ձեր սարքի օպերացիոն համակարգի ձայներով: Կախված սարքի կարգավորումներից՝ որոշ համակարգային ձայներ կարող են մշակվել սարքի արտադրողի կողմից. ձայնը ընտրեք հավելվածի և սարքի խոսքի կարգավորումներում: Հավելվածն ինքը ոչինչ ում չի ուղարկում:'],
         ['Անվտանգություն և պահպանում','Ձեր տվյալները մնում են այս սարքում, մինչև դուք ջնջեք դրանք: Քանի որ դրանք երբեք չեն ուղարկվում, հնարավոր չէ դրանք գաղտնալսել ճանապարհին: Հավելվածի անվտանգության քաղաքականությունը (CSP) արգելափակում է բոլոր արտաքին կապերը՝ որպես լրացուցիչ պաշտպանություն:'],
         ['Փոփոխություններ','Եթե հավելվածի աշխատանքը երբևէ փոխվի, մենք կթարմացնենք այս քաղաքականությունն ու նրա ամսաթիվը նախքան փոփոխության ուժի մեջ մտնելը, իսկ էական փոփոխությունները կնշվեն հավելվածում:']
+      ]
+    }
+  };
+
+  // ---- terms of use ----
+  // Written to stay valid if paid features ever ship: the purchase, auto-renewal (Cal. Bus. &
+  // Prof. Code §17600 et seq.) and refund sections are conditional and must be reviewed (and the
+  // effective date bumped) before any payment feature actually launches.
+  var TERMS = {
+    en:{
+      link:'Terms', title:'Terms of Use', updated:'Effective date: July 10, 2026',
+      sections:[
+        ['Agreement','These terms are an agreement between you and Tiny Hands (contact: akram.aboukhalil@gmail.com). By using the app you confirm that you are an adult (18 or older) and the parent or legal guardian of any child who uses it. Children may use the app only under your supervision and cannot agree to these terms themselves.'],
+        ['License','We grant you a personal, non-commercial, non-transferable license to use Tiny Hands with your family. The app, its artwork, sounds, and code belong to us or our licensors. You may not copy, resell, redistribute, or reverse-engineer the app except where the law expressly allows it.'],
+        ['Your content','Names, photos, and voice recordings you create belong to you and stay on your device (see the Privacy Policy). We claim no rights over them and never receive them.'],
+        ['Purchases','The app currently has no paid features. If we ever offer any, the full price and what it includes will be shown clearly before you pay; payment will be handled by your app store or payment processor; and purchases will only be possible for a grown-up behind the parent gate. Children will never be shown purchase prompts.'],
+        ['Subscriptions and automatic renewal','If a subscription is ever offered, we will present the renewal price, billing period, and cancellation method clearly and conspicuously before you subscribe and obtain your affirmative consent, as California law requires (Bus. & Prof. Code §17600 et seq.). A subscription would renew automatically until cancelled; you would be able to cancel at any time, online, as easily as you signed up, with cancellation taking effect at the end of the paid period; and we would send you a confirmation with these terms and renewal reminders where required by law.'],
+        ['Refunds','Purchases made through an app store follow that store’s refund policy. For any purchase made directly from us, you may request a full refund within 14 days of purchase by emailing us. Nothing in these terms limits refund or other rights you have under applicable law.'],
+        ['Changes to the app and pricing','We may add, change, or retire features over time. Price changes will only apply going forward and with prior notice; if a change materially reduces something you already paid for, you will be offered a refund for the unused portion.'],
+        ['Acceptable use','Use the app as it is meant to be used: with your family. Do not attempt to disrupt it, misuse recordings of other people without their permission, or use the app in any unlawful way.'],
+        ['No professional advice','Tiny Hands is play-based learning entertainment. It is not medical, developmental, or educational advice, and it is not a substitute for professional evaluation of a child’s development.'],
+        ['Disclaimer of warranties','The app is provided “as is” and “as available”, without warranties of any kind, express or implied, to the fullest extent permitted by law. Some jurisdictions do not allow certain warranty exclusions, so parts of this section may not apply to you.'],
+        ['Limitation of liability','To the fullest extent permitted by law, our total liability for all claims relating to the app is limited to the greater of the amount you paid us in the twelve months before the claim or fifty US dollars ($50). We are not liable for indirect, incidental, or consequential damages. Nothing in these terms excludes liability that cannot be excluded by law, including under California consumer protection statutes.'],
+        ['Disputes','If you have a problem, email us first — most issues can be fixed quickly, and we agree to try in good faith for 30 days before either of us starts a formal proceeding. Any dispute that cannot be resolved informally will be settled by binding individual arbitration under the American Arbitration Association’s Consumer Arbitration Rules, except that either party may bring an individual claim in small-claims court, and either party may seek public injunctive relief in court where California law guarantees that right. You and we each waive the right to a jury trial and to participate in a class action. You may opt out of this arbitration agreement by emailing us within 30 days of first accepting these terms. These terms are governed by California law.'],
+        ['Changes to these terms, and the rest','We may update these terms; material changes will be shown in the app with a new effective date before they apply, and continued use after that date is acceptance. If any part of these terms is found unenforceable, the rest remains in effect. Translations are provided for convenience — the English version controls. Questions: akram.aboukhalil@gmail.com.']
+      ]
+    },
+    es:{
+      link:'Condiciones', title:'Condiciones de uso', updated:'Fecha de entrada en vigor: 10 de julio de 2026',
+      sections:[
+        ['Acuerdo','Estas condiciones son un acuerdo entre tú y Tiny Hands (contacto: akram.aboukhalil@gmail.com). Al usar la app confirmas que eres una persona adulta (18 años o más) y madre, padre o tutor legal de cualquier menor que la use. Los niños solo pueden usar la app bajo tu supervisión y no pueden aceptar estas condiciones por sí mismos.'],
+        ['Licencia','Te concedemos una licencia personal, no comercial e intransferible para usar Tiny Hands con tu familia. La app, sus ilustraciones, sonidos y código nos pertenecen a nosotros o a nuestros licenciantes. No puedes copiarla, revenderla, redistribuirla ni aplicar ingeniería inversa salvo donde la ley lo permita expresamente.'],
+        ['Tu contenido','Los nombres, fotos y grabaciones de voz que crees te pertenecen y permanecen en tu dispositivo (ver la Política de privacidad). No reclamamos ningún derecho sobre ellos y nunca los recibimos.'],
+        ['Compras','Actualmente la app no tiene funciones de pago. Si algún día las ofrecemos, el precio completo y lo que incluye se mostrarán con claridad antes de pagar; el pago lo gestionará tu tienda de aplicaciones o un procesador de pagos; y solo podrá comprar un adulto tras el control parental. A los niños nunca se les mostrarán avisos de compra.'],
+        ['Suscripciones y renovación automática','Si algún día se ofrece una suscripción, presentaremos el precio de renovación, el período de facturación y la forma de cancelar de manera clara y destacada antes de suscribirte, y obtendremos tu consentimiento expreso, como exige la ley de California (Bus. & Prof. Code §17600 y ss.). La suscripción se renovaría automáticamente hasta su cancelación; podrías cancelarla en cualquier momento, en línea, con la misma facilidad con la que te suscribiste, con efecto al final del período pagado; y te enviaríamos una confirmación con estas condiciones y los recordatorios de renovación que exija la ley.'],
+        ['Reembolsos','Las compras hechas a través de una tienda de aplicaciones siguen la política de reembolso de esa tienda. Para cualquier compra hecha directamente con nosotros, puedes pedir el reembolso completo dentro de los 14 días siguientes escribiéndonos por correo. Nada en estas condiciones limita los derechos que te otorgue la ley aplicable.'],
+        ['Cambios en la app y en los precios','Podemos añadir, cambiar o retirar funciones con el tiempo. Los cambios de precio solo se aplicarán hacia el futuro y con aviso previo; si un cambio reduce sustancialmente algo por lo que ya pagaste, se te ofrecerá el reembolso de la parte no disfrutada.'],
+        ['Uso aceptable','Usa la app para lo que está pensada: tu familia. No intentes alterarla, no uses grabaciones de otras personas sin su permiso y no la uses de forma ilícita.'],
+        ['No es asesoramiento profesional','Tiny Hands es entretenimiento educativo basado en el juego. No es asesoramiento médico, evolutivo ni educativo, y no sustituye la evaluación profesional del desarrollo de un niño.'],
+        ['Exclusión de garantías','La app se ofrece «tal cual» y «según disponibilidad», sin garantías de ningún tipo, expresas o implícitas, en la máxima medida que permita la ley. Algunas jurisdicciones no permiten ciertas exclusiones, por lo que partes de esta sección podrían no aplicarse a ti.'],
+        ['Limitación de responsabilidad','En la máxima medida que permita la ley, nuestra responsabilidad total por todas las reclamaciones relacionadas con la app se limita a la mayor de estas cantidades: lo que nos pagaste en los doce meses anteriores a la reclamación o cincuenta dólares estadounidenses (50 US$). No respondemos por daños indirectos, incidentales o consecuentes. Nada en estas condiciones excluye responsabilidades que la ley no permita excluir, incluidas las leyes de protección al consumidor de California.'],
+        ['Disputas','Si tienes un problema, escríbenos primero: la mayoría se resuelve rápido, y ambas partes acordamos intentarlo de buena fe durante 30 días antes de iniciar un procedimiento formal. Cualquier disputa no resuelta se someterá a arbitraje individual vinculante conforme a las Reglas de Arbitraje de Consumo de la American Arbitration Association, salvo que cualquiera de las partes podrá acudir individualmente al juzgado de menor cuantía, y cualquiera podrá solicitar ante los tribunales medidas cautelares de interés público donde la ley de California garantice ese derecho. Ambas partes renunciamos al juicio con jurado y a participar en acciones colectivas. Puedes excluirte de este acuerdo de arbitraje escribiéndonos dentro de los 30 días siguientes a tu primera aceptación. Estas condiciones se rigen por la ley de California.'],
+        ['Cambios en estas condiciones, y lo demás','Podemos actualizar estas condiciones; los cambios importantes se mostrarán en la app con una nueva fecha de vigencia antes de aplicarse, y seguir usándola después equivale a aceptarlos. Si alguna parte resulta inaplicable, el resto sigue vigente. Las traducciones son orientativas: prevalece la versión en inglés. Preguntas: akram.aboukhalil@gmail.com.']
+      ]
+    },
+    fr:{
+      link:'Conditions', title:'Conditions d’utilisation', updated:'En vigueur au 10 juillet 2026',
+      sections:[
+        ['Accord','Ces conditions forment un accord entre vous et Tiny Hands (contact : akram.aboukhalil@gmail.com). En utilisant l’app, vous confirmez être majeur·e (18 ans ou plus) et parent ou tuteur légal de tout enfant qui l’utilise. Les enfants ne peuvent utiliser l’app que sous votre supervision et ne peuvent pas accepter ces conditions eux-mêmes.'],
+        ['Licence','Nous vous accordons une licence personnelle, non commerciale et incessible pour utiliser Tiny Hands en famille. L’app, ses illustrations, sons et code nous appartiennent ou appartiennent à nos concédants. Vous ne pouvez pas la copier, la revendre, la redistribuer ni la décompiler, sauf lorsque la loi l’autorise expressément.'],
+        ['Votre contenu','Les noms, photos et enregistrements vocaux que vous créez vous appartiennent et restent sur votre appareil (voir la Politique de confidentialité). Nous ne revendiquons aucun droit dessus et ne les recevons jamais.'],
+        ['Achats','L’app n’a actuellement aucune fonction payante. Si nous en proposons un jour, le prix complet et son contenu seront affichés clairement avant le paiement ; le paiement sera géré par votre boutique d’applications ou un prestataire de paiement ; et seuls les adultes pourront acheter, derrière le contrôle parental. Aucune invitation à l’achat ne sera jamais montrée aux enfants.'],
+        ['Abonnements et renouvellement automatique','Si un abonnement est un jour proposé, nous présenterons le prix de renouvellement, la période de facturation et le mode de résiliation de façon claire et visible avant la souscription, avec votre consentement exprès, comme l’exige la loi californienne (Bus. & Prof. Code §17600 et s.). L’abonnement se renouvellerait automatiquement jusqu’à résiliation ; vous pourriez résilier à tout moment, en ligne, aussi facilement que vous avez souscrit, avec effet à la fin de la période payée ; et nous vous enverrions une confirmation reprenant ces conditions ainsi que les rappels de renouvellement prévus par la loi.'],
+        ['Remboursements','Les achats effectués via une boutique d’applications suivent la politique de remboursement de cette boutique. Pour tout achat effectué directement auprès de nous, vous pouvez demander un remboursement intégral dans les 14 jours par e-mail. Rien dans ces conditions ne limite vos droits légaux.'],
+        ['Évolutions de l’app et des prix','Nous pouvons ajouter, modifier ou retirer des fonctions. Les changements de prix ne s’appliqueront que pour l’avenir et avec préavis ; si un changement réduit sensiblement ce que vous avez déjà payé, un remboursement de la partie non utilisée vous sera proposé.'],
+        ['Utilisation acceptable','Utilisez l’app comme prévu : en famille. N’essayez pas de la perturber, n’utilisez pas les enregistrements d’autres personnes sans leur accord et ne l’utilisez pas de façon illégale.'],
+        ['Pas un avis professionnel','Tiny Hands est un divertissement éducatif fondé sur le jeu. Ce n’est ni un avis médical, ni un avis sur le développement de l’enfant, ni un substitut à une évaluation professionnelle.'],
+        ['Exclusion de garanties','L’app est fournie « telle quelle » et « selon disponibilité », sans garantie d’aucune sorte, expresse ou implicite, dans toute la mesure permise par la loi. Certaines juridictions n’autorisent pas certaines exclusions : des parties de cette section peuvent ne pas s’appliquer à vous.'],
+        ['Limitation de responsabilité','Dans toute la mesure permise par la loi, notre responsabilité totale pour toutes les réclamations liées à l’app est limitée au plus élevé des deux montants suivants : ce que vous nous avez payé au cours des douze mois précédant la réclamation, ou cinquante dollars US (50 $). Nous ne répondons pas des dommages indirects, accessoires ou consécutifs. Rien n’exclut une responsabilité que la loi ne permet pas d’exclure, y compris au titre des lois californiennes de protection des consommateurs.'],
+        ['Litiges','En cas de problème, écrivez-nous d’abord : la plupart des soucis se règlent vite, et chacun s’engage à essayer de bonne foi pendant 30 jours avant toute procédure formelle. Tout litige non résolu sera tranché par arbitrage individuel contraignant selon les règles d’arbitrage de consommation de l’American Arbitration Association, étant précisé que chaque partie peut saisir individuellement la juridiction des petits litiges, et demander en justice une injonction d’intérêt public lorsque le droit californien le garantit. Chaque partie renonce au procès devant jury et aux actions collectives. Vous pouvez refuser cet accord d’arbitrage en nous écrivant dans les 30 jours suivant votre première acceptation. Ces conditions sont régies par le droit californien.'],
+        ['Modifications de ces conditions, et le reste','Nous pouvons mettre à jour ces conditions ; les changements importants seront affichés dans l’app avec une nouvelle date d’entrée en vigueur avant de s’appliquer, et continuer à l’utiliser vaut acceptation. Si une clause est jugée inapplicable, le reste demeure en vigueur. Les traductions sont fournies à titre indicatif : la version anglaise prévaut. Questions : akram.aboukhalil@gmail.com.']
+      ]
+    },
+    ar:{
+      link:'الشروط', title:'شروط الاستخدام', updated:'تاريخ السريان: 10 يوليو 2026',
+      sections:[
+        ['الاتفاق','هذه الشروط اتفاق بينك وبين Tiny Hands (للتواصل: akram.aboukhalil@gmail.com). باستخدامك التطبيق تؤكد أنك شخص بالغ (18 عاماً أو أكثر) وأنك ولي أمر أي طفل يستخدمه. لا يستخدم الأطفال التطبيق إلا تحت إشرافك، ولا يمكنهم قبول هذه الشروط بأنفسهم.'],
+        ['الترخيص','نمنحك ترخيصاً شخصياً غير تجاري وغير قابل للنقل لاستخدام Tiny Hands مع عائلتك. التطبيق ورسومه وأصواته وشيفرته ملك لنا أو لمرخصينا. لا يجوز نسخه أو إعادة بيعه أو توزيعه أو إجراء هندسة عكسية له إلا حيث يسمح القانون صراحة.'],
+        ['محتواك','الأسماء والصور والتسجيلات الصوتية التي تنشئها ملك لك وتبقى على جهازك (انظر سياسة الخصوصية). لا ندّعي أي حق فيها ولا نستلمها أبداً.'],
+        ['المشتريات','لا يحتوي التطبيق حالياً على ميزات مدفوعة. إذا عرضنا أياً منها يوماً ما، فسيظهر السعر الكامل وما يشمله بوضوح قبل الدفع؛ وسيتولى الدفع متجر التطبيقات أو معالج الدفع؛ ولن يتمكن من الشراء إلا شخص بالغ خلف بوابة الوالدين. ولن تُعرض على الأطفال أي رسائل شراء مطلقاً.'],
+        ['الاشتراكات والتجديد التلقائي','إذا عُرض اشتراك يوماً ما، فسنعرض سعر التجديد ودورة الفوترة وطريقة الإلغاء بوضوح وبشكل بارز قبل الاشتراك، وسنحصل على موافقتك الصريحة كما يقتضي قانون كاليفورنيا. يتجدد الاشتراك تلقائياً حتى الإلغاء؛ ويمكنك الإلغاء في أي وقت عبر الإنترنت بنفس سهولة الاشتراك، ويسري الإلغاء بنهاية المدة المدفوعة؛ وسنرسل لك تأكيداً بهذه الشروط وتذكيرات التجديد حيثما يوجبها القانون.'],
+        ['الاسترداد','تخضع المشتريات عبر متاجر التطبيقات لسياسة الاسترداد الخاصة بالمتجر. ولأي شراء مباشر منا، يمكنك طلب استرداد كامل خلال 14 يوماً من الشراء عبر البريد الإلكتروني. لا تحد هذه الشروط من أي حقوق يمنحها لك القانون.'],
+        ['تغييرات التطبيق والأسعار','قد نضيف ميزات أو نغيرها أو نوقفها مع الوقت. لا تسري تغييرات الأسعار إلا مستقبلاً وبإشعار مسبق؛ وإذا قلّص تغيير جوهري شيئاً دفعت مقابله، فسيُعرض عليك استرداد الجزء غير المستخدم.'],
+        ['الاستخدام المقبول','استخدم التطبيق فيما صُمم له: مع عائلتك. لا تحاول تعطيله، ولا تستخدم تسجيلات أشخاص آخرين دون إذنهم، ولا تستخدمه بأي شكل مخالف للقانون.'],
+        ['ليس نصيحة مهنية','Tiny Hands ترفيه تعليمي قائم على اللعب، وليس نصيحة طبية أو تربوية أو تقييماً لنمو الطفل، ولا يغني عن التقييم المتخصص.'],
+        ['إخلاء الضمانات','يُقدَّم التطبيق «كما هو» و«حسب التوافر» دون أي ضمانات صريحة أو ضمنية إلى أقصى حد يسمح به القانون. لا تسمح بعض الولايات القضائية ببعض الاستثناءات، فقد لا تنطبق عليك أجزاء من هذا البند.'],
+        ['حدود المسؤولية','إلى أقصى حد يسمح به القانون، تنحصر مسؤوليتنا الكلية عن جميع المطالبات المتعلقة بالتطبيق في المبلغ الأكبر من: ما دفعته لنا خلال الاثني عشر شهراً السابقة للمطالبة، أو خمسين دولاراً أمريكياً (50$). ولا نتحمل الأضرار غير المباشرة أو العرضية أو التبعية. ولا يستثني أي بند هنا مسؤولية لا يجيز القانون استثناءها، بما في ذلك قوانين حماية المستهلك في كاليفورنيا.'],
+        ['النزاعات','إذا واجهت مشكلة فراسلنا أولاً — تُحل معظم المشكلات سريعاً، ونتفق على السعي بحسن نية لمدة 30 يوماً قبل أي إجراء رسمي. يُحسم أي نزاع لم يُحل ودياً بالتحكيم الفردي الملزم وفق قواعد تحكيم المستهلك لدى جمعية التحكيم الأمريكية، مع جواز لجوء أي طرف منفرداً إلى محكمة الدعاوى الصغيرة، وجواز طلب أمر قضائي للمصلحة العامة أمام المحاكم حيث يكفل قانون كاليفورنيا ذلك. ويتنازل الطرفان عن المحاكمة أمام هيئة محلفين وعن الدعاوى الجماعية. يمكنك الانسحاب من اتفاق التحكيم بمراسلتنا خلال 30 يوماً من أول قبول لهذه الشروط. تخضع هذه الشروط لقانون كاليفورنيا.'],
+        ['تعديل هذه الشروط وأحكام عامة','قد نحدّث هذه الشروط؛ وتُعرض التغييرات الجوهرية في التطبيق بتاريخ سريان جديد قبل تطبيقها، ويُعد الاستمرار في الاستخدام بعده قبولاً. وإذا تبين عدم نفاذ أي جزء بقي الباقي سارياً. التراجم للتوضيح فقط، والنسخة الإنجليزية هي المعتمدة. للاستفسار: akram.aboukhalil@gmail.com.']
+      ]
+    },
+    hy:{
+      link:'Պայմաններ', title:'Օգտագործման պայմաններ', updated:'Ուժի մեջ է՝ 2026թ. հուլիսի 10-ից',
+      sections:[
+        ['Համաձայնություն','Այս պայմանները համաձայնագիր են ձեր և Tiny Hands-ի միջև (կապ՝ akram.aboukhalil@gmail.com): Օգտագործելով հավելվածը՝ հաստատում եք, որ չափահաս եք (18 տարեկան և ավելի) և հավելվածն օգտագործող ցանկացած երեխայի ծնող կամ օրինական խնամակալ եք: Երեխաները հավելվածը կարող են օգտագործել միայն ձեր հսկողությամբ և չեն կարող ինքնուրույն ընդունել այս պայմանները:'],
+        ['Լիցենզիա','Ձեզ տրվում է անձնական, ոչ առևտրային, չփոխանցվող լիցենզիա՝ Tiny Hands-ը ընտանիքով օգտագործելու համար: Հավելվածը, նրա նկարները, ձայներն ու կոդը պատկանում են մեզ կամ մեր լիցենզատուներին: Չի կարելի պատճենել, վերավաճառել, տարածել կամ ապակոմպիլյացնել այն, բացի օրենքով ուղղակիորեն թույլատրված դեպքերից:'],
+        ['Ձեր բովանդակությունը','Ձեր ստեղծած անունները, լուսանկարներն ու ձայնագրությունները ձերն են և մնում են ձեր սարքում (տես Գաղտնիության քաղաքականությունը): Մենք դրանց նկատմամբ իրավունքներ չենք պահանջում և երբեք չենք ստանում դրանք:'],
+        ['Գնումներ','Հավելվածն այժմ վճարովի գործառույթներ չունի: Եթե երբևէ առաջարկենք, ամբողջ գինը և ներառվածը հստակ կցուցադրվեն նախքան վճարելը. վճարումը կկատարի ձեր հավելվածների խանութը կամ վճարային մշակողը. գնումներ կկարողանա անել միայն մեծահասակը՝ ծնողական արգելակի հետևում: Երեխաներին գնման հուշումներ երբեք չեն ցուցադրվի:'],
+        ['Բաժանորդագրություններ և ավտոմատ երկարաձգում','Եթե երբևէ առաջարկվի բաժանորդագրություն, երկարաձգման գինը, վճարման պարբերությունը և չեղարկման եղանակը հստակ և տեսանելի կներկայացվեն նախքան բաժանորդագրվելը՝ ձեր հստակ համաձայնությամբ, ինչպես պահանջում է Կալիֆորնիայի օրենքը: Բաժանորդագրությունը ինքնաբերաբար կերկարաձգվեր մինչև չեղարկումը. կկարողանայիք չեղարկել ցանկացած պահի, առցանց, նույնքան հեշտ, որքան բաժանորդագրվել եք, ուժի մեջ մտնելով վճարված ժամանակահատվածի վերջում. և կստանայիք հաստատում այս պայմաններով ու օրենքով պահանջվող հիշեցումները:'],
+        ['Վերադարձներ','Հավելվածների խանութով կատարված գնումները ենթակա են այդ խանութի վերադարձի կանոններին: Մեզնից ուղղակի գնման դեպքում կարող եք 14 օրվա ընթացքում էլ. նամակով պահանջել ամբողջական վերադարձ: Այս պայմանները չեն սահմանափակում օրենքով ձեզ տրված իրավունքները:'],
+        ['Հավելվածի և գների փոփոխություններ','Ժամանակի ընթացքում կարող ենք ավելացնել, փոխել կամ հանել գործառույթներ: Գների փոփոխություններն ուժի մեջ կմտնեն միայն ապագայի համար և նախապես ծանուցմամբ. եթե փոփոխությունը էապես նվազեցնի արդեն վճարվածը, ձեզ կառաջարկվի չօգտագործված մասի վերադարձ:'],
+        ['Ընդունելի օգտագործում','Օգտագործեք հավելվածն իր նպատակով՝ ընտանիքի հետ: Մի փորձեք խաթարել այն, մի օգտագործեք այլ մարդկանց ձայնագրություններն առանց նրանց թույլտվության և մի օգտագործեք հավելվածն ապօրինի կերպով:'],
+        ['Մասնագիտական խորհուրդ չէ','Tiny Hands-ը խաղի վրա հիմնված ուսուցողական ժամանց է: Այն բժշկական, զարգացման կամ կրթական խորհուրդ չէ և չի փոխարինում երեխայի զարգացման մասնագիտական գնահատմանը:'],
+        ['Երաշխիքների բացառում','Հավելվածը տրամադրվում է «ինչպես կա» և «ըստ հասանելիության»՝ առանց որևէ բացահայտ կամ ենթադրյալ երաշխիքի, օրենքով թույլատրված առավելագույն չափով: Որոշ իրավակարգեր չեն թույլատրում որոշ բացառումներ, ուստի այս բաժնի մասերը կարող են ձեզ չվերաբերել:'],
+        ['Պատասխանատվության սահմանափակում','Օրենքով թույլատրված առավելագույն չափով մեր ընդհանուր պատասխանատվությունը հավելվածի հետ կապված բոլոր պահանջների համար սահմանափակվում է հետևյալից առավելագույնով՝ պահանջին նախորդող տասներկու ամիսներին մեզ վճարած գումարը կամ հիսուն ԱՄՆ դոլար (50$): Մենք պատասխանատու չենք անուղղակի, պատահական կամ հետևանքային վնասների համար: Ոչինչ չի բացառում պատասխանատվություն, որը օրենքը չի թույլատրում բացառել:'],
+        ['Վեճեր','Խնդրի դեպքում նախ գրեք մեզ — շատ հարցեր լուծվում են արագ, և կողմերը համաձայնում են 30 օր բարեխղճորեն փորձել՝ նախքան պաշտոնական ընթացակարգը: Չլուծված վեճերը կարգավորվում են պարտադիր անհատական արբիտրաժով՝ American Arbitration Association-ի սպառողական կանոններով. ընդ որում՝ յուրաքանչյուր կողմ կարող է անհատական հայց ներկայացնել փոքր հայցերի դատարան, իսկ Կալիֆորնիայի օրենքով երաշխավորված դեպքերում՝ դատարանում պահանջել հանրային արգելանք: Կողմերը հրաժարվում են երդվյալ ատենակալների դատից և խմբային հայցերից: Կարող եք հրաժարվել արբիտրաժի այս համաձայնությունից՝ գրելով մեզ պայմաններն առաջին անգամ ընդունելուց հետո 30 օրվա ընթացքում: Այս պայմանները կարգավորվում են Կալիֆորնիայի օրենքով:'],
+        ['Պայմանների փոփոխություններ և այլն','Կարող ենք թարմացնել այս պայմանները. էական փոփոխությունները կցուցադրվեն հավելվածում նոր ամսաթվով՝ նախքան ուժի մեջ մտնելը, և դրանից հետո շարունակելը համարվում է ընդունում: Եթե որևէ մաս անվավեր ճանաչվի, մնացածը մնում է ուժի մեջ: Թարգմանությունները տրվում են հարմարության համար — գերակայում է անգլերեն տարբերակը: Հարցեր՝ akram.aboukhalil@gmail.com:']
       ]
     }
   };
@@ -1739,6 +1854,7 @@
     document.documentElement.setAttribute('lang', LANG);
     speakerEl.setAttribute('aria-label', T.replay);
     var pl=gid('privacyLink'); if(pl){ pl.textContent=(PRIVACY[LANG]||PRIVACY.en).link; }
+    var tl=gid('termsLink'); if(tl){ tl.textContent=(TERMS[LANG]||TERMS.en).link; }
     document.body.classList.toggle('arabic', LANG==='ar');
     document.body.classList.toggle('armenian', LANG==='hy');
     subtitleEl.textContent = T.subtitle;
@@ -2648,6 +2764,7 @@
     gid('pmProfiles').innerHTML='<span class="pmemo">🧒</span>'+g.children;
     gid('pmBackup').innerHTML='<span class="pmemo">💾</span>'+g.backup;
     gid('pmPrivacy').innerHTML='<span class="pmemo">🔒</span>'+g.privacy;
+    gid('pmTerms').innerHTML='<span class="pmemo">📄</span>'+(TERMS[LANG]||TERMS.en).link;
     gid('parentClose').textContent=g.done;
     gid('parentSheet').classList.add('open');
   }
@@ -2859,23 +2976,25 @@
     sheet.classList.add('open');
   }
 
-  // ---- privacy policy sheet ----
-  function openPrivacy(){
-    var P=PRIVACY[LANG]||PRIVACY.en;
-    var sheet=gid('privacySheet');
+  // ---- legal document sheets (privacy policy, terms of use) ----
+  function openLegalDoc(docs, sheetId, titleId, updatedId, bodyId, closeId, emoji){
+    var D=docs[LANG]||docs.en;
+    var sheet=gid(sheetId);
     sheet.setAttribute('dir', I18N[LANG].dir);
-    gid('ppTitle').textContent='🔒 '+P.title;
-    gid('ppUpdated').textContent=P.updated;
-    var body=gid('ppBody'); body.innerHTML='';
-    P.sections.forEach(function(s){
+    gid(titleId).textContent=emoji+' '+D.title;
+    gid(updatedId).textContent=D.updated;
+    var body=gid(bodyId); body.innerHTML='';
+    D.sections.forEach(function(s){
       var h=document.createElement('h3'); h.textContent=s[0];
       var p=document.createElement('p'); p.textContent=s[1];
       body.appendChild(h); body.appendChild(p);
     });
-    gid('ppClose').textContent=TG().done;
+    gid(closeId).textContent=TG().done;
     sheet.classList.add('open');
-    gid('privacySheet').querySelector('.sheet-card').scrollTop=0;
+    sheet.querySelector('.sheet-card').scrollTop=0;
   }
+  function openPrivacy(){ openLegalDoc(PRIVACY,'privacySheet','ppTitle','ppUpdated','ppBody','ppClose','🔒'); }
+  function openTerms(){ openLegalDoc(TERMS,'termsSheet','ptTitle','ptUpdated','ptBody','ptClose','📄'); }
 
   // ---- delete everything (parental deletion right: COPPA / CCPA / Cal. eraser law) ----
   function eraseAllData(){
@@ -2948,10 +3067,14 @@
     gid('pmProfiles').addEventListener('click', function(){ closeParent(); openProfiles(); });
     gid('pmBackup').addEventListener('click', function(){ closeParent(); openBackup(); });
     gid('pmPrivacy').addEventListener('click', function(){ closeParent(); openPrivacy(); });
-    // privacy policy: reachable from the home page without the parent gate (CalOPPA conspicuous posting)
+    gid('pmTerms').addEventListener('click', function(){ closeParent(); openTerms(); });
+    // legal docs: reachable from the home page without the parent gate (CalOPPA conspicuous posting)
     gid('privacyLink').addEventListener('click', openPrivacy);
+    gid('termsLink').addEventListener('click', openTerms);
     gid('ppClose').addEventListener('click', function(){ gid('privacySheet').classList.remove('open'); });
     gid('privacySheet').addEventListener('click', function(e){ if(e.target===gid('privacySheet')) gid('privacySheet').classList.remove('open'); });
+    gid('ptClose').addEventListener('click', function(){ gid('termsSheet').classList.remove('open'); });
+    gid('termsSheet').addEventListener('click', function(e){ if(e.target===gid('termsSheet')) gid('termsSheet').classList.remove('open'); });
     // settings / dashboard / profiles / songs close
     gid('settingsClose').addEventListener('click', function(){ gid('settingsSheet').classList.remove('open'); });
     gid('settingsSheet').addEventListener('click', function(e){ if(e.target===gid('settingsSheet')) gid('settingsSheet').classList.remove('open'); });
