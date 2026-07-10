@@ -1,4 +1,4 @@
-// Generates the Tiny Taps app icons (no external deps) for the PWA / home-screen install.
+// Generates the Tiny Hands app icons (no external deps) for the PWA / home-screen install.
 // Design: warm diagonal gradient, white rounded "card", gold star (the in-app reward motif).
 const zlib = require('zlib');
 const fs = require('fs');
