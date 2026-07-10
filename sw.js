@@ -1,5 +1,5 @@
-/* Tiny Taps service worker — makes the app work fully offline once installed. */
-var CACHE = 'tinytaps-v2';
+/* Tiny Hands service worker — makes the app work fully offline once installed. */
+var CACHE = 'tinyhands-v1';
 var ASSETS = [
   './',
   './index.html',

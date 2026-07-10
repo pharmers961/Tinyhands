@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Tiny Taps — Little Learning Games</title>
-<meta name="description" content="Little learning games for toddlers — letters, numbers, animals, colors and shapes in English, Arabic and Armenian." />
+<title>Tiny Hands — Little Learning Games</title>
+<meta name="description" content="Little learning games for toddlers — letters, numbers, animals, colors and shapes in English and Spanish." />
 <meta name="theme-color" content="#fef6e4" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="Tiny Taps" />
+<meta name="apple-mobile-web-app-title" content="Tiny Hands" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700&family=Cairo:wght@600;700&family=Fredoka:wght@500;600;700&family=Noto+Sans+Armenian:wght@500;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
@@ -435,7 +435,7 @@
     <button class="fab left2" id="songsFab" aria-label="Songs">&#x1F3B5;</button>
     <button class="fab right2" id="settingsFab" aria-label="Settings">&#x2699;&#xFE0F;</button>
     <div class="home-head">
-      <h1>Tiny Taps</h1>
+      <h1>Tiny Hands</h1>
       <p id="subtitle"></p>
       <div class="langbar" id="langBar">
         <button class="langpill" data-lang="en">English</button>
@@ -1859,7 +1859,7 @@
   var THEMES=[{id:'day',c:'#ffd166'},{id:'bedtime',c:'#2a2c47'},{id:'ocean',c:'#7fd8d4'},{id:'jungle',c:'#8cd2a0'},{id:'candy',c:'#ff9ad0'},{id:'contrast',c:'#111111'}];
   function effectiveTheme(t){ if(t==='auto'){ return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'bedtime':'day'; } return t||'day'; }
   function applyTheme(){
-    var t=effectiveTheme(PD.theme||'auto');
+    var t=effectiveTheme(PD.theme||'day');
     if(t==='day') document.body.removeAttribute('data-theme'); else document.body.setAttribute('data-theme', t);
     var s=settings();
     document.body.classList.toggle('bigtext', !!s.bigText);
@@ -2156,7 +2156,8 @@
   // ---- language visibility (settings, always English) ----
   var HIDDEN_KEY='tinyTapsHiddenLangs';
   var ALL_LANGS=[{code:'en',name:'English'},{code:'ar',name:'العربية'},{code:'hy',name:'Հայերեն'},{code:'es',name:'Español'},{code:'fr',name:'Français'}];
-  function getHidden(){ try{ var a=JSON.parse(lsGet(HIDDEN_KEY)); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  var DEFAULT_HIDDEN_LANGS=['ar','hy','fr'];
+  function getHidden(){ var raw=lsGet(HIDDEN_KEY); if(raw===null) return DEFAULT_HIDDEN_LANGS.slice(); try{ var a=JSON.parse(raw); return Array.isArray(a)?a:DEFAULT_HIDDEN_LANGS.slice(); }catch(e){ return DEFAULT_HIDDEN_LANGS.slice(); } }
   function setHidden(arr){ lsSet(HIDDEN_KEY, JSON.stringify(arr)); }
   function visibleLangs(){ var h=getHidden(); return ALL_LANGS.filter(function(l){ return h.indexOf(l.code)<0; }); }
   function refreshLangbarVisibility(){
@@ -2165,7 +2166,7 @@
   }
   function renderThemeChips(){
     var box=gid('themeChips'); if(!box) return; box.innerHTML='';
-    var cur=PD.theme||'auto';
+    var cur=PD.theme||'day';
     function chip(id, bg, label){ var b=document.createElement('button'); b.className='themeChip'+(cur===id?' on':''); b.title=label; b.setAttribute('aria-label',label);
       if(bg==='auto'){ b.style.background='linear-gradient(135deg,#fef6e4 50%,#20223a 50%)'; } else { b.style.background=bg; }
       b.addEventListener('click', function(){ PD.theme=id; flushPD(); applyTheme(); renderThemeChips(); }); box.appendChild(b); }
@@ -2303,7 +2304,7 @@
         var prof={}; profilesArr.forEach(function(p){ prof[p.id]=loadPData(p.id); });
         var data={ v:1, persons:persons, profiles:profilesArr, profileData:prof, hiddenLangs:getHidden(), clips:clips };
         var blob=new Blob([JSON.stringify(data)],{type:'application/json'});
-        var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='tiny-taps-backup.json'; document.body.appendChild(a); a.click();
+        var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='tiny-hands-backup.json'; document.body.appendChild(a); a.click();
         setTimeout(function(){ URL.revokeObjectURL(url); if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
         showTransientToast('Backup saved ✓');
       });
@@ -2345,7 +2346,7 @@
   // ---- add-to-home-screen + update toasts ----
   var deferredInstall=null;
   function wireInstall(){
-    window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferredInstall=e; if(!lsGet('tinyTapsInstallDismiss')){ gid('installMsg').textContent='Add Tiny Taps to your home screen?'; gid('installToast').classList.add('show'); } });
+    window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferredInstall=e; if(!lsGet('tinyTapsInstallDismiss')){ gid('installMsg').textContent='Add Tiny Hands to your home screen?'; gid('installToast').classList.add('show'); } });
     gid('installBtn').addEventListener('click', function(){ gid('installToast').classList.remove('show'); if(deferredInstall){ deferredInstall.prompt(); deferredInstall=null; } });
     gid('installDismiss').addEventListener('click', function(){ gid('installToast').classList.remove('show'); lsSet('tinyTapsInstallDismiss','1'); });
     gid('updateBtn').addEventListener('click', function(){ location.reload(); });

@@ -1,7 +1,7 @@
 {
-  "name": "Tiny Taps — Little Learning Games",
-  "short_name": "Tiny Taps",
-  "description": "Little learning games for toddlers — letters, numbers, animals, colors and shapes in English, Arabic and Armenian.",
+  "name": "Tiny Hands — Little Learning Games",
+  "short_name": "Tiny Hands",
+  "description": "Little learning games for toddlers — letters, numbers, animals, colors and shapes in English and Spanish.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
