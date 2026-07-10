@@ -1,5 +1,5 @@
 /* Tiny Hands service worker — makes the app work fully offline once installed. */
-var CACHE = 'tinyhands-v2';
+var CACHE = 'tinyhands-v3';
 var ASSETS = [
   './',
   './index.html',
@@ -31,10 +31,9 @@ self.addEventListener('fetch', function (e) {
       if (hit) return hit;
       return fetch(req).then(function (res) {
         try {
+          // Same-origin only: the app makes no third-party requests and none are cached.
           var url = new URL(req.url);
-          var sameOrigin = url.origin === self.location.origin;
-          var isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.host);
-          if ((sameOrigin || isFont) && res && res.status === 200) {
+          if (url.origin === self.location.origin && res && res.status === 200) {
             var copy = res.clone();
             caches.open(CACHE).then(function (c) { c.put(req, copy); });
           }
