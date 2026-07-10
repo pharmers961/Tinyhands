@@ -687,6 +687,7 @@
       </div>
       <p class="vp-tip" id="studioLangHint" style="display:none;"></p>
       <p class="vp-tip" id="studioTip"></p>
+      <div class="studioRow" id="studioShareRow"></div>
     </div>
     <div class="recList" id="recList"></div>
   </div>
@@ -1163,6 +1164,7 @@
         ['Your rights and parental controls','You can review everything the app knows in the grown-ups area (Children, Progress, Record voices) and delete it at any time: delete individual recordings in the studio, remove a child in the Children screen, or use “Delete everything” in Backup & data to erase all app data at once. Clearing this site’s data in your browser does the same. California residents have rights under the CCPA/CPRA to know, delete, correct, and opt out of sale or sharing — because we hold no data about you on any server, every one of these rights is satisfied directly on your device, and there is nothing for us to disclose, sell, or delete remotely. California minors’ right to remove posted content (Bus. & Prof. Code §22581): the app never posts or publishes anything, and the deletion controls above remove any content a child created.'],
         ['“Do Not Track” and third parties','We do not track anyone over time or across websites, so the app behaves the same whether or not your browser sends a “Do Not Track” or Global Privacy Control signal. No third party collects personal information through this app.'],
         ['Backups','“Save backup” creates a file on your device only, and only when you tap it. It is never uploaded. The backup file contains your recordings, names, and progress — store it somewhere safe, and delete it if you no longer want it.'],
+        ['Sharing a recording','If a grown-up taps “Share” on a voice in the recording studio, the app bundles that person’s recordings into a single file and hands it to your device’s own share options — a messaging or email app you choose — or saves it to your device. The app still has no server and makes no network connection of its own; whatever you pick then carries the file, under that service’s own privacy policy. Only the selected voice’s recordings are included — children’s names and other family data are not. Share only with people you trust, and only recordings you are comfortable sending.'],
         ['Device voices (text-to-speech)','Words are spoken by voices installed on your device by its operating system. Depending on your device’s settings, some system voices may be processed by the device maker; you can choose which voice is used in the app’s voice picker and in your device’s speech settings. The app itself sends nothing to anyone.'],
         ['Security and retention','Your data is kept on this device until you delete it. Because it is never transmitted, it cannot be intercepted in transit. The app’s security policy (CSP) blocks all connections to other servers as an extra safeguard.'],
         ['Changes to this policy','If we ever change how the app works, we will update this policy and its effective date before the change takes effect, and material changes will be highlighted in the app.']
@@ -1180,6 +1182,7 @@
         ['Tus derechos y controles parentales','Puedes revisar todo lo que la app conoce en la zona para adultos (Niños, Progreso, Grabar voces) y borrarlo cuando quieras: borra grabaciones individuales en el estudio, quita a un peque en la pantalla Niños o usa «Borrar todo» en Copia y datos para eliminar todos los datos de una vez. Borrar los datos de este sitio en tu navegador tiene el mismo efecto. Los residentes de California tienen derechos bajo la CCPA/CPRA a saber, borrar, corregir y excluirse de la venta o compartición de datos: como no guardamos ningún dato tuyo en ningún servidor, todos esos derechos se ejercen directamente en tu dispositivo y no hay nada que podamos revelar, vender o borrar de forma remota. Derecho de los menores de California a retirar contenido publicado (Bus. & Prof. Code §22581): la app nunca publica nada, y los controles de borrado anteriores eliminan cualquier contenido creado por un menor.'],
         ['«Do Not Track» y terceros','No rastreamos a nadie a lo largo del tiempo ni entre sitios web, así que la app se comporta igual tanto si tu navegador envía la señal «Do Not Track» o Global Privacy Control como si no. Ningún tercero recopila información personal a través de esta app.'],
         ['Copias de seguridad','«Guardar copia» crea un archivo solo en tu dispositivo y solo cuando tú lo pulsas. Nunca se sube. El archivo contiene tus grabaciones, nombres y progreso: guárdalo en un lugar seguro y bórralo si ya no lo quieres.'],
+        ['Compartir una grabación','Si un adulto toca «Compartir» en una voz del estudio, la app agrupa las grabaciones de esa persona en un solo archivo y lo entrega a las opciones para compartir de tu dispositivo —una app de mensajería o correo que elijas— o lo guarda en tu dispositivo. La app sigue sin tener servidor y no realiza ninguna conexión de red propia; lo que elijas será quien transporte el archivo, según su propia política de privacidad. Solo se incluyen las grabaciones de la voz seleccionada: los nombres de los niños y otros datos de la familia no se incluyen. Comparte solo con personas de confianza y solo grabaciones que te sientas cómodo enviando.'],
         ['Voces del dispositivo (texto a voz)','Las palabras se pronuncian con las voces instaladas en tu dispositivo por su sistema operativo. Según la configuración del dispositivo, algunas voces del sistema pueden ser procesadas por su fabricante; puedes elegir la voz en el selector de la app y en los ajustes de voz del dispositivo. La app en sí no envía nada a nadie.'],
         ['Seguridad y conservación','Tus datos se conservan en este dispositivo hasta que los borres. Como nunca se transmiten, no pueden interceptarse en tránsito. La política de seguridad de la app (CSP) bloquea todas las conexiones a otros servidores como protección adicional.'],
         ['Cambios en esta política','Si algún día cambiamos el funcionamiento de la app, actualizaremos esta política y su fecha de vigencia antes de que el cambio surta efecto, y los cambios importantes se destacarán en la app.']
@@ -1197,6 +1200,7 @@
         ['Vos droits et le contrôle parental','Vous pouvez consulter tout ce que l’app connaît dans l’espace parents (Enfants, Progrès, Enregistrer des voix) et le supprimer à tout moment : supprimez des enregistrements dans le studio, retirez un enfant dans l’écran Enfants, ou utilisez « Tout effacer » dans Sauvegarde et données. Effacer les données de ce site dans votre navigateur a le même effet. Les résidents de Californie disposent des droits CCPA/CPRA (accès, suppression, rectification, refus de vente ou de partage) : comme nous ne détenons aucune donnée sur aucun serveur, ces droits s’exercent directement sur votre appareil. Droit des mineurs californiens au retrait de contenus publiés (§22581) : l’app ne publie jamais rien, et les commandes de suppression ci-dessus effacent tout contenu créé par un enfant.'],
         ['« Do Not Track » et tiers','Nous ne suivons personne dans le temps ni entre les sites : l’app se comporte de la même façon que votre navigateur envoie ou non un signal « Do Not Track » ou Global Privacy Control. Aucun tiers ne collecte d’informations personnelles via cette app.'],
         ['Sauvegardes','« Sauvegarder » crée un fichier uniquement sur votre appareil, et uniquement quand vous le demandez. Il n’est jamais envoyé. Ce fichier contient vos enregistrements, noms et progrès : conservez-le en lieu sûr et supprimez-le si vous n’en voulez plus.'],
+        ['Partager un enregistrement','Si un adulte touche « Partager » sur une voix du studio, l’app regroupe les enregistrements de cette personne dans un seul fichier et le remet aux options de partage de votre appareil — une app de messagerie ou d’e-mail que vous choisissez — ou l’enregistre sur votre appareil. L’app n’a toujours pas de serveur et n’effectue aucune connexion réseau de sa part ; ce que vous choisissez transporte alors le fichier, selon sa propre politique de confidentialité. Seuls les enregistrements de la voix sélectionnée sont inclus — les prénoms des enfants et les autres données familiales ne le sont pas. Ne partagez qu’avec des personnes de confiance, et seulement des enregistrements que vous acceptez d’envoyer.'],
         ['Voix de l’appareil (synthèse vocale)','Les mots sont prononcés par les voix installées sur votre appareil par son système d’exploitation. Selon les réglages de l’appareil, certaines voix système peuvent être traitées par son fabricant ; vous choisissez la voix dans l’app et dans les réglages vocaux de l’appareil. L’app elle-même n’envoie rien à personne.'],
         ['Sécurité et conservation','Vos données restent sur cet appareil jusqu’à ce que vous les supprimiez. N’étant jamais transmises, elles ne peuvent pas être interceptées. La politique de sécurité de l’app (CSP) bloque toute connexion vers d’autres serveurs, par précaution supplémentaire.'],
         ['Modifications','Si le fonctionnement de l’app change un jour, nous mettrons à jour cette politique et sa date d’entrée en vigueur avant le changement, et les modifications importantes seront signalées dans l’app.']
@@ -1214,6 +1218,7 @@
         ['حقوقك وأدوات الرقابة الأبوية','يمكنك مراجعة كل ما يعرفه التطبيق في قسم الكبار (الأطفال، التقدم، تسجيل الأصوات) وحذفه في أي وقت: احذف تسجيلات بعينها من الاستوديو، أو أزل طفلاً من شاشة الأطفال، أو استخدم «حذف كل شيء» في النسخ الاحتياطي. مسح بيانات هذا الموقع من المتصفح يؤدي الغرض نفسه. ولسكان كاليفورنيا حقوق بموجب CCPA/CPRA (المعرفة والحذف والتصحيح ورفض البيع أو المشاركة): ولأننا لا نحتفظ بأي بيانات عنك على أي خادم، تُمارس هذه الحقوق كلها مباشرة على جهازك. أما حق القاصرين في كاليفورنيا في إزالة المحتوى المنشور (§22581) فالتطبيق لا ينشر شيئاً مطلقاً، وأدوات الحذف أعلاه تزيل أي محتوى أنشأه الطفل.'],
         ['«Do Not Track» والأطراف الثالثة','نحن لا نتتبع أحداً عبر الوقت أو بين المواقع، لذا يعمل التطبيق بالطريقة نفسها سواء أرسل متصفحك إشارة «Do Not Track» أم لا. ولا يجمع أي طرف ثالث معلومات شخصية عبر هذا التطبيق.'],
         ['النسخ الاحتياطية','زر «حفظ نسخة» ينشئ ملفاً على جهازك فقط وعند طلبك فقط، ولا يُرفع أبداً. يحتوي الملف على تسجيلاتك والأسماء والتقدم، فاحفظه في مكان آمن واحذفه إذا لم تعد تريده.'],
+        ['مشاركة تسجيل','إذا ضغط شخص بالغ على «مشاركة» لصوتٍ في الاستوديو، يجمع التطبيق تسجيلات ذلك الشخص في ملف واحد ويسلّمه إلى خيارات المشاركة في جهازك — تطبيق مراسلة أو بريد تختاره — أو يحفظه على جهازك. ما زال التطبيق بلا خادم ولا يجري أي اتصال شبكي من تلقاء نفسه؛ فما تختاره هو الذي ينقل الملف، وفق سياسة خصوصيته الخاصة. تُضمَّن تسجيلات الصوت المحدد فقط — أما أسماء الأطفال وبيانات العائلة الأخرى فلا تُضمَّن. شارك فقط مع من تثق بهم، وفقط التسجيلات التي ترتاح لإرسالها.'],
         ['أصوات الجهاز (تحويل النص إلى كلام)','تُنطق الكلمات بأصوات مثبتة على جهازك من نظام التشغيل. بحسب إعدادات جهازك، قد تُعالج بعض أصوات النظام لدى الشركة المصنعة؛ ويمكنك اختيار الصوت من التطبيق ومن إعدادات النطق في الجهاز. التطبيق نفسه لا يرسل شيئاً لأحد.'],
         ['الأمان والاحتفاظ بالبيانات','تبقى بياناتك على هذا الجهاز حتى تحذفها. ولأنها لا تُرسل أبداً، فلا يمكن اعتراضها. كما تحظر سياسة أمان التطبيق (CSP) أي اتصال بخوادم أخرى كطبقة حماية إضافية.'],
         ['التغييرات على هذه السياسة','إذا تغيرت طريقة عمل التطبيق يوماً ما، فسنحدث هذه السياسة وتاريخ سريانها قبل أن يسري التغيير، وستُبرز التغييرات المهمة داخل التطبيق.']
@@ -1231,6 +1236,7 @@
         ['Ձեր իրավունքները և ծնողական վերահսկողությունը','Մեծահասակների բաժնում (Երեխաներ, Առաջընթաց, Ձայնագրել) կարող եք տեսնել ամեն ինչ և ջնջել ցանկացած պահ՝ ջնջեք առանձին ձայնագրություններ ստուդիայում, հեռացրեք երեխային «Երեխաներ» էջից կամ օգտագործեք «Ջնջել ամեն ինչ» կոճակը Պահուստի բաժնում: Բրաուզերի տվյալները մաքրելն էլ նույն արդյունքն ունի: Կալիֆորնիայի բնակիչների CCPA/CPRA իրավունքներն ամբողջությամբ իրականացվում են անմիջապես ձեր սարքում, քանի որ մենք ոչ մի սերվերում ձեր մասին տվյալ չունենք:'],
         ['«Do Not Track» և երրորդ կողմեր','Մենք ոչ մեկին չենք հետևում ոչ ժամանակի, ոչ կայքերի միջև: հավելվածն աշխատում է նույն կերպ՝ անկախ «Do Not Track» ազդանշանից: Ոչ մի երրորդ կողմ այս հավելվածի միջոցով անձնական տվյալներ չի հավաքում:'],
         ['Պահուստներ','«Պահել պահուստ» կոճակը ֆայլ է ստեղծում միայն ձեր սարքում և միայն ձեր հրամանով. այն երբեք չի ուղարկվում: Ֆայլը պարունակում է ձեր ձայնագրությունները, անուններն ու առաջընթացը. պահեք այն ապահով տեղում և ջնջեք, երբ այլևս պետք չի:'],
+        ['Ձայնագրությամբ կիսվելը','Եթե մեծահասակը ստուդիայում սեղմում է «Կիսվել» որևէ ձայնի վրա, հավելվածը այդ մարդու ձայնագրությունները միավորում է մեկ ֆայլում և հանձնում ձեր սարքի կիսվելու տարբերակներին՝ ձեր ընտրած հաղորդագրության կամ էլ․ փոստի հավելվածին, կամ պահում ձեր սարքում: Հավելվածը դեռ սերվեր չունի և ինքն որևէ ցանցային կապ չի հաստատում. ձեր ընտրածն է այնուհետև տեղափոխում ֆայլը՝ ըստ իր գաղտնիության քաղաքականության: Ներառվում են միայն ընտրված ձայնի ձայնագրությունները — երեխաների անուններն ու ընտանիքի այլ տվյալները չեն ներառվում: Կիսվեք միայն վստահելի մարդկանց հետ և միայն այն ձայնագրություններով, որ հարմար եք ուղարկել:'],
         ['Սարքի ձայները (տեքստից խոսք)','Բառերը արտասանվում են ձեր սարքի օպերացիոն համակարգի ձայներով: Կախված սարքի կարգավորումներից՝ որոշ համակարգային ձայներ կարող են մշակվել սարքի արտադրողի կողմից. ձայնը ընտրեք հավելվածի և սարքի խոսքի կարգավորումներում: Հավելվածն ինքը ոչինչ ում չի ուղարկում:'],
         ['Անվտանգություն և պահպանում','Ձեր տվյալները մնում են այս սարքում, մինչև դուք ջնջեք դրանք: Քանի որ դրանք երբեք չեն ուղարկվում, հնարավոր չէ դրանք գաղտնալսել ճանապարհին: Հավելվածի անվտանգության քաղաքականությունը (CSP) արգելափակում է բոլոր արտաքին կապերը՝ որպես լրացուցիչ պաշտպանություն:'],
         ['Փոփոխություններ','Եթե հավելվածի աշխատանքը երբևէ փոխվի, մենք կթարմացնենք այս քաղաքականությունն ու նրա ամսաթիվը նախքան փոփոխության ուժի մեջ մտնելը, իսկ էական փոփոխությունները կնշվեն հավելվածում:']
@@ -2544,6 +2550,16 @@
     }).catch(function(){ status('denied'); });
   }
 
+  // ---- voice-pack sharing strings (studio can be in any language; fall back to English) ----
+  var VPK = {
+    en:{ share:'\u{1F4E4} Share {name}’s voice', receive:'\u{1F4E5} Receive a voice', empty:'Record a few words first, then share.', prep:'Preparing voice pack…', ready:'Ready to share ✓', dl:'Voice pack saved ✓', added:'{name}’s voice added ✓', bad:'That file could not be read' },
+    es:{ share:'\u{1F4E4} Compartir la voz de {name}', receive:'\u{1F4E5} Recibir una voz', empty:'Graba unas palabras primero y luego comparte.', prep:'Preparando el paquete de voz…', ready:'Listo para compartir ✓', dl:'Paquete de voz guardado ✓', added:'Voz de {name} añadida ✓', bad:'No se pudo leer ese archivo' },
+    fr:{ share:'\u{1F4E4} Partager la voix de {name}', receive:'\u{1F4E5} Recevoir une voix', empty:'Enregistre d’abord quelques mots, puis partage.', prep:'Préparation du pack vocal…', ready:'Prêt à partager ✓', dl:'Pack vocal enregistré ✓', added:'Voix de {name} ajoutée ✓', bad:'Ce fichier n’a pas pu être lu' },
+    ar:{ share:'\u{1F4E4} مشاركة صوت {name}', receive:'\u{1F4E5} استقبال صوت', empty:'سجّل بعض الكلمات أولاً ثم شارك.', prep:'جارٍ تحضير حزمة الصوت…', ready:'جاهز للمشاركة ✓', dl:'تم حفظ حزمة الصوت ✓', added:'تمت إضافة صوت {name} ✓', bad:'تعذّرت قراءة هذا الملف' },
+    hy:{ share:'\u{1F4E4} Կիսվել {name}-ի ձայնով', receive:'\u{1F4E5} Ստանալ ձայն', empty:'Նախ ձայնագրիր մի քանի բառ, ապա կիսվիր։', prep:'Ձայնի փաթեթը պատրաստվում է…', ready:'Պատրաստ է կիսվելու ✓', dl:'Ձայնի փաթեթը պահվեց ✓', added:'{name}-ի ձայնն ավելացվեց ✓', bad:'Ֆայլը հնարավոր չէ կարդալ' }
+  };
+  function TVPK(){ return VPK[LANG]||VPK.en; }
+
   // ---- recording studio ----
   var studioLang='en', studioCat='animals', studioPersonId=null, studioReturn='home';
   function openStudio(ret){
@@ -2574,7 +2590,25 @@
     var hint=gid('studioLangHint');
     if(studioLang==='es'||studioLang==='fr'){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
     else { hint.style.display='none'; }
+    renderShareRow();
     renderRecList();
+  }
+  // Share this person's whole voice as one file; anyone can receive one back.
+  function renderShareRow(){
+    var row=gid('studioShareRow'); if(!row) return; row.innerHTML='';
+    var V=TVPK();
+    var p=studioPersonId?personById(studioPersonId):null;
+    if(p){
+      var s=document.createElement('button'); s.className='mini vp-rec';
+      s.textContent=V.share.replace('{name}', String(p.name||''));
+      s.addEventListener('click', function(){ exportVoicePack(p.id); });
+      row.appendChild(s);
+    }
+    var r=document.createElement('button'); r.className='mini';
+    r.style.background='#a0e7e5'; r.style.color='#1f5e60';
+    r.textContent=V.receive;
+    r.addEventListener('click', function(){ gid('importFile').click(); });
+    row.appendChild(r);
   }
   function renderRecList(){
     var list=gid('recList'); list.innerHTML='';
@@ -2936,9 +2970,11 @@
   }
   function importBackup(file){
     var fr=new FileReader();
-    fr.onload=function(){
+    fr.onload=function(){ var data=null; try{ data=JSON.parse(fr.result); }catch(e){} importBackupData(data); };
+    fr.readAsText(file);
+  }
+  function importBackupData(data){
       try{
-        var data=JSON.parse(fr.result);
         if(!data || typeof data!=='object') throw new Error('bad');
         var ps=bkPersons(data.persons); if(ps){ persons=ps; savePersons(); }
         var pf=bkProfiles(data.profiles); if(pf){ profilesArr=pf; saveProfiles(); }
@@ -2950,7 +2986,78 @@
         Object.keys(clips).forEach(function(k){ var u=bkClipEntry(k,clips[k]); if(!u) return; chain=chain.then(function(){ return idbPut(k, dataURLToBlob(u)).then(function(){ customIndex[k]=1; n++; }); }); });
         chain.then(function(){ showTransientToast(TG().bkRestored); setTimeout(function(){ location.reload(); }, 900); });
       }catch(e){ showTransientToast(TG().bkBad); }
-    };
+  }
+
+  // ---- voice packs: share one person's whole voice as a single file, receive one back ----
+  // A pack is person-independent: clips are keyed "lang|word" (no device id), so the receiving
+  // device rebuilds each key under its own local person id. Only the chosen voice travels —
+  // no child names, no other family data.
+  function shareOrDownload(blob, filename, title){
+    var V=TVPK();
+    try{
+      if(navigator.canShare && navigator.share){
+        var file=new File([blob], filename, {type:'application/json'});
+        if(navigator.canShare({files:[file]})){
+          navigator.share({files:[file], title:title, text:title}).then(function(){ showTransientToast(V.ready); }).catch(function(){});
+          return;
+        }
+      }
+    }catch(e){}
+    var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
+    showTransientToast(V.dl);
+  }
+  function exportVoicePack(pid){
+    var p=personById(pid); if(!p) return;
+    var V=TVPK();
+    showTransientToast(V.prep);
+    idbAllKeys().then(function(keys){
+      // every recording keyed rec|<lang>|<pid>|<word>, across all categories and languages
+      var mine=keys.filter(function(k){ var s=String(k).split('|'); return s[0]==='rec' && s[2]===pid; });
+      if(!mine.length){ showTransientToast(V.empty); return; }
+      var clips={}, photoData=null, chain=Promise.resolve();
+      mine.forEach(function(k){ var s=String(k).split('|'); var slot=s[1]+'|'+s[3]; chain=chain.then(function(){ return idbGet(k).then(function(b){ if(b&&b.size!=null) return blobToDataURL(b).then(function(u){ if(u) clips[slot]=u; }); }); }); });
+      if(p.photo){ chain=chain.then(function(){ return idbGet(photoKey(pid)).then(function(b){ if(b&&b.size!=null) return blobToDataURL(b).then(function(u){ if(u) photoData=u; }); }); }); }
+      return chain.then(function(){
+        var pack={ tinyHandsVoicePack:1, name:String(p.name||''), emoji:String(p.emoji||''), photo:photoData, clips:clips };
+        var blob=new Blob([JSON.stringify(pack)],{type:'application/json'});
+        var safe=(String(p.name||'voice').replace(/[^A-Za-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40))||'voice';
+        shareOrDownload(blob, 'tiny-hands-voice-'+safe+'.json', V.share.replace('{name}', String(p.name||'')));
+      });
+    }).catch(function(){ showTransientToast(TG().bkFail); });
+  }
+  // Pack files come from outside the app: validate keys, media types, and sizes before use.
+  function vpClip(slot,u){
+    if(!/^[a-z]{2}\|[^|]{1,64}$/.test(slot)) return null;
+    if(typeof u!=='string' || u.length>15*1024*1024) return null;
+    if(!/^data:audio\/[a-z0-9.+-]+;base64,/i.test(u)) return null;
+    return u;
+  }
+  function importVoicePackData(data){
+    var V=TVPK();
+    try{
+      if(!data || typeof data!=='object' || !data.tinyHandsVoicePack) throw new Error('bad');
+      var name=bkStr(data.name,60)||'?';
+      var clips=(data.clips&&typeof data.clips==='object')?data.clips:{};
+      var valid=[]; Object.keys(clips).forEach(function(slot){ var u=vpClip(slot,clips[slot]); if(u) valid.push([slot,u]); });
+      if(!valid.length){ showTransientToast(V.bad); return; }
+      // attach the whole batch to one local person: reuse a same-named voice, else create it
+      loadPersons();
+      var target=null; for(var i=0;i<persons.length;i++){ if(String(persons[i].name||'').toLowerCase()===name.toLowerCase()){ target=persons[i]; break; } }
+      if(!target){ target=addPerson(name, bkStr(data.emoji,8)||''); }
+      var pid=target.id, chain=Promise.resolve();
+      valid.forEach(function(pair){ var s=pair[0].split('|'); var key=customKey(s[0], pid, s[1]); chain=chain.then(function(){ return idbPut(key, dataURLToBlob(pair[1])).then(function(){ customIndex[key]=1; }); }); });
+      var photo=(typeof data.photo==='string' && /^data:image\/[a-z0-9.+-]+;base64,/i.test(data.photo) && data.photo.length<=15*1024*1024)?data.photo:null;
+      if(photo && !target.photo){ chain=chain.then(function(){ return setPersonPhoto(pid, dataURLToBlob(photo)); }); }
+      chain.then(function(){ showTransientToast(V.added.replace('{name}', name)); setTimeout(function(){ location.reload(); }, 900); });
+    }catch(e){ showTransientToast(V.bad); }
+  }
+  // One file picker, two payloads: a voice pack merges in; anything else restores as a backup.
+  function routeImportFile(file){
+    var fr=new FileReader();
+    fr.onload=function(){ var data=null; try{ data=JSON.parse(fr.result); }catch(e){}
+      if(data && typeof data==='object' && data.tinyHandsVoicePack){ importVoicePackData(data); }
+      else { importBackupData(data); } };
     fr.readAsText(file);
   }
   function openBackup(){
@@ -3100,7 +3207,7 @@
       if(goStudio){ studioPersonId=p.id; renderStudio(); } else { setActivePerson(p.id); }
     });
     // backup restore file input
-    gid('importFile').addEventListener('change', function(){ var f=this.files&&this.files[0]; if(f) importBackup(f); this.value=''; });
+    gid('importFile').addEventListener('change', function(){ var f=this.files&&this.files[0]; if(f) routeImportFile(f); this.value=''; });
     // save play-time when leaving/hiding the app
     document.addEventListener('visibilitychange', function(){ if(document.visibilityState!=='visible') addTime(); });
     window.addEventListener('pagehide', addTime); window.addEventListener('beforeunload', addTime);
