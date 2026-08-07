@@ -301,10 +301,13 @@
   .tile.t6{ background:linear-gradient(160deg,#b39ddb,#9575cd); }
   .tile.t7{ background:linear-gradient(160deg,#80cbc4,#4db6ac); }
   .tile.t8{ background:linear-gradient(160deg,#8fc1ff,#5f9df5); }
+  .tile.t9{ background:linear-gradient(160deg,#f9a8d4,#ec6fb0); }
+  .tile.t10{ background:linear-gradient(160deg,#9ee37d,#5fc26b); }
   #menu .playonly{ display:none; }
   #menu.show-games .playonly{ display:flex; }
-  /* Learn shows 6 tiles (3 rows of 2); Play shows 9 tiles (trace fills the last row) */
-  #menu.show-games .grid{ grid-template-rows:repeat(5,1fr); }
+  /* Learn shows 8 tiles (4 rows of 2); Play shows 11 tiles (trace fills the last row) */
+  #menu:not(.show-games) .grid{ grid-template-rows:repeat(4,1fr); }
+  #menu.show-games .grid{ grid-template-rows:repeat(6,1fr); }
   #menu.show-games .tile.t7{ grid-column:1 / -1; }
   /* truly-centered, larger screen titles */
   .gametop{ position:relative; }
@@ -579,6 +582,8 @@
       <button class="tile t2" data-game="colors"><span class="emoji">&#x1F3A8;</span><span class="name"></span></button>
       <button class="tile t3" data-game="shapes"><span class="emoji">&#x1F537;</span><span class="name"></span></button>
       <button class="tile t8" data-game="house"><span class="emoji">&#x1F3E0;</span><span class="name"></span></button>
+      <button class="tile t9" data-game="clothes"><span class="emoji">&#x1F455;</span><span class="name"></span></button>
+      <button class="tile t10" data-game="body"><span class="emoji">&#x1F9B6;</span><span class="name"></span></button>
       <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
       <button class="tile t5 playonly" data-game="count"><span class="emoji">&#x1F9EE;</span><span class="name"></span></button>
       <button class="tile t6 playonly" data-game="memory"><span class="emoji">&#x1F9E0;</span><span class="name"></span></button>
@@ -907,6 +912,30 @@
     {key:"phone",  render:{type:"emoji",emoji:emo(0x260E)+"\uFE0F"},   say:{en:"phone",  ar:"تلفون",  hy:"հեռախոս"}},
     {key:"bath",   render:{type:"emoji",emoji:emo(0x1F6C1)},           say:{en:"bath",   ar:"حمّام",  hy:"լոգարան"}}
   ];
+  var CLOTHES = [
+    {key:"shirt",  render:{type:"emoji",emoji:emo(0x1F455)},           say:{en:"shirt",  ar:"قميص",   hy:"շապիկ"}},
+    {key:"pants",  render:{type:"emoji",emoji:emo(0x1F456)},           say:{en:"pants",  ar:"بنطلون", hy:"տաբատ"}},
+    {key:"dress",  render:{type:"emoji",emoji:emo(0x1F457)},           say:{en:"dress",  ar:"فستان",  hy:"զգեստ"}},
+    {key:"jacket", render:{type:"emoji",emoji:emo(0x1F9E5)},           say:{en:"jacket", ar:"جاكيت",  hy:"բաճկոն"}},
+    {key:"shoes",  render:{type:"emoji",emoji:emo(0x1F45F)},           say:{en:"shoes",  ar:"صباط",   hy:"կոշիկ"}},
+    {key:"socks",  render:{type:"emoji",emoji:emo(0x1F9E6)},           say:{en:"socks",  ar:"كلسات",  hy:"գուլպա"}},
+    {key:"hat",    render:{type:"emoji",emoji:emo(0x1F9E2)},           say:{en:"hat",    ar:"طاقية",  hy:"գլխարկ"}},
+    {key:"shorts", render:{type:"emoji",emoji:emo(0x1FA73)},           say:{en:"shorts", ar:"شورت",   hy:"շորտ"}},
+    {key:"gloves", render:{type:"emoji",emoji:emo(0x1F9E4)},           say:{en:"gloves", ar:"كفوف",   hy:"ձեռնոց"}},
+    {key:"scarf",  render:{type:"emoji",emoji:emo(0x1F9E3)},           say:{en:"scarf",  ar:"شال",    hy:"շարֆ"}}
+  ];
+  var BODY = [
+    {key:"eye",    render:{type:"emoji",emoji:emo(0x1F441)+"\uFE0F"},  say:{en:"eye",    ar:"عين",    hy:"աչք"}},
+    {key:"ear",    render:{type:"emoji",emoji:emo(0x1F442)},           say:{en:"ear",    ar:"أذن",    hy:"ականջ"}},
+    {key:"nose",   render:{type:"emoji",emoji:emo(0x1F443)},           say:{en:"nose",   ar:"منخار",  hy:"քիթ"}},
+    {key:"mouth",  render:{type:"emoji",emoji:emo(0x1F444)},           say:{en:"mouth",  ar:"تمّ",    hy:"բերան"}},
+    {key:"tooth",  render:{type:"emoji",emoji:emo(0x1F9B7)},           say:{en:"tooth",  ar:"سن",     hy:"ատամ"}},
+    {key:"tongue", render:{type:"emoji",emoji:emo(0x1F445)},           say:{en:"tongue", ar:"لسان",   hy:"լեզու"}},
+    {key:"hand",   render:{type:"emoji",emoji:emo(0x270B)},            say:{en:"hand",   ar:"إيد",    hy:"ձեռք"}},
+    {key:"foot",   render:{type:"emoji",emoji:emo(0x1F9B6)},           say:{en:"foot",   ar:"إجر",    hy:"ոտք"}},
+    {key:"arm",    render:{type:"emoji",emoji:emo(0x1F4AA)},           say:{en:"arm",    ar:"ذراع",   hy:"թև"}},
+    {key:"face",   render:{type:"emoji",emoji:emo(0x1F642)},           say:{en:"face",   ar:"وجه",    hy:"դեմք"}}
+  ];
   var AR_LETTERS = ["ا","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س","ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م","ن","ه","و","ي"];
   var AR_NUMWORDS = ["واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة","عشرة"];
   var HY_LETTERS = ["Ա","Բ","Գ","Դ","Ե","Զ","Է","Ը","Թ","Ժ","Ի","Լ","Խ","Ծ","Կ","Հ","Ձ","Ղ","Ճ","Մ","Յ","Ն","Շ","Ո","Չ","Պ","Ջ","Ռ","Ս","Վ","Տ","Ր","Ց","Ւ","Փ","Ք","Օ","Ֆ"];
@@ -917,17 +946,21 @@
     dog:"perro", cat:"gato", cow:"vaca", pig:"cerdo", frog:"rana", lion:"león", bear:"oso", monkey:"mono", horse:"caballo", duck:"pato", rabbit:"conejo", elephant:"elefante", fish:"pez", sheep:"oveja",
     red:"rojo", blue:"azul", yellow:"amarillo", green:"verde", orange:"naranja", purple:"morado", pink:"rosa", brown:"marrón", black:"negro", white:"blanco", gray:"gris",
     circle:"círculo", square:"cuadrado", triangle:"triángulo", star:"estrella", heart:"corazón", diamond:"rombo",
-    house:"casa", door:"puerta", window:"ventana", table:"mesa", chair:"silla", bed:"cama", sofa:"sofá", lamp:"lámpara", spoon:"cuchara", cup:"vaso", plate:"plato", key:"llave", phone:"teléfono", bath:"baño"
+    house:"casa", door:"puerta", window:"ventana", table:"mesa", chair:"silla", bed:"cama", sofa:"sofá", lamp:"lámpara", spoon:"cuchara", cup:"vaso", plate:"plato", key:"llave", phone:"teléfono", bath:"baño",
+    shirt:"camisa", pants:"pantalón", dress:"vestido", jacket:"chaqueta", shoes:"zapatos", socks:"calcetines", hat:"gorra", shorts:"shorts", gloves:"guantes", scarf:"bufanda",
+    eye:"ojo", ear:"oreja", nose:"nariz", mouth:"boca", tooth:"diente", tongue:"lengua", hand:"mano", foot:"pie", arm:"brazo", face:"cara"
   };
-  [ANIMALS, COLORS, SHAPES, HOUSE].forEach(function(arr){ arr.forEach(function(it){ if(ES_WORDS[it.key]) it.say.es = ES_WORDS[it.key]; }); });
+  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY].forEach(function(arr){ arr.forEach(function(it){ if(ES_WORDS[it.key]) it.say.es = ES_WORDS[it.key]; }); });
   var FR_NUMWORDS = ["un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix"];
   var FR_WORDS = {
     dog:"chien", cat:"chat", cow:"vache", pig:"cochon", frog:"grenouille", lion:"lion", bear:"ours", monkey:"singe", horse:"cheval", duck:"canard", rabbit:"lapin", elephant:"éléphant", fish:"poisson", sheep:"mouton",
     red:"rouge", blue:"bleu", yellow:"jaune", green:"vert", orange:"orange", purple:"violet", pink:"rose", brown:"marron", black:"noir", white:"blanc", gray:"gris",
     circle:"cercle", square:"carré", triangle:"triangle", star:"étoile", heart:"cœur", diamond:"losange",
-    house:"maison", door:"porte", window:"fenêtre", table:"table", chair:"chaise", bed:"lit", sofa:"canapé", lamp:"lampe", spoon:"cuillère", cup:"verre", plate:"assiette", key:"clé", phone:"téléphone", bath:"bain"
+    house:"maison", door:"porte", window:"fenêtre", table:"table", chair:"chaise", bed:"lit", sofa:"canapé", lamp:"lampe", spoon:"cuillère", cup:"verre", plate:"assiette", key:"clé", phone:"téléphone", bath:"bain",
+    shirt:"chemise", pants:"pantalon", dress:"robe", jacket:"veste", shoes:"chaussures", socks:"chaussettes", hat:"casquette", shorts:"short", gloves:"gants", scarf:"écharpe",
+    eye:"œil", ear:"oreille", nose:"nez", mouth:"bouche", tooth:"dent", tongue:"langue", hand:"main", foot:"pied", arm:"bras", face:"visage"
   };
-  [ANIMALS, COLORS, SHAPES, HOUSE].forEach(function(arr){ arr.forEach(function(it){ if(FR_WORDS[it.key]) it.say.fr = FR_WORDS[it.key]; }); });
+  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY].forEach(function(arr){ arr.forEach(function(it){ if(FR_WORDS[it.key]) it.say.fr = FR_WORDS[it.key]; }); });
   var EN_OVR = { A:"ay", Z:"zee" };
   var HY_CLIPS = {
     "Ա":"data:audio/mpeg;base64,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",
@@ -1016,8 +1049,8 @@
     en:{
       dir:'ltr',
       subtitle:'Little learning games \u00b7 ages 20\u201336 months',
-      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
-      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', count:'How many?', memory:'Find the matching pairs!'},
+      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', clothes:'Clothes', body:'Body', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
+      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', clothes:'Tap the one you hear', body:'Tap the one you hear', count:'How many?', memory:'Find the matching pairs!'},
       home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
       count:'Count', countDesc:'Count and tap the number', memory:'Memory', memoryDesc:'Find the matching pairs', trace:'Trace', traceDesc:'Trace letters and numbers', clear:'Clear', next:'Next \u25b6',
       play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it',
@@ -1027,8 +1060,8 @@
     ar:{
       dir:'rtl',
       subtitle:'ألعاب تعليمية صغيرة \u00b7 للأعمار ٢٠–٣٦ شهراً',
-      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
-      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
+      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', clothes:'ملابس', body:'الجسم', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
+      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', clothes:'اضغط على الشيء الذي تسمعه', body:'اضغط على الشيء الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
       home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
       count:'عُدّ', countDesc:'عُدّ واضغط الرقم', memory:'ذاكرة', memoryDesc:'جد البطاقات المتطابقة', trace:'تتبّع', traceDesc:'تتبّع الحروف والأرقام', clear:'مسح', next:'◀ التالي',
       play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها',
@@ -1038,8 +1071,8 @@
     hy:{
       dir:'ltr',
       subtitle:'Փոքրիկ ուսուցողական խաղեր \u00b7 20\u201336 ամսական',
-      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
-      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
+      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', clothes:'Հագուստ', body:'Մարմին', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
+      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', clothes:'Սեղմիր այն, ինչ լսում ես', body:'Սեղմիր այն, ինչ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
       home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
       count:'Հաշվիր', countDesc:'Հաշվիր և սեղմիր թիվը', memory:'Հիշողություն', memoryDesc:'Գտիր զույգերը', trace:'Գծիր', traceDesc:'Գծիր տառերն ու թվերը', clear:'Մաքրել', next:'Հաջորդ ▶',
       play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար',
@@ -1049,8 +1082,8 @@
     es:{
       dir:'ltr',
       subtitle:'Pequeños juegos de aprendizaje · 20–36 meses',
-      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
-      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
+      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', clothes:'Ropa', body:'Cuerpo', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
+      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', clothes:'Toca lo que escuchas', body:'Toca lo que escuchas', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
       home:'← Inicio', newRound:'Otra ronda ↻', voice:emo(0x1F399)+' Voz', replay:'Escuchar otra vez', cheer:'¡Muy bien!',
       count:'Contar', countDesc:'Cuenta y toca el número', memory:'Memoria', memoryDesc:'Encuentra las parejas', trace:'Trazar', traceDesc:'Traza letras y números', clear:'Borrar', next:'Siguiente ▶',
       play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla',
@@ -1060,8 +1093,8 @@
     fr:{
       dir:'ltr',
       subtitle:'Petits jeux d’apprentissage · 20–36 mois',
-      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
-      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
+      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', clothes:'Vêtements', body:'Corps', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
+      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', clothes:'Touche ce que tu entends', body:'Touche ce que tu entends', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
       home:'← Accueil', newRound:'Nouveau tour ↻', voice:emo(0x1F399)+' Voix', replay:'Réécouter', cheer:'Bravo !',
       count:'Compter', countDesc:'Compte et touche le chiffre', memory:'Mémoire', memoryDesc:'Trouve les paires', trace:'Tracer', traceDesc:'Trace les lettres et les chiffres', clear:'Effacer', next:'Suivant ▶',
       play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre',
@@ -1530,7 +1563,9 @@
       animals:{prompt:T.prompts.animals, items:L(ANIMALS)},
       colors:{prompt:T.prompts.colors,   items:L(COLORS)},
       shapes:{prompt:T.prompts.shapes,   items:L(SHAPES)},
-      house:{prompt:T.prompts.house,     items:L(HOUSE)}
+      house:{prompt:T.prompts.house,     items:L(HOUSE)},
+      clothes:{prompt:T.prompts.clothes, items:L(CLOTHES)},
+      body:{prompt:T.prompts.body,       items:L(BODY)}
     };
   }
 
@@ -1657,7 +1692,7 @@
   var ES_PHONICS={A:'a',B:'ba',C:'ca',D:'da',E:'e',F:'fa',G:'ga',H:'ha',I:'i',J:'ja',K:'ka',L:'la',M:'ma',N:'na','Ñ':'ña',O:'o',P:'pa',Q:'que',R:'ra',S:'sa',T:'ta',U:'u',V:'va',W:'wa',X:'xa',Y:'ya',Z:'za'};
   function numberWord(n, lang){ return lang==='ar'?AR_NUMWORDS[n-1] : lang==='hy'?HY_NUMWORDS[n-1] : lang==='es'?ES_NUMWORDS[n-1] : lang==='fr'?FR_NUMWORDS[n-1] : String(n); }
   function wordFor(key, lang){
-    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE);
+    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE).concat(CLOTHES).concat(BODY);
     for(var i=0;i<src.length;i++){ if(src[i].key===key) return src[i].say[lang]||src[i].say.en; }
     var m=/^n([1-9]|10)$/.exec(key); if(m) return numberWord(+m[1], lang);
     return key;   // letters: the glyph itself
@@ -1931,7 +1966,7 @@
       } else {
         b.style.background=LEARN_PALETTE[idx%LEARN_PALETTE.length]; applyContent(b,item);
       }
-      var showCap = (type==='animals'||type==='shapes'||type==='colors'||type==='house') || (type==='numbers' && item.say && item.render && item.say!==item.render.label);
+      var showCap = (type==='animals'||type==='shapes'||type==='colors'||type==='house'||type==='clothes'||type==='body') || (type==='numbers' && item.say && item.render && item.say!==item.render.label);
       if(showCap && item.say){ var cap=document.createElement('span'); cap.className='lcap'; cap.textContent=item.say; cap.style.color=capColor; b.appendChild(cap); }
       b.setAttribute('aria-label', item.say||item.key||'');
       (function(it,btn){ btn.addEventListener('click', function(){ learnSpeak(it,btn); }); })(item,b);
@@ -2583,7 +2618,7 @@
     renderStudio();
     showScreen('studio');
   }
-  function studioCats(){ return ['letters','numbers','animals','colors','shapes','house']; }
+  function studioCats(){ return ['letters','numbers','animals','colors','shapes','house','clothes','body']; }
   function renderStudio(){
     var T=I18N[LANG];
     // people row
@@ -2801,7 +2836,8 @@
   var SHAPE_CHIP_EMOJI={circle:'⚪',square:'🟦',triangle:'🔺',star:'⭐',heart:'❤️',diamond:'🔷'};
   function chipVisual(key){
     for(var i=0;i<ANIMALS.length;i++){ if(ANIMALS[i].key===key) return {text:ANIMALS[i].render.emoji}; }
-    for(var h=0;h<HOUSE.length;h++){ if(HOUSE[h].key===key) return {text:HOUSE[h].render.emoji||HOUSE[h].render.chip}; }
+    var hcb=HOUSE.concat(CLOTHES).concat(BODY);
+    for(var h=0;h<hcb.length;h++){ if(hcb[h].key===key) return {text:hcb[h].render.emoji||hcb[h].render.chip}; }
     for(var j=0;j<COLORS.length;j++){ if(COLORS[j].key===key) return {text:'●', color:COLORS[j].render.color}; }
     if(SHAPE_CHIP_EMOJI[key]) return {text:SHAPE_CHIP_EMOJI[key]};
     var m=/^n([1-9]|10)$/.exec(key); if(m) return {text:countLabel(+m[1])};
@@ -2851,7 +2887,7 @@
     stat((PD.wordsHeard||0),g.wordsHeard);
     renderWordChips();
     var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(cc[k]>maxc) maxc=cc[k]; }
-    var order=['letters','numbers','animals','colors','shapes','house','count','memory','trace'];
+    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','count','memory','trace'];
     order.forEach(function(cat){ if(!cc[cat]) return; var row=document.createElement('div'); row.className='barRow';
       row.innerHTML='<span class="bl">'+(I18N[LANG].tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
     if(!cats.children.length){ cats.innerHTML='<p class="vp-tip">'+g.noPlay+'</p>'; }
