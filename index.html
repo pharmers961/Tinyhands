@@ -2132,7 +2132,10 @@
   var MEM_PAIRS=3, memFirst=null, memLock=false, memMatched=0;
   function newMemoryBoard(){
     memFirst=null; memLock=false; memMatched=0;
-    var pool=shuffle(GAMESBYTYPE.animals.items.slice()).slice(0,MEM_PAIRS);
+    // draw pairs from every picture category (emoji renders only — the table is an SVG)
+    var mix=GAMESBYTYPE.animals.items.concat(GAMESBYTYPE.house.items, GAMESBYTYPE.clothes.items, GAMESBYTYPE.body.items)
+      .filter(function(it){ return it.render && it.render.type==='emoji'; });
+    var pool=shuffle(mix).slice(0,MEM_PAIRS);
     var deck=[]; pool.forEach(function(it){ deck.push(it); deck.push(it); }); shuffle(deck);
     memGrid.innerHTML='';
     deck.forEach(function(item){
@@ -2580,26 +2583,33 @@
   function closePersonSheet(){ gid('personSheet').classList.remove('open'); }
 
   // ---- recording (MediaRecorder -> IndexedDB) ----
-  var mediaStream=null, mediaRec=null, recChunks=[], recTimer=null, recordingKey=null;
+  // Each session keeps its key, stream and chunks in this closure, so overlapping sessions
+  // (tapping the next word's ● while another word is still recording) can never save audio
+  // under the wrong word, stop each other's microphone, or tangle the shared state.
+  var mediaRec=null, recTimer=null, recordingKey=null, lastRecStopAt=0;
   function recSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
-  function stopStream(){ if(mediaStream){ try{ mediaStream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){} mediaStream=null; } }
   function stopRecording(){ if(recTimer){ clearTimeout(recTimer); recTimer=null; } if(mediaRec && mediaRec.state!=='inactive'){ try{ mediaRec.stop(); }catch(e){} } }
   function startRecording(lang,pid,key, status, maxMs){
     if(!recSupported()){ status('unsupported'); return; }
     stopAllAudio();
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
-      mediaStream=stream; recChunks=[]; recordingKey=customKey(lang,pid,key);
-      var mr; try{ mr=new MediaRecorder(stream); }catch(e){ try{ mr=new MediaRecorder(stream,{mimeType:'audio/webm'}); }catch(e2){ stopStream(); status('unsupported'); return; } }
-      mediaRec=mr;
-      mr.ondataavailable=function(e){ if(e.data&&e.data.size) recChunks.push(e.data); };
+      var ck=customKey(lang,pid,key), chunks=[];
+      function releaseMic(){ try{ stream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){} }
+      var mr; try{ mr=new MediaRecorder(stream); }catch(e){ try{ mr=new MediaRecorder(stream,{mimeType:'audio/webm'}); }catch(e2){ releaseMic(); status('unsupported'); return; } }
+      stopRecording();   // a previous session may still be open; close it before taking over
+      mediaRec=mr; recordingKey=ck;
+      mr.ondataavailable=function(e){ if(e.data&&e.data.size) chunks.push(e.data); };
       mr.onstop=function(){
-        var type=(recChunks[0]&&recChunks[0].type)||'audio/webm';
-        var blob=new Blob(recChunks,{type:type}); stopStream();
-        var ck=recordingKey; recordingKey=null;
+        releaseMic();
+        if(recordingKey===ck) recordingKey=null;   // a newer session may already own the state
+        if(mediaRec===mr) mediaRec=null;
+        lastRecStopAt=Date.now();
+        if(!chunks.length){ status('error'); return; }   // mic produced nothing: keep any older clip
+        var blob=new Blob(chunks,{type:chunks[0].type||'audio/webm'});
         idbPut(ck, blob).then(function(){ customIndex[ck]=1; delete waBufCache['cust|'+ck]; status('saved'); }).catch(function(){ status('error'); });
       };
       mr.start();
-      recTimer=setTimeout(function(){ stopRecording(); }, maxMs||5000); // safety auto-stop
+      recTimer=setTimeout(function(){ if(mediaRec===mr) stopRecording(); }, maxMs||5000); // safety auto-stop
       status('recording');
     }).catch(function(){ status('denied'); });
   }
@@ -2629,12 +2639,20 @@
     var lt=gid('studioLangs'); lt.innerHTML=''; [['en','EN'],['ar','AR'],['hy','HY'],['es','ES'],['fr','FR']].forEach(function(pair){ var b=document.createElement('button'); b.className='mini'+(studioLang===pair[0]?' vp-done':''); b.textContent=pair[1]; b.addEventListener('click', function(){ studioLang=pair[0]; renderStudio(); }); lt.appendChild(b); });
     // category select
     var cs=gid('studioCat'); cs.innerHTML=''; studioCats().forEach(function(cat){ var o=document.createElement('option'); o.value=cat; o.textContent=T.tiles[cat]; if(cat===studioCat) o.selected=true; cs.appendChild(o); });
-    cs.onchange=function(){ studioCat=cs.value; renderRecList(); };
-    // es/fr ship without recorded clips, so nudge families to record their own voice
-    var hint=gid('studioLangHint');
-    if(studioLang==='es'||studioLang==='fr'){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
-    else { hint.style.display='none'; }
+    cs.onchange=function(){ studioCat=cs.value; updateStudioHint(); renderRecList(); };
+    updateStudioHint();
     renderRecList();
+  }
+  // Nudge families to record their own voice wherever no built-in clips exist
+  // (all of es/fr, and the newer categories in every language).
+  function catHasBuiltin(lang,cat){
+    var g=buildGames(lang)[cat]; if(!g) return false;
+    return g.items.some(function(it){ return !!builtinClip(lang,it.key); });
+  }
+  function updateStudioHint(){
+    var hint=gid('studioLangHint');
+    if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
+    else { hint.style.display='none'; }
   }
   function renderRecList(){
     var list=gid('recList'); list.innerHTML='';
@@ -2657,13 +2675,15 @@
       if(recordingKey===ck) rec.classList.add('recording');
       rec.addEventListener('click', function(){
         if(recordingKey===ck){ stopRecording(); return; }
+        // a tap aimed at ■ can land just after the auto-stop swapped it back to ● — don't re-record
+        if(!recordingKey && Date.now()-lastRecStopAt<500) return;
         if(recordingKey){ stopRecording(); }
         startRecording(studioLang, studioPersonId, item.key, function(state){
-          if(state==='recording'){ recordingKey=ck; gid('studioTip').textContent=I18N[LANG].enh.tipRec; renderRecList(); }
-          else if(state==='saved'){ recordingKey=null; gid('studioTip').textContent=I18N[LANG].enh.tipSaved; renderRecList(); }
-          else if(state==='denied'){ recordingKey=null; gid('studioTip').textContent=I18N[LANG].enh.tipDenied; renderRecList(); }
-          else if(state==='unsupported'){ recordingKey=null; gid('studioTip').textContent=I18N[LANG].enh.tipUnsupported; renderRecList(); }
-          else { recordingKey=null; renderRecList(); }
+          if(state==='recording'){ gid('studioTip').textContent=I18N[LANG].enh.tipRec; renderRecList(); }
+          else if(state==='saved'){ gid('studioTip').textContent = recordingKey ? I18N[LANG].enh.tipRec : I18N[LANG].enh.tipSaved; renderRecList(); }
+          else if(state==='denied'){ gid('studioTip').textContent=I18N[LANG].enh.tipDenied; renderRecList(); }
+          else if(state==='unsupported'){ gid('studioTip').textContent=I18N[LANG].enh.tipUnsupported; renderRecList(); }
+          else { if(!recordingKey) gid('studioTip').textContent=I18N[LANG].enh.tipReady; renderRecList(); }
         });
       });
       row.appendChild(play); row.appendChild(del); row.appendChild(rec);
@@ -2944,8 +2964,9 @@
       var rec=document.createElement('button'); rec.className='recBtn'+(customIndex[ck]?' has':'')+(recordingKey===ck?' recording':''); rec.textContent=(recordingKey===ck)?'■':'●';
       rec.addEventListener('click', function(){
         if(recordingKey===ck){ stopRecording(); return; }
+        if(!recordingKey && Date.now()-lastRecStopAt<500) return;
         if(recordingKey){ stopRecording(); }
-        startRecording('songs','all','song'+i, function(state){ if(state==='recording') recordingKey=ck; else recordingKey=null; openSongs(); }, 40000);
+        startRecording('songs','all','song'+i, function(){ openSongs(); }, 40000);
       });
       row.appendChild(play); row.appendChild(del); row.appendChild(rec); list.appendChild(row);
     })(i); }
