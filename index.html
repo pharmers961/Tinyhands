@@ -416,6 +416,10 @@
   .recBtn{ border:none; border-radius:50%; width:42px; height:42px; font-size:17px; cursor:pointer; box-shadow:0 4px 0 rgba(59,58,82,.14); background:#ff7a92; color:#fff; flex:0 0 auto; }
   .recBtn.has{ background:#7bd389; }
   .recBtn.recording{ background:#e63946; animation:recpulse .8s ease-in-out infinite; }
+  .recItem.recnow{ box-shadow:inset 0 0 0 3px #e63946; }
+  .pedit{ margin-inline-start:4px; opacity:.8; font-size:13px; }
+  .vp-danger{ background:#ffdada; color:#a33232; }
+  .songNameInput{ flex:1; min-width:0; padding:7px 9px; border-radius:10px; border:2px solid #e7e3f0; font-family:inherit; font-weight:700; font-size:14px; color:var(--ink); background:#faf9ff; }
   @keyframes recpulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
   .iconBtn{ border:none; border-radius:50%; width:40px; height:40px; font-size:16px; cursor:pointer; background:rgba(255,255,255,.95); box-shadow:0 4px 0 rgba(59,58,82,.12); flex:0 0 auto; color:var(--ink); }
   .iconBtn:active,.recBtn:active{ transform:translateY(3px); box-shadow:none; }
@@ -691,6 +695,7 @@
       <div class="studioRow">
         <div class="langTabs" id="studioLangs"></div>
         <select id="studioCat"></select>
+        <button class="mini" id="studioAutoBtn"></button>
       </div>
       <p class="vp-tip" id="studioLangHint" style="display:none;"></p>
       <p class="vp-tip" id="studioTip"></p>
@@ -716,6 +721,7 @@
       <input id="personName" type="text" autocomplete="off" />
       <div class="personChips" id="avatarPick"></div>
       <div class="vp-row">
+        <button class="mini vp-danger" id="personDelete" style="display:none;"></button>
         <button class="mini" id="personCancel"></button>
         <button class="mini vp-done" id="personSave"></button>
       </div>
@@ -1055,7 +1061,7 @@
       count:'Count', countDesc:'Count and tap the number', memory:'Memory', memoryDesc:'Find the matching pairs', trace:'Trace', traceDesc:'Trace letters and numbers', clear:'Clear', next:'Next \u25b6',
       play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it',
       vp:{ title:'Choose a voice', note:'These are the voices installed on this device. Pick one, then tap Test.', test:emo(0x1F50A)+' Test', done:'Done', tip:'Your choice is saved on this device. If none sound right, try a different browser or add a voice in your device settings.' },
-      enh:{ whose:'Whose voice?', auto:emo(0x1F46A)+' Family', add:'＋ Add', rec:emo(0x1F399)+'️ Record family voices', studioTitle:'Record voices', studioTip:'Pick a person, then tap ● to record each word. Recordings save on this device.', tipReady:'Tap ● to record', tipRec:'Recording… tap ■ to stop', tipSaved:'Saved! ✓', tipDenied:'Microphone permission is needed to record.', tipUnsupported:'Recording is not supported in this browser.', stickers:'My Stickers', stickersSub:'Earn a sticker each time you fill the stars!', stickersEmpty:'Play to earn your first sticker!', addTitle:'Add a voice', addSub:'Who is recording?', name:'Name (e.g. Mama)', save:'Save', cancel:'Cancel', done:'Done', hint:'Tap to start!' }
+      enh:{ whose:'Whose voice?', auto:emo(0x1F46A)+' Family', add:'＋ Add', rec:emo(0x1F399)+'️ Record family voices', studioTitle:'Record voices', studioTip:'Pick a person, then tap ● to record each word. Recordings save on this device.', tipReady:'Tap ● to record', tipRec:'Recording… tap ■ to stop', tipSaved:'Saved! ✓', tipDenied:'Microphone permission is needed to record.', tipUnsupported:'Recording is not supported in this browser.', stickers:'My Stickers', stickersSub:'Earn a sticker each time you fill the stars!', stickersEmpty:'Play to earn your first sticker!', addTitle:'Add a voice', addSub:'Who is recording?', name:'Name (e.g. Mama)', save:'Save', cancel:'Cancel', done:'Done', hint:'Tap to start!', recAll:'⏭ Record all', editTitle:'Edit voice', editDel:'🗑️ Delete voice', editDelAsk:'Remove this voice? Its recordings on this device will be deleted too.' }
     },
     ar:{
       dir:'rtl',
@@ -1066,7 +1072,7 @@
       count:'عُدّ', countDesc:'عُدّ واضغط الرقم', memory:'ذاكرة', memoryDesc:'جد البطاقات المتطابقة', trace:'تتبّع', traceDesc:'تتبّع الحروف والأرقام', clear:'مسح', next:'◀ التالي',
       play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها',
       vp:{ title:'اختر الصوت', note:'هذه الأصوات مثبّتة على هذا الجهاز. اختر صوتاً ثم اضغط استماع.', test:emo(0x1F50A)+' استماع', done:'تم', tip:'تم حفظ اختيارك على هذا الجهاز. إذا لم يناسبك أي صوت، جرّب متصفحاً آخر أو أضف صوتاً عربياً من إعدادات جهازك.' },
-      enh:{ whose:'صوت من؟', auto:emo(0x1F46A)+' العائلة', add:'＋ إضافة', rec:emo(0x1F399)+'️ سجّل أصوات العائلة', studioTitle:'تسجيل الأصوات', studioTip:'اختر شخصاً ثم اضغط ● لتسجيل كل كلمة. تُحفظ التسجيلات على هذا الجهاز.', tipReady:'اضغط ● للتسجيل', tipRec:'جارٍ التسجيل… اضغط ■ للإيقاف', tipSaved:'تم الحفظ ✓', tipDenied:'يلزم إذن الميكروفون للتسجيل.', tipUnsupported:'التسجيل غير مدعوم في هذا المتصفح.', stickers:'ملصقاتي', stickersSub:'احصل على ملصق كلما ملأت النجوم!', stickersEmpty:'العب لتحصل على أول ملصق!', addTitle:'إضافة صوت', addSub:'من سيسجّل؟', name:'الاسم (مثلاً ماما)', save:'حفظ', cancel:'إلغاء', done:'تم', hint:'اضغط للبدء!' }
+      enh:{ whose:'صوت من؟', auto:emo(0x1F46A)+' العائلة', add:'＋ إضافة', rec:emo(0x1F399)+'️ سجّل أصوات العائلة', studioTitle:'تسجيل الأصوات', studioTip:'اختر شخصاً ثم اضغط ● لتسجيل كل كلمة. تُحفظ التسجيلات على هذا الجهاز.', tipReady:'اضغط ● للتسجيل', tipRec:'جارٍ التسجيل… اضغط ■ للإيقاف', tipSaved:'تم الحفظ ✓', tipDenied:'يلزم إذن الميكروفون للتسجيل.', tipUnsupported:'التسجيل غير مدعوم في هذا المتصفح.', stickers:'ملصقاتي', stickersSub:'احصل على ملصق كلما ملأت النجوم!', stickersEmpty:'العب لتحصل على أول ملصق!', addTitle:'إضافة صوت', addSub:'من سيسجّل؟', name:'الاسم (مثلاً ماما)', save:'حفظ', cancel:'إلغاء', done:'تم', hint:'اضغط للبدء!', recAll:'⏭ تسجيل الكل' }
     },
     hy:{
       dir:'ltr',
@@ -1077,7 +1083,7 @@
       count:'Հաշվիր', countDesc:'Հաշվիր և սեղմիր թիվը', memory:'Հիշողություն', memoryDesc:'Գտիր զույգերը', trace:'Գծիր', traceDesc:'Գծիր տառերն ու թվերը', clear:'Մաքրել', next:'Հաջորդ ▶',
       play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար',
       vp:{ title:'Ընտրիր ձայնը', note:'Սրանք այս սարքում տեղադրված ձայներն են։ Ընտրիր մեկը և սեղմիր Փորձել։', test:emo(0x1F50A)+' Փորձել', done:'Լավ', tip:'Քո ընտրությունը պահվեց այս սարքում։ Եթե ոչ մի ձայն հարմար չէ, փորձիր այլ դիտարկիչ կամ ավելացրու ձայն սարքի կարգավորումներից։' },
-      enh:{ whose:'Ո՞ւմ ձայնը', auto:emo(0x1F46A)+' Ընտանիք', add:'＋ Ավելացնել', rec:emo(0x1F399)+'️ Ձայնագրել ընտանիքի ձայները', studioTitle:'Ձայնագրել', studioTip:'Ընտրիր մարդ, ապա սեղմիր ●՝ յուրաքանչյուր բառ ձայնագրելու համար։ Ձայնագրությունները պահվում են այս սարքում։', tipReady:'Սեղմիր ●՝ ձայնագրելու', tipRec:'Ձայնագրվում է… սեղմիր ■՝ կանգնեցնելու', tipSaved:'Պահպանվեց ✓', tipDenied:'Ձայնագրելու համար անհրաժեշտ է խոսափողի թույլտվություն։', tipUnsupported:'Ձայնագրումը չի աջակցվում այս դիտարկիչում։', stickers:'Իմ կպչուկները', stickersSub:'Ստացիր կպչուկ՝ ամեն անգամ աստղերը լրացնելիս!', stickersEmpty:'Խաղա՝ առաջին կպչուկը ստանալու համար!', addTitle:'Ավելացնել ձայն', addSub:'Ո՞վ է ձայնագրում', name:'Անուն (օր.՝ Մամա)', save:'Պահել', cancel:'Չեղարկել', done:'Լավ', hint:'Սեղմիր՝ սկսելու!' }
+      enh:{ whose:'Ո՞ւմ ձայնը', auto:emo(0x1F46A)+' Ընտանիք', add:'＋ Ավելացնել', rec:emo(0x1F399)+'️ Ձայնագրել ընտանիքի ձայները', studioTitle:'Ձայնագրել', studioTip:'Ընտրիր մարդ, ապա սեղմիր ●՝ յուրաքանչյուր բառ ձայնագրելու համար։ Ձայնագրությունները պահվում են այս սարքում։', tipReady:'Սեղմիր ●՝ ձայնագրելու', tipRec:'Ձայնագրվում է… սեղմիր ■՝ կանգնեցնելու', tipSaved:'Պահպանվեց ✓', tipDenied:'Ձայնագրելու համար անհրաժեշտ է խոսափողի թույլտվություն։', tipUnsupported:'Ձայնագրումը չի աջակցվում այս դիտարկիչում։', stickers:'Իմ կպչուկները', stickersSub:'Ստացիր կպչուկ՝ ամեն անգամ աստղերը լրացնելիս!', stickersEmpty:'Խաղա՝ առաջին կպչուկը ստանալու համար!', addTitle:'Ավելացնել ձայն', addSub:'Ո՞վ է ձայնագրում', name:'Անուն (օր.՝ Մամա)', save:'Պահել', cancel:'Չեղարկել', done:'Լավ', hint:'Սեղմիր՝ սկսելու!', recAll:'⏭ Ձայնագրել բոլորը' }
     },
     es:{
       dir:'ltr',
@@ -1088,7 +1094,7 @@
       count:'Contar', countDesc:'Cuenta y toca el número', memory:'Memoria', memoryDesc:'Encuentra las parejas', trace:'Trazar', traceDesc:'Traza letras y números', clear:'Borrar', next:'Siguiente ▶',
       play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla',
       vp:{ title:'Elige una voz', note:'Estas son las voces instaladas en este dispositivo. Elige una y toca Probar.', test:emo(0x1F50A)+' Probar', done:'Listo', tip:'Tu elección se guarda en este dispositivo. Si ninguna suena bien, prueba otro navegador o añade una voz en los ajustes del dispositivo.' },
-      enh:{ whose:'¿Voz de quién?', auto:emo(0x1F46A)+' Familia', add:'＋ Añadir', rec:emo(0x1F399)+'️ Grabar voces de la familia', studioTitle:'Grabar voces', studioTip:'Elige a una persona y toca ● para grabar cada palabra. Las grabaciones se guardan en este dispositivo.', tipReady:'Toca ● para grabar', tipRec:'Grabando… toca ■ para parar', tipSaved:'¡Guardado! ✓', tipDenied:'Se necesita permiso del micrófono para grabar.', tipUnsupported:'La grabación no es compatible con este navegador.', stickers:'Mis pegatinas', stickersSub:'¡Gana una pegatina cada vez que llenes las estrellas!', stickersEmpty:'¡Juega para ganar tu primera pegatina!', addTitle:'Añadir una voz', addSub:'¿Quién está grabando?', name:'Nombre (p. ej. Mamá)', save:'Guardar', cancel:'Cancelar', done:'Listo', hint:'¡Toca para empezar!' }
+      enh:{ whose:'¿Voz de quién?', auto:emo(0x1F46A)+' Familia', add:'＋ Añadir', rec:emo(0x1F399)+'️ Grabar voces de la familia', studioTitle:'Grabar voces', studioTip:'Elige a una persona y toca ● para grabar cada palabra. Las grabaciones se guardan en este dispositivo.', tipReady:'Toca ● para grabar', tipRec:'Grabando… toca ■ para parar', tipSaved:'¡Guardado! ✓', tipDenied:'Se necesita permiso del micrófono para grabar.', tipUnsupported:'La grabación no es compatible con este navegador.', stickers:'Mis pegatinas', stickersSub:'¡Gana una pegatina cada vez que llenes las estrellas!', stickersEmpty:'¡Juega para ganar tu primera pegatina!', addTitle:'Añadir una voz', addSub:'¿Quién está grabando?', name:'Nombre (p. ej. Mamá)', save:'Guardar', cancel:'Cancelar', done:'Listo', hint:'¡Toca para empezar!', recAll:'⏭ Grabar todo' }
     },
     fr:{
       dir:'ltr',
@@ -1099,7 +1105,7 @@
       count:'Compter', countDesc:'Compte et touche le chiffre', memory:'Mémoire', memoryDesc:'Trouve les paires', trace:'Tracer', traceDesc:'Trace les lettres et les chiffres', clear:'Effacer', next:'Suivant ▶',
       play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre',
       vp:{ title:'Choisis une voix', note:'Voici les voix installées sur cet appareil. Choisis-en une, puis touche Tester.', test:emo(0x1F50A)+' Tester', done:'OK', tip:'Ton choix est enregistré sur cet appareil. Si aucune voix ne convient, essaie un autre navigateur ou ajoute une voix dans les réglages de l’appareil.' },
-      enh:{ whose:'La voix de qui ?', auto:emo(0x1F46A)+' Famille', add:'＋ Ajouter', rec:emo(0x1F399)+'️ Enregistrer les voix de la famille', studioTitle:'Enregistrer des voix', studioTip:'Choisis une personne, puis touche ● pour enregistrer chaque mot. Les enregistrements sont gardés sur cet appareil.', tipReady:'Touche ● pour enregistrer', tipRec:'Enregistrement… touche ■ pour arrêter', tipSaved:'Enregistré ! ✓', tipDenied:'L’autorisation du microphone est nécessaire pour enregistrer.', tipUnsupported:'L’enregistrement n’est pas pris en charge sur ce navigateur.', stickers:'Mes autocollants', stickersSub:'Gagne un autocollant chaque fois que tu remplis les étoiles !', stickersEmpty:'Joue pour gagner ton premier autocollant !', addTitle:'Ajouter une voix', addSub:'Qui enregistre ?', name:'Nom (p. ex. Maman)', save:'Enregistrer', cancel:'Annuler', done:'OK', hint:'Touche pour commencer !' }
+      enh:{ whose:'La voix de qui ?', auto:emo(0x1F46A)+' Famille', add:'＋ Ajouter', rec:emo(0x1F399)+'️ Enregistrer les voix de la famille', studioTitle:'Enregistrer des voix', studioTip:'Choisis une personne, puis touche ● pour enregistrer chaque mot. Les enregistrements sont gardés sur cet appareil.', tipReady:'Touche ● pour enregistrer', tipRec:'Enregistrement… touche ■ pour arrêter', tipSaved:'Enregistré ! ✓', tipDenied:'L’autorisation du microphone est nécessaire pour enregistrer.', tipUnsupported:'L’enregistrement n’est pas pris en charge sur ce navigateur.', stickers:'Mes autocollants', stickersSub:'Gagne un autocollant chaque fois que tu remplis les étoiles !', stickersEmpty:'Joue pour gagner ton premier autocollant !', addTitle:'Ajouter une voix', addSub:'Qui enregistre ?', name:'Nom (p. ex. Maman)', save:'Enregistrer', cancel:'Annuler', done:'OK', hint:'Touche pour commencer !', recAll:'⏭ Tout enregistrer' }
     }
   };
 
@@ -2560,16 +2566,23 @@
     var add=document.createElement('button'); add.className='pchip add'; add.textContent=T.add; add.addEventListener('click', function(){ openPersonSheet(null); }); box.appendChild(add);
   }
 
-  // ---- add-a-voice sheet ----
-  var pendingAvatar=AVATARS[0], pendingPhoto=null;
-  function openPersonSheet(afterSaveGoStudio){
-    pendingAvatar=AVATARS[persons.length%AVATARS.length]; pendingPhoto=null;
+  // ---- add / edit a voice sheet ----
+  var pendingAvatar=AVATARS[0], pendingPhoto=null, pendingEmojiPicked=false;
+  function openPersonSheet(afterSaveGoStudio, editP){
+    pendingPhoto=null; pendingEmojiPicked=false;
+    pendingAvatar = editP ? (editP.emoji||AVATARS[0]) : AVATARS[persons.length%AVATARS.length];
     var T=I18N.en.enh;   // settings UI: always English
-    gid('personTitle').textContent=T.addTitle; gid('personSub').textContent=T.addSub;
-    gid('personName').value=''; gid('personName').placeholder=T.name;
+    gid('personTitle').textContent = editP ? T.editTitle : T.addTitle;
+    gid('personSub').textContent = editP ? '' : T.addSub;
+    gid('personName').value = editP ? String(editP.name||'') : ''; gid('personName').placeholder=T.name;
     gid('personCancel').textContent=T.cancel; gid('personSave').textContent=T.save;
+    var delBtn=gid('personDelete');
+    if(editP){
+      delBtn.style.display=''; delBtn.textContent=T.editDel;
+      delBtn.onclick=function(){ if(window.confirm(T.editDelAsk)) deletePerson(editP.id); };
+    } else { delBtn.style.display='none'; delBtn.onclick=null; }
     var pick=gid('avatarPick'); pick.innerHTML='';
-    AVATARS.forEach(function(em){ var b=document.createElement('button'); b.className='pchip'+(em===pendingAvatar?' active':''); b.innerHTML='<span class="av">'+em+'</span>'; b.addEventListener('click', function(){ pendingAvatar=em; pendingPhoto=null; var ch=pick.children; for(var i=0;i<ch.length;i++) ch[i].classList.remove('active'); b.classList.add('active'); }); pick.appendChild(b); });
+    AVATARS.forEach(function(em){ var b=document.createElement('button'); b.className='pchip'+(em===pendingAvatar?' active':''); b.innerHTML='<span class="av">'+em+'</span>'; b.addEventListener('click', function(){ pendingAvatar=em; pendingPhoto=null; pendingEmojiPicked=true; var ch=pick.children; for(var i=0;i<ch.length;i++) ch[i].classList.remove('active'); b.classList.add('active'); }); pick.appendChild(b); });
     var photoBtn=document.createElement('button'); photoBtn.className='pchip add'; photoBtn.innerHTML='\u{1F4F7} Photo';
     photoBtn.addEventListener('click', function(){
       var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
@@ -2578,9 +2591,31 @@
     });
     pick.appendChild(photoBtn);
     gid('personSheet')._goStudio=!!afterSaveGoStudio;
+    gid('personSheet')._editId=editP?editP.id:null;
     gid('personSheet').classList.add('open');
   }
   function closePersonSheet(){ gid('personSheet').classList.remove('open'); }
+  // Removing a voice also removes everything stored for it: recordings in every
+  // language, the photo, cached audio buffers, and any selection pointing at it.
+  function deletePerson(pid){
+    stopStudioAuto(); stopRecording();
+    idbAllKeys().then(function(keys){
+      var chain=Promise.resolve();
+      keys.forEach(function(k){
+        var mine = (typeof k==='string') && ((k.indexOf('rec|')===0 && k.split('|')[2]===pid) || k===photoKey(pid));
+        if(mine){ chain=chain.then(function(){ return idbDelete(k).then(function(){ delete customIndex[k]; delete waBufCache['cust|'+k]; }).catch(function(){}); }); }
+      });
+      return chain;
+    }).catch(function(){}).then(function(){
+      for(var i=persons.length-1;i>=0;i--){ if(persons[i].id===pid) persons.splice(i,1); }
+      savePersons();
+      if(photoURLs[pid]){ try{ URL.revokeObjectURL(photoURLs[pid]); }catch(e){} delete photoURLs[pid]; }
+      if(activePersonId===pid) setActivePerson('auto');
+      if(studioPersonId===pid) studioPersonId=persons.length?persons[0].id:null;
+      closePersonSheet(); renderPersonChips();
+      if(gid('studio').classList.contains('active')) renderStudio();
+    });
+  }
 
   // ---- recording (MediaRecorder -> IndexedDB) ----
   // Each session keeps its key, stream and chunks in this closure, so overlapping sessions
@@ -2618,6 +2653,7 @@
   var studioLang='en', studioCat='animals', studioPersonId=null, studioReturn='home';
   function openStudio(ret){
     studioReturn=ret||'home';
+    stopStudioAuto();
     loadPersons();
     studioLang=LANG;
     studioPersonId = persons.length ? (personById(studioPersonId)?studioPersonId:persons[0].id) : null;
@@ -2629,17 +2665,53 @@
     showScreen('studio');
   }
   function studioCats(){ return ['letters','numbers','animals','colors','shapes','house','clothes','body']; }
+  // record-all mode: after each save, automatically move on to the next unrecorded word
+  var studioAuto=false, studioAutoTimer=null;
+  function stopStudioAuto(){ studioAuto=false; if(studioAutoTimer){ clearTimeout(studioAutoTimer); studioAutoTimer=null; } var b=gid('studioAutoBtn'); if(b) b.classList.remove('vp-done'); }
+  function studioItems(){ var g=buildGames(studioLang)[studioCat]; return g?g.items:[]; }
+  function recDoneCount(games,cat){ var n=0; games[cat].items.forEach(function(it){ if(customIndex[customKey(studioLang,studioPersonId,it.key)]) n++; }); return n; }
+  function updateStudioCounts(){
+    var cs=gid('studioCat'); if(!cs || !studioPersonId) return;
+    var games=buildGames(studioLang), T=I18N[LANG];
+    for(var i=0;i<cs.options.length;i++){ var cat=cs.options[i].value; cs.options[i].textContent=T.tiles[cat]+' · '+recDoneCount(games,cat)+'/'+games[cat].items.length; }
+  }
+  function nextUnrecorded(afterKey){
+    var items=studioItems(); if(!items.length || !studioPersonId) return null;
+    var start=0;
+    if(afterKey!=null){ for(var i=0;i<items.length;i++){ if(items[i].key===afterKey){ start=i+1; break; } } }
+    for(var j=0;j<items.length;j++){ var it=items[(start+j)%items.length]; if(!customIndex[customKey(studioLang,studioPersonId,it.key)]) return it; }
+    return null;
+  }
   function renderStudio(){
     var T=I18N[LANG];
-    // people row
+    // people row (tap the pencil to rename/delete a voice)
     var pr=gid('studioPersons'); pr.innerHTML='';
-    persons.forEach(function(p){ var b=document.createElement('button'); b.className='pchip'+(p.id===studioPersonId?' active':''); b.appendChild(avatarNode(p)); b.appendChild(document.createTextNode(String(p.name||''))); b.addEventListener('click', function(){ studioPersonId=p.id; renderStudio(); }); pr.appendChild(b); });
+    persons.forEach(function(p){
+      var b=document.createElement('button'); b.className='pchip'+(p.id===studioPersonId?' active':'');
+      b.appendChild(avatarNode(p)); b.appendChild(document.createTextNode(String(p.name||'')));
+      var ed=document.createElement('span'); ed.className='pedit'; ed.textContent='✏️';
+      ed.addEventListener('click', function(e){ e.stopPropagation(); openPersonSheet(false, p); });
+      b.appendChild(ed);
+      b.addEventListener('click', function(){ stopStudioAuto(); stopRecording(); studioPersonId=p.id; renderStudio(); });
+      pr.appendChild(b);
+    });
     var add=document.createElement('button'); add.className='pchip add'; add.textContent=T.enh.add; add.addEventListener('click', function(){ openPersonSheet(true); }); pr.appendChild(add);
     // language tabs
-    var lt=gid('studioLangs'); lt.innerHTML=''; [['en','EN'],['ar','AR'],['hy','HY'],['es','ES'],['fr','FR']].forEach(function(pair){ var b=document.createElement('button'); b.className='mini'+(studioLang===pair[0]?' vp-done':''); b.textContent=pair[1]; b.addEventListener('click', function(){ studioLang=pair[0]; renderStudio(); }); lt.appendChild(b); });
-    // category select
+    var lt=gid('studioLangs'); lt.innerHTML=''; [['en','EN'],['ar','AR'],['hy','HY'],['es','ES'],['fr','FR']].forEach(function(pair){ var b=document.createElement('button'); b.className='mini'+(studioLang===pair[0]?' vp-done':''); b.textContent=pair[1]; b.addEventListener('click', function(){ stopStudioAuto(); stopRecording(); studioLang=pair[0]; renderStudio(); }); lt.appendChild(b); });
+    // category select (with recorded/total counts for this person+language)
     var cs=gid('studioCat'); cs.innerHTML=''; studioCats().forEach(function(cat){ var o=document.createElement('option'); o.value=cat; o.textContent=T.tiles[cat]; if(cat===studioCat) o.selected=true; cs.appendChild(o); });
-    cs.onchange=function(){ studioCat=cs.value; updateStudioHint(); renderRecList(); };
+    updateStudioCounts();
+    cs.onchange=function(){ stopStudioAuto(); stopRecording(); studioCat=cs.value; updateStudioHint(); renderRecList(); };
+    // record-all toggle
+    var ab=gid('studioAutoBtn');
+    ab.textContent=T.enh.recAll||I18N.en.enh.recAll;
+    ab.classList.toggle('vp-done', studioAuto);
+    ab.style.display = studioPersonId ? '' : 'none';
+    ab.onclick=function(){
+      if(studioAuto){ stopStudioAuto(); stopRecording(); renderRecList(); return; }
+      studioAuto=true; ab.classList.add('vp-done');
+      if(!recordingKey){ var nx=nextUnrecorded(null); if(nx) startRecItem(nx); else stopStudioAuto(); }
+    };
     updateStudioHint();
     renderRecList();
   }
@@ -2672,22 +2744,42 @@
       var del=document.createElement('button'); del.className='iconBtn'+(customIndex[ck]?'':' hidden'); del.textContent='\u{1F5D1}️';
       del.addEventListener('click', function(){ idbDelete(ck).then(function(){ delete customIndex[ck]; delete waBufCache['cust|'+ck]; renderRecList(); }); });
       var rec=document.createElement('button'); rec.className='recBtn'+(customIndex[ck]?' has':''); rec.textContent=(recordingKey===ck)?'■':'●';
-      if(recordingKey===ck) rec.classList.add('recording');
+      if(recordingKey===ck){ rec.classList.add('recording'); row.classList.add('recnow'); }
       rec.addEventListener('click', function(){
         if(recordingKey===ck){ stopRecording(); return; }
         // a tap aimed at ■ can land just after the auto-stop swapped it back to ● — don't re-record
         if(!recordingKey && Date.now()-lastRecStopAt<500) return;
         if(recordingKey){ stopRecording(); }
-        startRecording(studioLang, studioPersonId, item.key, function(state){
-          if(state==='recording'){ gid('studioTip').textContent=I18N[LANG].enh.tipRec; renderRecList(); }
-          else if(state==='saved'){ gid('studioTip').textContent = recordingKey ? I18N[LANG].enh.tipRec : I18N[LANG].enh.tipSaved; renderRecList(); }
-          else if(state==='denied'){ gid('studioTip').textContent=I18N[LANG].enh.tipDenied; renderRecList(); }
-          else if(state==='unsupported'){ gid('studioTip').textContent=I18N[LANG].enh.tipUnsupported; renderRecList(); }
-          else { if(!recordingKey) gid('studioTip').textContent=I18N[LANG].enh.tipReady; renderRecList(); }
-        });
+        startRecItem(item);
       });
       row.appendChild(play); row.appendChild(del); row.appendChild(rec);
       list.appendChild(row);
+    });
+    if(studioAuto){ var cur=list.querySelector('.recnow'); if(cur && cur.scrollIntoView) cur.scrollIntoView({block:'center', behavior:'smooth'}); }
+  }
+  function startRecItem(item){
+    startRecording(studioLang, studioPersonId, item.key, function(state){
+      if(state==='recording'){ gid('studioTip').textContent=I18N[LANG].enh.tipRec; renderRecList(); }
+      else if(state==='saved'){
+        updateStudioCounts();
+        if(studioAuto){
+          var nx=nextUnrecorded(item.key);
+          gid('studioTip').textContent=I18N[LANG].enh.tipSaved;
+          if(nx){
+            renderRecList();
+            studioAutoTimer=setTimeout(function(){
+              studioAutoTimer=null;
+              if(studioAuto && !recordingKey && gid('studio').classList.contains('active')) startRecItem(nx);
+            }, 700);
+          } else { stopStudioAuto(); renderRecList(); }
+        } else {
+          gid('studioTip').textContent = recordingKey ? I18N[LANG].enh.tipRec : I18N[LANG].enh.tipSaved;
+          renderRecList();
+        }
+      }
+      else if(state==='denied'){ stopStudioAuto(); gid('studioTip').textContent=I18N[LANG].enh.tipDenied; renderRecList(); }
+      else if(state==='unsupported'){ stopStudioAuto(); gid('studioTip').textContent=I18N[LANG].enh.tipUnsupported; renderRecList(); }
+      else { stopStudioAuto(); if(!recordingKey) gid('studioTip').textContent=I18N[LANG].enh.tipReady; renderRecList(); }
     });
   }
 
@@ -2947,6 +3039,9 @@
 
   // ---- songs (family-recorded) ----
   var SONG_SLOTS=6;
+  var SONG_NAMES_KEY='tinyHandsSongNames';
+  function songNames(){ try{ var m=JSON.parse(lsGet(SONG_NAMES_KEY)); return (m&&typeof m==='object'&&!Array.isArray(m))?m:{}; }catch(e){ return {}; } }
+  function setSongName(slot,name){ var m=songNames(); if(name) m[slot]=String(name).slice(0,40); else delete m[slot]; lsSet(SONG_NAMES_KEY, JSON.stringify(m)); }
   function openSongs(){
     var T=I18N[LANG].enh, g=TG();
     gid('songsSheet').setAttribute('dir', I18N[LANG].dir);
@@ -2957,8 +3052,20 @@
     for(var i=1;i<=SONG_SLOTS;i++){ (function(i){
       var ck=customKey('songs','all','song'+i);
       var row=document.createElement('div'); row.className='recItem';
-      var word=document.createElement('div'); word.className='rword'; word.innerHTML='<span class="rg">🎵</span><span class="rt">Song '+i+'</span>';
-      row.appendChild(word);
+      var word=document.createElement('div'); word.className='rword';
+      var rg=document.createElement('span'); rg.className='rg'; rg.textContent='🎵';
+      // song names are user data: always text nodes, never HTML strings
+      var rt=document.createElement('span'); rt.className='rt'; rt.textContent=songNames()['song'+i]||('Song '+i);
+      word.appendChild(rg); word.appendChild(rt); row.appendChild(word);
+      var ren=document.createElement('button'); ren.className='iconBtn'; ren.textContent='✏️';
+      ren.addEventListener('click', function(){
+        var inp=document.createElement('input'); inp.type='text'; inp.className='songNameInput';
+        inp.value=songNames()['song'+i]||''; inp.placeholder='Song '+i; inp.maxLength=40;
+        word.replaceChild(inp, rt); inp.focus();
+        inp.addEventListener('keydown', function(e){ if(e.key==='Enter') inp.blur(); });
+        inp.addEventListener('blur', function(){ setSongName('song'+i, (inp.value||'').trim()); openSongs(); });
+      });
+      row.appendChild(ren);
       var play=document.createElement('button'); play.className='iconBtn'+(customIndex[ck]?'':' hidden'); play.textContent='▶'; play.addEventListener('click', function(){ idbGet(ck).then(function(b){ if(b) playBlob(b,'cust|'+ck); }); });
       var del=document.createElement('button'); del.className='iconBtn'+(customIndex[ck]?'':' hidden'); del.textContent='🗑️'; del.addEventListener('click', function(){ idbDelete(ck).then(function(){ delete customIndex[ck]; delete waBufCache['cust|'+ck]; openSongs(); }); });
       var rec=document.createElement('button'); rec.className='recBtn'+(customIndex[ck]?' has':'')+(recordingKey===ck?' recording':''); rec.textContent=(recordingKey===ck)?'■':'●';
@@ -3128,7 +3235,7 @@
   function wireEnhancements(){
     // record voices (from the in-game voice panel)
     gid('recOpen').addEventListener('click', function(){ voicePanel.classList.remove('open'); openStudio('game'); });
-    gid('studioBack').addEventListener('click', function(){ stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); });
+    gid('studioBack').addEventListener('click', function(){ stopStudioAuto(); stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); });
     // home corner buttons
     gid('grownupsFab').addEventListener('click', function(){ requestParentAccess(openParent); });
     gid('settingsFab').addEventListener('click', function(){ requestParentAccess(openSettings); });
@@ -3176,11 +3283,23 @@
     gid('personSheet').addEventListener('click', function(e){ if(e.target===gid('personSheet')) closePersonSheet(); });
     gid('personSave').addEventListener('click', function(){
       var nm=(gid('personName').value||'').trim(); if(!nm) nm='?';
-      var p=addPerson(nm, pendingAvatar);
+      var editId=gid('personSheet')._editId, p=editId?personById(editId):null;
+      if(p){
+        p.name=nm.slice(0,60);
+        if(pendingEmojiPicked){
+          p.emoji=pendingAvatar;
+          if(p.photo){ p.photo=false; idbDelete(photoKey(p.id)).catch(function(){}); if(photoURLs[p.id]){ try{ URL.revokeObjectURL(photoURLs[p.id]); }catch(e){} delete photoURLs[p.id]; } }
+        }
+        savePersons();
+      } else {
+        p=addPerson(nm, pendingAvatar);
+      }
       if(pendingPhoto){ setPersonPhoto(p.id, pendingPhoto); pendingPhoto=null; }
       var goStudio=gid('personSheet')._goStudio;
       closePersonSheet(); renderPersonChips();
-      if(goStudio){ studioPersonId=p.id; renderStudio(); } else { setActivePerson(p.id); }
+      if(editId){ setAttribution(activePersonId); if(gid('studio').classList.contains('active')) renderStudio(); }
+      else if(goStudio){ studioPersonId=p.id; renderStudio(); }
+      else { setActivePerson(p.id); }
     });
     // backup restore file input
     gid('importFile').addEventListener('change', function(){ var f=this.files&&this.files[0]; if(f) importBackup(f); this.value=''; });
