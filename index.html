@@ -850,7 +850,6 @@
 <script>
 (function(){
   function emo(cp){ return String.fromCodePoint(cp); }
-  function eastern(n){ return String(n).replace(/[0-9]/g,function(d){ return String.fromCharCode(0x0660+(+d)); }); }
 
   // ---- shared content (emoji / color / shape are universal; only spoken word changes by language) ----
   var ANIMALS = [
@@ -1543,7 +1542,9 @@
     if(lang==='ar'){
       letters = AR_LETTERS.map(function(L){ return {key:L, say:L, render:{type:'glyph',label:L}}; });
       numbers = [];
-      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], render:{type:'glyph',label:eastern(i)}}); }
+      // Western digits (1, 2, 3) on screen, Arabic word for the sound: Lebanon uses 0-9 day to day,
+      // and the child sees the same digits everywhere else too
+      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], render:{type:'glyph',label:String(i)}}); }
     } else if(lang==='hy'){
       letters = HY_LETTERS.map(function(L){ return {key:L, say:L, render:{type:'glyph',label:L}}; });
       numbers = [];
@@ -2068,7 +2069,7 @@
   var countStreak=0, countLocked=false, countN=0, countItem=null, countRecent=[];
   for(var cs=0;cs<MAX_STARS;cs++){ var st=document.createElement('span'); st.className='star'; st.textContent=emo(0x2B50); countStarsEl.appendChild(st); }
   function paintCountStars(){ var n=countStarsEl.children; for(var i=0;i<n.length;i++){ if(i<countStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
-  function countLabel(num){ return (LANG==='ar') ? eastern(num) : String(num); }
+  function countLabel(num){ return String(num); }   // digits are 0-9 in every language, including Arabic
   function newCountRound(speakNow){
     countLocked=false;
     var max=Math.max(5, settings().countMax||9);   // 1–10 or 1–20 (Settings)
