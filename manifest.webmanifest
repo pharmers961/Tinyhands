@@ -1,7 +1,7 @@
 {
   "name": "Tiny Hands — Little Learning Games",
   "short_name": "Tiny Hands",
-  "description": "Little learning games for toddlers — letters, numbers, animals, colors and shapes in English and Spanish.",
+  "description": "Little learning games for toddlers — letters, numbers, animals, colors, food, family and everyday words in English, Lebanese Arabic and Armenian.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
@@ -10,8 +10,23 @@
   "background_color": "#fef6e4",
   "theme_color": "#fef6e4",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }

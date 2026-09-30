@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Tiny Hands — Little Learning Games</title>
-<meta name="description" content="Little learning games for toddlers — letters, numbers, animals, colors and shapes in English and Spanish." />
+<meta name="description" content="Little learning games for toddlers — letters, numbers, animals, colors, food, family and everyday words in English, Lebanese Arabic and Armenian." />
 <meta name="theme-color" content="#fef6e4" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -161,8 +161,8 @@
   .langpill:active{ transform:translateY(3px); box-shadow:none; }
   .grid{
     width:100%; flex:1; min-height:0; display:grid;
-    grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(3,1fr);
-    gap:clamp(10px,2.8vw,16px); padding:2px; overflow:hidden;
+    grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+    gap:clamp(8px,2.4vw,14px); padding:2px; overflow:hidden;
   }
   .tile{
     border:none; border-radius:26px; min-height:0;
@@ -172,8 +172,8 @@
   }
   body.arabic .tile{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
   .tile.span2{ grid-column:1 / -1; }
-  .tile .emoji{ font-size:clamp(34px,9vw,52px); line-height:1; filter:drop-shadow(0 3px 0 rgba(0,0,0,.14)); }
-  .tile .name{ font-size:clamp(15px,4.2vw,20px); text-shadow:0 2px 0 rgba(0,0,0,.12); }
+  .tile .emoji{ font-size:clamp(30px,8vw,48px); line-height:1; filter:drop-shadow(0 3px 0 rgba(0,0,0,.14)); }
+  .tile .name{ font-size:clamp(13px,3.7vw,19px); text-shadow:0 2px 0 rgba(0,0,0,.12); padding:0 4px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .tile.t0{background:linear-gradient(160deg,#ff9aa2,#ff7a92);}
   .tile.t1{background:linear-gradient(160deg,#7fd8d4,#4fb8c9);}
   .tile.t2{background:linear-gradient(160deg,#ffd166,#ffae42);}
@@ -305,10 +305,15 @@
   .tile.t10{ background:linear-gradient(160deg,#9ee37d,#5fc26b); }
   #menu .playonly{ display:none; }
   #menu.show-games .playonly{ display:flex; }
-  /* Learn shows 8 tiles (4 rows of 2); Play shows 11 tiles (trace fills the last row) */
+  .tile.t11{ background:linear-gradient(160deg,#ffc36b,#f7931e); }
+  .tile.t12{ background:linear-gradient(160deg,#ffb7b2,#ef7b7b); }
+  .tile.t13{ background:linear-gradient(160deg,#7ee8c8,#2bb5a0); }
+  /* Learn shows 11 tiles (4 rows of 3, Everyday spans two); Play shows 13 (5 rows, Trace fills the last) */
   #menu:not(.show-games) .grid{ grid-template-rows:repeat(4,1fr); }
-  #menu.show-games .grid{ grid-template-rows:repeat(6,1fr); }
+  #menu:not(.show-games) .tile.t13{ grid-column:span 2; }
+  #menu.show-games .grid{ grid-template-rows:repeat(5,1fr); }
   #menu.show-games .tile.t7{ grid-column:1 / -1; }
+  #menu.show-games .learnonly{ display:none; }
   /* truly-centered, larger screen titles */
   .gametop{ position:relative; }
   .menutitle{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); margin:0; text-align:center; pointer-events:none; font-size:clamp(24px,7vw,36px); }
@@ -426,9 +431,10 @@
   .iconBtn.hidden{ display:none; }
 
   /* first-run hint */
-  .hint{ position:absolute; left:0; right:0; bottom:16%; z-index:5; display:none; flex-direction:column; align-items:center; gap:2px; pointer-events:none; color:var(--ink); font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(15px,4vw,19px); }
+  .hint{ position:absolute; left:0; right:0; top:46%; z-index:5; display:none; flex-direction:column; align-items:center; gap:2px; pointer-events:none; color:var(--ink); font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(15px,4vw,19px); }
   body.arabic .hint{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
   .hint .hand{ font-size:42px; animation:handbob 1.1s ease-in-out infinite; }
+  .hint .htxt{ background:var(--surface); color:var(--panelink); padding:6px 16px; border-radius:999px; box-shadow:0 4px 0 var(--shadow), 0 6px 12px rgba(0,0,0,.12); }
   @keyframes handbob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
   @media (prefers-reduced-motion: reduce){ .hint .hand,.recBtn.recording{ animation:none; } }
 
@@ -520,7 +526,7 @@
   .avatarImg{ width:26px; height:26px; border-radius:50%; object-fit:cover; }
 
   /* mascot */
-  .mascot{ position:absolute; bottom:9%; right:6%; font-size:54px; z-index:2; pointer-events:none; animation:mascotBob 3.2s ease-in-out infinite; filter:drop-shadow(0 5px 0 rgba(0,0,0,.12)); }
+  .mascot{ display:none; }
   @keyframes mascotBob{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-10px) rotate(3deg); } }
 
   /* toasts */
@@ -541,6 +547,51 @@
   @keyframes startPulse{ 0%{ transform:scale(.6); opacity:.9; } 100%{ transform:scale(1.8); opacity:0; } }
   .traceStars{ position:absolute; top:6px; left:0; right:0; text-align:center; font-size:22px; z-index:6; pointer-events:none; }
   @media (prefers-reduced-motion: reduce){ .mascot,.cards .card.dealin,.balloon,.spark,.traceStartDot{ animation:none; } .mascot{ opacity:.9; } }
+  /* ===== Arabic-first: today's words card, grown-up helper text, cheat sheet, reminder ===== */
+  .todaycard{ width:100%; flex:0 0 auto; margin:10px 0 30px; border:none; border-radius:22px; background:var(--surface); color:var(--ink); text-align:start; padding:10px 12px 11px; cursor:pointer; box-shadow:0 6px 0 var(--shadow), 0 10px 18px rgba(0,0,0,.10); z-index:2; display:flex; flex-direction:column; gap:8px; font-family:inherit; }
+  .todaycard:active{ transform:translateY(4px); box-shadow:0 2px 0 var(--shadow), 0 4px 8px rgba(0,0,0,.10); }
+  .tc-head{ display:flex; align-items:center; gap:8px; }
+  .tc-av{ font-size:26px; line-height:1; animation:mascotBob 3.2s ease-in-out infinite; filter:drop-shadow(0 3px 0 rgba(0,0,0,.12)); }
+  .tc-title{ flex:1; font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(15px,4.2vw,19px); color:var(--panelink); }
+  body.arabic .tc-title{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+  .tc-status{ font-family:'Fredoka',sans-serif; font-weight:700; font-size:14px; color:var(--soft); background:var(--chip); border-radius:999px; padding:4px 10px; }
+  .tc-status.done{ background:var(--good); color:#fff; }
+  .tc-row{ display:flex; gap:6px; }
+  .tcchip{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; gap:1px; background:var(--surface2); border-radius:14px; padding:6px 2px 5px; }
+  .tcchip.heard{ box-shadow:inset 0 0 0 2px var(--good); }
+  .tcchip .tcv{ font-size:24px; line-height:1.1; }
+  .tcchip .tcw{ font-weight:700; font-size:clamp(11px,3.1vw,14px); color:var(--panelink); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tcchip .tct{ font-family:'Quicksand',sans-serif; font-weight:700; font-size:clamp(9px,2.6vw,11px); color:var(--soft); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; direction:ltr; }
+  body.bigtext .tcchip .tcw{ font-size:15px; }
+  .grownup{ margin:8px 0 0; min-height:18px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:14px; color:var(--soft); direction:ltr; }
+  .grownup b{ color:var(--ink); font-size:17px; }
+  body.arabic .grownup b{ font-family:'Baloo Bhaijaan 2','Cairo',sans-serif; }
+  .lcard .ltr{ position:absolute; left:0; right:0; bottom:4%; text-align:center; font-family:'Quicksand',sans-serif; font-weight:700; font-size:calc(var(--cell,60px)*0.125); opacity:.9; padding:0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; direction:ltr; }
+  .lcard.hastr .lcap{ bottom:17%; }
+  .lcard.hastr:not(.tronly) .cardEmoji{ font-size:calc(var(--cell,60px)*0.44); transform:translateY(-14%); }
+  .lcard.hastr:not(.tronly) .cardShape{ transform:translateY(-12%); }
+  .lcard.tronly .ltr{ bottom:6%; }
+  .recItem .rword .rt{ flex:0 0 auto; max-width:62%; }
+  .recItem .rword .rtr{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; font-family:'Quicksand',sans-serif; font-size:12px; font-weight:700; color:var(--soft); white-space:nowrap; unicode-bidi:plaintext; }
+  .pm-cheat{ background:linear-gradient(160deg,#7ee8c8,#2bb5a0); }
+  .pm-remind{ background:linear-gradient(160deg,#ffc36b,#f7931e); }
+  .cheatBody{ text-align:start; }
+  .crow{ display:flex; align-items:center; gap:10px; padding:6px 2px; border-bottom:1px solid rgba(127,127,127,.12); }
+  .crow .cv{ width:32px; flex:0 0 auto; text-align:center; font-size:22px; line-height:1; }
+  .crow .cw{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .crow .car{ font-size:19px; font-weight:700; color:var(--panelink); line-height:1.3; }
+  .crow .ctr{ font-family:'Quicksand',sans-serif; font-size:13px; font-weight:700; color:var(--soft); unicode-bidi:plaintext; }
+  .crow .cen{ font-size:12px; color:var(--soft); unicode-bidi:plaintext; }
+  .crow .iconBtn{ width:36px; height:36px; font-size:13px; }
+  .timeInput{ width:auto !important; margin:0 !important; padding:9px 12px !important; font-size:16px !important; }
+  @media print{
+    body.printcheat{ display:block; height:auto; overflow:visible; background:#fff !important; }
+    body.printcheat .stage{ max-height:none; height:auto; overflow:visible; max-width:none; }
+    body.printcheat .screen, body.printcheat .sheet:not(#cheatSheet), body.printcheat .toast, body.printcheat .blob, body.printcheat .noprint, body.printcheat .crow .iconBtn{ display:none !important; }
+    body.printcheat #cheatSheet{ position:static; display:block; background:none; padding:0; backdrop-filter:none; }
+    body.printcheat #cheatSheet .sheet-card{ max-height:none; overflow:visible; box-shadow:none; max-width:none; }
+    body.printcheat .crow{ break-inside:avoid; }
+  }
 </style>
 </head>
 <body>
@@ -568,6 +619,10 @@
       <button class="modecard m-learn" data-mode="learn"><span class="emoji">&#x1F4DA;</span><span class="name" id="learnName"></span><span class="desc" id="learnDesc"></span></button>
       <button class="modecard m-play" data-mode="play"><span class="emoji">&#x1F3AE;</span><span class="name" id="playName"></span><span class="desc" id="playDesc"></span></button>
     </div>
+    <button class="todaycard" id="todayCard" style="display:none;">
+      <span class="tc-head"><span class="tc-av" id="tcAv">&#x1F423;</span><span class="tc-title" id="tcTitle"></span><span class="tc-status" id="tcStatus"></span></span>
+      <span class="tc-row" id="tcRow"></span>
+    </button>
     <div class="hint" id="homeHint"><span class="hand">&#x1F447;</span><span class="htxt"></span></div>
     <div class="mascot" id="mascot">&#x1F423;</div>
     <!-- CalOPPA: the privacy policy must be conspicuously reachable from the home page, outside the parent gate -->
@@ -588,6 +643,9 @@
       <button class="tile t8" data-game="house"><span class="emoji">&#x1F3E0;</span><span class="name"></span></button>
       <button class="tile t9" data-game="clothes"><span class="emoji">&#x1F455;</span><span class="name"></span></button>
       <button class="tile t10" data-game="body"><span class="emoji">&#x1F9B6;</span><span class="name"></span></button>
+      <button class="tile t11" data-game="food"><span class="emoji">&#x1F34E;</span><span class="name"></span></button>
+      <button class="tile t12" data-game="family"><span class="emoji">&#x1F46A;</span><span class="name"></span></button>
+      <button class="tile t13 learnonly" data-game="everyday"><span class="emoji">&#x1F44B;</span><span class="name"></span></button>
       <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
       <button class="tile t5 playonly" data-game="count"><span class="emoji">&#x1F9EE;</span><span class="name"></span></button>
       <button class="tile t6 playonly" data-game="memory"><span class="emoji">&#x1F9E0;</span><span class="name"></span></button>
@@ -605,6 +663,7 @@
       <p id="promptText"></p>
       <button class="speaker" id="speaker" aria-label="Play again"><span class="ring"></span>&#x1F50A;</button>
       <div class="attribution" id="attribution"></div>
+      <p class="grownup" id="grownupLine"></p>
     </div>
     <div class="cards" id="cards"></div>
     <div class="bottombar">
@@ -739,6 +798,8 @@
         <button class="pmbtn pm-set" id="pmSettings"><span class="pmemo">&#x2699;&#xFE0F;</span>Settings</button>
         <button class="pmbtn pm-dash" id="pmDash"><span class="pmemo">&#x1F4CA;</span>Progress</button>
         <button class="pmbtn pm-prof" id="pmProfiles"><span class="pmemo">&#x1F9D2;</span>Children</button>
+        <button class="pmbtn pm-cheat" id="pmCheat"><span class="pmemo">&#x1F4D6;</span>Cheat sheet</button>
+        <button class="pmbtn pm-remind" id="pmRemind"><span class="pmemo">&#x23F0;</span>Daily reminder</button>
         <button class="pmbtn pm-back" id="pmBackup"><span class="pmemo">&#x1F4BE;</span>Backup</button>
         <button class="pmbtn pm-priv" id="pmPrivacy"><span class="pmemo">&#x1F512;</span>Privacy</button>
         <button class="pmbtn pm-terms" id="pmTerms"><span class="pmemo">&#x1F4C4;</span>Terms</button>
@@ -812,6 +873,8 @@
       <div class="settingsGroupTitle" id="dashWordsTitle"></div>
       <div id="wordChips"></div>
       <p class="vp-tip" id="coplayTip" style="text-align:start;"></p>
+      <div class="settingsGroupTitle" id="dashVoiceTitle"></div>
+      <div id="voiceCov"></div>
       <div class="settingsGroupTitle" id="dashCatTitle">By category</div>
       <div id="catBars"></div>
       <div class="settingsGroupTitle" id="dashLimitTitle">Daily time limit</div>
@@ -839,6 +902,28 @@
       <p class="sheet-sub" id="songsSub"></p>
       <div id="songsList"></div>
       <button class="mini sheet-close" id="songsClose"></button>
+    </div>
+  </div>
+
+  <!-- GROWN-UPS' CHEAT SHEET (every word + everyday phrases, with how to say them) -->
+  <div class="sheet" id="cheatSheet">
+    <div class="sheet-card cheatCard" style="max-width:520px;">
+      <h2 id="cheatTitle"></h2>
+      <p class="sheet-sub" id="cheatSub"></p>
+      <div class="cheatBody" id="cheatBody"></div>
+      <div class="vp-row noprint"><button class="mini" id="cheatPrint"></button><button class="mini vp-done" id="cheatClose"></button></div>
+    </div>
+  </div>
+
+  <!-- DAILY REMINDER (repeating calendar event, generated on this device) -->
+  <div class="sheet" id="remindSheet" dir="ltr">
+    <div class="sheet-card" style="max-width:420px;">
+      <h2 id="remindTitle"></h2>
+      <p class="sheet-sub" id="remindSub"></p>
+      <div class="optRow"><span class="optname" id="remindTimeLbl"></span><input type="time" id="remindTime" value="18:00" class="timeInput" /></div>
+      <button class="mini vp-rec" id="remindAdd" style="margin-top:14px;"></button>
+      <p class="vp-tip" id="remindTip" style="text-align:start;"></p>
+      <button class="mini sheet-close" id="remindClose"></button>
     </div>
   </div>
 
@@ -942,8 +1027,98 @@
     {key:"arm",    render:{type:"emoji",emoji:emo(0x1F4AA)},           say:{en:"arm",    ar:"ذراع",   hy:"թև"}},
     {key:"face",   render:{type:"emoji",emoji:emo(0x1F642)},           say:{en:"face",   ar:"وجه",    hy:"դեմք"}}
   ];
+  // ---- Lebanese-first additions ----
+  // Food, family and everyday words: the moments a two-year-old actually hears language
+  // (meals, cuddles, getting dressed, bedtime). Arabic is the everyday Lebanese word.
+  var FOOD = [
+    {key:"water",      render:{type:"emoji",emoji:emo(0x1F4A7)}, say:{en:"water",      ar:"مي",      hy:"ջուր"}},
+    {key:"milk",       render:{type:"emoji",emoji:emo(0x1F95B)}, say:{en:"milk",       ar:"حليب",    hy:"կաթ"}},
+    {key:"bread",      render:{type:"emoji",emoji:emo(0x1F35E)}, say:{en:"bread",      ar:"خبز",     hy:"հաց"}},
+    {key:"apple",      render:{type:"emoji",emoji:emo(0x1F34E)}, say:{en:"apple",      ar:"تفاحة",   hy:"խնձոր"}},
+    {key:"banana",     render:{type:"emoji",emoji:emo(0x1F34C)}, say:{en:"banana",     ar:"موز",     hy:"բանան"}},
+    {key:"egg",        render:{type:"emoji",emoji:emo(0x1F95A)}, say:{en:"egg",        ar:"بيضة",    hy:"ձու"}},
+    {key:"cheese",     render:{type:"emoji",emoji:emo(0x1F9C0)}, say:{en:"cheese",     ar:"جبنة",    hy:"պանիր"}},
+    {key:"rice",       render:{type:"emoji",emoji:emo(0x1F35A)}, say:{en:"rice",       ar:"رز",      hy:"բրինձ"}},
+    {key:"juice",      render:{type:"emoji",emoji:emo(0x1F9C3)}, say:{en:"juice",      ar:"عصير",    hy:"հյութ"}},
+    {key:"cookie",     render:{type:"emoji",emoji:emo(0x1F36A)}, say:{en:"cookie",     ar:"بسكوت",   hy:"թխվածքաբլիթ"}},
+    {key:"strawberry", render:{type:"emoji",emoji:emo(0x1F353)}, say:{en:"strawberry", ar:"فريز",    hy:"ելակ"}},
+    {key:"orangefruit",render:{type:"emoji",emoji:emo(0x1F34A)}, say:{en:"orange",     ar:"برتقانة", hy:"նարինջ"}},
+    {key:"grapes",     render:{type:"emoji",emoji:emo(0x1F347)}, say:{en:"grapes",     ar:"عنب",     hy:"խաղող"}},
+    {key:"carrot",     render:{type:"emoji",emoji:emo(0x1F955)}, say:{en:"carrot",     ar:"جزر",     hy:"գազար"}},
+    {key:"tomato",     render:{type:"emoji",emoji:emo(0x1F345)}, say:{en:"tomato",     ar:"بندورة",  hy:"լոլիկ"}},
+    {key:"icecream",   render:{type:"emoji",emoji:emo(0x1F366)}, say:{en:"ice cream",  ar:"بوظة",    hy:"պաղպաղակ"}}
+  ];
+  var FAMILY = [
+    {key:"mama",    render:{type:"emoji",emoji:emo(0x1F469)}, say:{en:"Mama",    ar:"ماما",  hy:"մայրիկ"}},
+    {key:"baba",    render:{type:"emoji",emoji:emo(0x1F468)}, say:{en:"Baba",    ar:"بابا",  hy:"հայրիկ"}},
+    {key:"teta",    render:{type:"emoji",emoji:emo(0x1F475)}, say:{en:"Grandma", ar:"تيتا",  hy:"տատիկ"}},
+    {key:"jeddo",   render:{type:"emoji",emoji:emo(0x1F474)}, say:{en:"Grandpa", ar:"جدّو",  hy:"պապիկ"}},
+    {key:"baby",    render:{type:"emoji",emoji:emo(0x1F476)}, say:{en:"baby",    ar:"بيبي",  hy:"երեխա"}},
+    {key:"sister",  render:{type:"emoji",emoji:emo(0x1F467)}, say:{en:"sister",  ar:"أخت",   hy:"քույր"}},
+    {key:"brother", render:{type:"emoji",emoji:emo(0x1F466)}, say:{en:"brother", ar:"أخ",    hy:"եղբայր"}}
+  ];
+  // Everyday words are Learn-only (tap to hear): the pictures stand for ideas, not objects,
+  // so they don't work as quiz answers for a toddler. Arabic verbs use the short everyday form.
+  var EVERYDAY = [
+    {key:"hello",    render:{type:"emoji",emoji:emo(0x1F44B)}, say:{en:"hello",      ar:"مرحبا",  hy:"բարև"}},
+    {key:"yalla",    render:{type:"emoji",emoji:emo(0x1F3C3)}, say:{en:"let's go",   ar:"يلا",    hy:"գնացինք"}},
+    {key:"eat",      render:{type:"emoji",emoji:emo(0x1F60B)}, say:{en:"eat",        ar:"كول",    hy:"կեր"}},
+    {key:"sleep",    render:{type:"emoji",emoji:emo(0x1F634)}, say:{en:"sleep",      ar:"نام",    hy:"քնիր"}},
+    {key:"wash",     render:{type:"emoji",emoji:emo(0x1F9FC)}, say:{en:"wash",       ar:"غسّل",   hy:"լվա"}},
+    {key:"kiss",     render:{type:"emoji",emoji:emo(0x1F618)}, say:{en:"kiss",       ar:"بوسة",   hy:"պաչիկ"}},
+    {key:"hug",      render:{type:"emoji",emoji:emo(0x1FAC2)}, say:{en:"hug",        ar:"عبطة",   hy:"գրկել"}},
+    {key:"iloveyou", render:{type:"emoji",emoji:emo(0x1F970)}, say:{en:"I love you", ar:"بحبّك",  hy:"սիրում եմ քեզ"}},
+    {key:"bravo",    render:{type:"emoji",emoji:emo(0x1F44F)}, say:{en:"bravo",      ar:"برافو",  hy:"ապրես"}},
+    {key:"yes",      render:{type:"emoji",emoji:emo(0x1F44D)}, say:{en:"yes",        ar:"إي",     hy:"այո"}},
+    {key:"no",       render:{type:"emoji",emoji:emo(0x1F645)}, say:{en:"no",         ar:"لأ",     hy:"ոչ"}},
+    {key:"thanks",   render:{type:"emoji",emoji:emo(0x1F64F)}, say:{en:"thank you",  ar:"شكراً",  hy:"մերսի"}},
+    {key:"done",     render:{type:"emoji",emoji:emo(0x2705)},  say:{en:"all done",   ar:"خلص",    hy:"վերջ"}},
+    {key:"toy",      render:{type:"emoji",emoji:emo(0x1F9F8)}, say:{en:"toy",        ar:"لعبة",   hy:"խաղալիք"}},
+    {key:"ball",     render:{type:"emoji",emoji:emo(0x26BD)},  say:{en:"ball",       ar:"طابة",   hy:"գնդակ"}},
+    {key:"book",     render:{type:"emoji",emoji:emo(0x1F4D6)}, say:{en:"book",       ar:"كتاب",   hy:"գիրք"}},
+    {key:"car",      render:{type:"emoji",emoji:emo(0x1F697)}, say:{en:"car",        ar:"سيارة",  hy:"մեքենա"}}
+  ];
+  // Everyday Lebanese phrases for the grown-ups' cheat sheet and the recording studio.
+  // Where the form depends on who you're talking to, the girl form comes first (then the boy form).
+  var PHRASES = [
+    {key:"ph_come",    en:"Come here",            ar:"تعي لهون",             tr:"ta3i la hawn · (boy) ta3a la hawn"},
+    {key:"ph_what",    en:"What's this?",         ar:"شو هيدا؟",             tr:"shu hayda?"},
+    {key:"ph_where",   en:"Where is the…?",       ar:"وين الـ…؟",            tr:"wen el…?"},
+    {key:"ph_water",   en:"Do you want water?",   ar:"بدّك مي؟",             tr:"baddik mayy? · (boy) baddak mayy?"},
+    {key:"ph_eat",     en:"Let's eat",            ar:"يلا ناكل",             tr:"yalla nekol"},
+    {key:"ph_hands",   en:"Let's wash our hands", ar:"يلا نغسّل إيدينا",      tr:"yalla nghassel idena"},
+    {key:"ph_shoes",   en:"Put on your shoes",    ar:"البسي الصباط",         tr:"lbisi el sabbat · (boy) lbos el sabbat"},
+    {key:"ph_hand",    en:"Give me your hand",    ar:"عطيني إيدك",           tr:"3atini idik · (boy) 3atini idak"},
+    {key:"ph_look",    en:"Look!",                ar:"شوفي!",                tr:"shoufi! · (boy) shouf!"},
+    {key:"ph_careful", en:"Careful!",             ar:"أوعي!",                tr:"ou3i! · (boy) ou3a!"},
+    {key:"ph_sit",     en:"Sit down",             ar:"قعودي",                tr:"2a3odi · (boy) 2a3od"},
+    {key:"ph_play",    en:"Come, let's play",     ar:"تعي نلعب",             tr:"ta3i nel3ab · (boy) ta3a nel3ab"},
+    {key:"ph_out",     en:"Let's go outside",     ar:"يلا نطلع برّا",         tr:"yalla netla3 barra"},
+    {key:"ph_bath",    en:"Bath time",            ar:"وقت الحمّام",          tr:"wa2t el 7ammem"},
+    {key:"ph_sleep",   en:"Time to sleep",        ar:"يلا ننام",             tr:"yalla nnem"},
+    {key:"ph_morning", en:"Good morning",         ar:"صباح الخير",           tr:"sabah el kheir"},
+    {key:"ph_night",   en:"Good night",           ar:"تصبحي على خير",        tr:"tesba7i 3ala kheir · (boy) tesba7 3ala kheir"},
+    {key:"ph_love",    en:"I love you",           ar:"بحبّك",                tr:"b7ebbik · (boy) b7ebbak"},
+    {key:"ph_bravo",   en:"Well done!",           ar:"برافو عليكي!",         tr:"bravo 3layki! · (boy) bravo 3layk!"},
+    {key:"ph_bye",     en:"Bye bye",              ar:"باي باي / مع السلامة", tr:"bye bye · ma3 el saleme"}
+  ];
+  // How each Arabic word sounds, in the Latin "chat" spelling Lebanese families use
+  // (2 = hamza/qaf, 3 = ʿayn, 7 = ḥa, kh, gh). Shown to grown-ups only.
+  var AR_TR = {
+    dog:"kalb", cat:"2atta", cow:"ba2ra", pig:"khanzir", frog:"dofda3", lion:"asad", bear:"debb", monkey:"2erd", horse:"7san", duck:"batta", rabbit:"arnab", elephant:"fil", fish:"samke", sheep:"kharouf",
+    red:"a7mar", blue:"azra2", yellow:"asfar", green:"akhdar", orange:"bort2ali", purple:"banafsaji", pink:"wardi", brown:"benni", black:"aswad", white:"abyad", gray:"rmedi",
+    circle:"dayra", square:"mrabba3", triangle:"msallas", star:"nejme", heart:"2alb", diamond:"m3ayyan",
+    house:"bayt", door:"beb", window:"shebbek", table:"tawle", chair:"kersi", bed:"takht", sofa:"kanabe", lamp:"lamba", spoon:"mal3a2a", cup:"kebbeye", plate:"sa7n", key:"mefte7", phone:"telefon", bath:"7ammem",
+    shirt:"2amis", pants:"bantalon", dress:"fostan", jacket:"jaket", shoes:"sabbat", socks:"kalsat", hat:"ta2iyye", shorts:"short", gloves:"kfouf", scarf:"shel",
+    eye:"3ayn", ear:"edn", nose:"menkhar", mouth:"temm", tooth:"senn", tongue:"lsen", hand:"id", foot:"ejer", arm:"dra3", face:"wejj",
+    water:"mayy", milk:"7alib", bread:"khebez", apple:"teffe7a", banana:"mawz", egg:"bayda", cheese:"jebne", rice:"rezz", juice:"3asir", cookie:"baskot", strawberry:"frez", orangefruit:"bort2ena", grapes:"3enab", carrot:"jazar", tomato:"banadoura", icecream:"bouza",
+    mama:"mama", baba:"baba", teta:"teta", jeddo:"jeddo", baby:"bebe", sister:"ekht", brother:"khayy",
+    hello:"marhaba", yalla:"yalla", eat:"kol", sleep:"nem", wash:"ghassel", kiss:"bawse", hug:"3abta", iloveyou:"b7ebbik", bravo:"bravo", yes:"eh", no:"la2", thanks:"shukran", done:"khalas", toy:"le3be", ball:"tabe", book:"kteb", car:"siyyara"
+  };
+  var AR_LETTER_TR = {"ا":"alef","ب":"ba","ت":"ta","ث":"tha","ج":"jim","ح":"7a","خ":"kha","د":"dal","ذ":"dhal","ر":"ra","ز":"zay","س":"sin","ش":"shin","ص":"sad","ض":"dad","ط":"Ta","ظ":"Za","ع":"3ayn","غ":"ghayn","ف":"fa","ق":"2af","ك":"kaf","ل":"lam","م":"mim","ن":"nun","ه":"ha","و":"waw","ي":"ya"};
+  var AR_NUM_TR = ["wa7ad","tnen","tlete","arb3a","khamse","sette","sab3a","tmene","tes3a","3ashra"];
   var AR_LETTERS = ["ا","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س","ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م","ن","ه","و","ي"];
-  var AR_NUMWORDS = ["واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة","عشرة"];
+  var AR_NUMWORDS = ["واحد","تنين","تلاتة","أربعة","خمسة","ستة","سبعة","تمانة","تسعة","عشرة"];   // Lebanese counting
   var HY_LETTERS = ["Ա","Բ","Գ","Դ","Ե","Զ","Է","Ը","Թ","Ժ","Ի","Լ","Խ","Ծ","Կ","Հ","Ձ","Ղ","Ճ","Մ","Յ","Ն","Շ","Ո","Չ","Պ","Ջ","Ռ","Ս","Վ","Տ","Ր","Ց","Ւ","Փ","Ք","Օ","Ֆ"];
   var HY_NUMWORDS = ["մեկ","երկու","երեք","չորս","հինգ","վեց","յոթ","ութ","ինը","տասը"];
   var ES_NUMWORDS = ["uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez"];
@@ -954,9 +1129,12 @@
     circle:"círculo", square:"cuadrado", triangle:"triángulo", star:"estrella", heart:"corazón", diamond:"rombo",
     house:"casa", door:"puerta", window:"ventana", table:"mesa", chair:"silla", bed:"cama", sofa:"sofá", lamp:"lámpara", spoon:"cuchara", cup:"vaso", plate:"plato", key:"llave", phone:"teléfono", bath:"baño",
     shirt:"camisa", pants:"pantalón", dress:"vestido", jacket:"chaqueta", shoes:"zapatos", socks:"calcetines", hat:"gorra", shorts:"shorts", gloves:"guantes", scarf:"bufanda",
-    eye:"ojo", ear:"oreja", nose:"nariz", mouth:"boca", tooth:"diente", tongue:"lengua", hand:"mano", foot:"pie", arm:"brazo", face:"cara"
+    eye:"ojo", ear:"oreja", nose:"nariz", mouth:"boca", tooth:"diente", tongue:"lengua", hand:"mano", foot:"pie", arm:"brazo", face:"cara",
+    water:"agua", milk:"leche", bread:"pan", apple:"manzana", banana:"plátano", egg:"huevo", cheese:"queso", rice:"arroz", juice:"jugo", cookie:"galleta", strawberry:"fresa", orangefruit:"naranja", grapes:"uvas", carrot:"zanahoria", tomato:"tomate", icecream:"helado",
+    mama:"mamá", baba:"papá", teta:"abuela", jeddo:"abuelo", baby:"bebé", sister:"hermana", brother:"hermano",
+    hello:"hola", yalla:"vamos", eat:"come", sleep:"duerme", wash:"lava", kiss:"beso", hug:"abrazo", iloveyou:"te quiero", bravo:"bravo", yes:"sí", no:"no", thanks:"gracias", done:"ya está", toy:"juguete", ball:"pelota", book:"libro", car:"coche"
   };
-  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY].forEach(function(arr){ arr.forEach(function(it){ if(ES_WORDS[it.key]) it.say.es = ES_WORDS[it.key]; }); });
+  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY, FOOD, FAMILY, EVERYDAY].forEach(function(arr){ arr.forEach(function(it){ if(ES_WORDS[it.key]) it.say.es = ES_WORDS[it.key]; }); });
   var FR_NUMWORDS = ["un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix"];
   var FR_WORDS = {
     dog:"chien", cat:"chat", cow:"vache", pig:"cochon", frog:"grenouille", lion:"lion", bear:"ours", monkey:"singe", horse:"cheval", duck:"canard", rabbit:"lapin", elephant:"éléphant", fish:"poisson", sheep:"mouton",
@@ -964,9 +1142,12 @@
     circle:"cercle", square:"carré", triangle:"triangle", star:"étoile", heart:"cœur", diamond:"losange",
     house:"maison", door:"porte", window:"fenêtre", table:"table", chair:"chaise", bed:"lit", sofa:"canapé", lamp:"lampe", spoon:"cuillère", cup:"verre", plate:"assiette", key:"clé", phone:"téléphone", bath:"bain",
     shirt:"chemise", pants:"pantalon", dress:"robe", jacket:"veste", shoes:"chaussures", socks:"chaussettes", hat:"casquette", shorts:"short", gloves:"gants", scarf:"écharpe",
-    eye:"œil", ear:"oreille", nose:"nez", mouth:"bouche", tooth:"dent", tongue:"langue", hand:"main", foot:"pied", arm:"bras", face:"visage"
+    eye:"œil", ear:"oreille", nose:"nez", mouth:"bouche", tooth:"dent", tongue:"langue", hand:"main", foot:"pied", arm:"bras", face:"visage",
+    water:"eau", milk:"lait", bread:"pain", apple:"pomme", banana:"banane", egg:"œuf", cheese:"fromage", rice:"riz", juice:"jus", cookie:"biscuit", strawberry:"fraise", orangefruit:"orange", grapes:"raisin", carrot:"carotte", tomato:"tomate", icecream:"glace",
+    mama:"maman", baba:"papa", teta:"mamie", jeddo:"papi", baby:"bébé", sister:"sœur", brother:"frère",
+    hello:"bonjour", yalla:"allez", eat:"mange", sleep:"dodo", wash:"lave", kiss:"bisou", hug:"câlin", iloveyou:"je t'aime", bravo:"bravo", yes:"oui", no:"non", thanks:"merci", done:"fini", toy:"jouet", ball:"ballon", book:"livre", car:"voiture"
   };
-  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY].forEach(function(arr){ arr.forEach(function(it){ if(FR_WORDS[it.key]) it.say.fr = FR_WORDS[it.key]; }); });
+  [ANIMALS, COLORS, SHAPES, HOUSE, CLOTHES, BODY, FOOD, FAMILY, EVERYDAY].forEach(function(arr){ arr.forEach(function(it){ if(FR_WORDS[it.key]) it.say.fr = FR_WORDS[it.key]; }); });
   var EN_OVR = { A:"ay", Z:"zee" };
   var HY_CLIPS = {
     "Ա":"data:audio/mpeg;base64,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",
@@ -1055,55 +1236,55 @@
     en:{
       dir:'ltr',
       subtitle:'Little learning games \u00b7 ages 20\u201336 months',
-      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', clothes:'Clothes', body:'Body', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
-      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', clothes:'Tap the one you hear', body:'Tap the one you hear', count:'How many?', memory:'Find the matching pairs!'},
+      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', clothes:'Clothes', body:'Body', food:'Food', family:'Family', everyday:'Everyday', phrases:'Phrases', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
+      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', clothes:'Tap the one you hear', body:'Tap the one you hear', food:'Tap the food you hear', family:'Tap the one you hear', count:'How many?', memory:'Find the matching pairs!'},
       home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
       count:'Count', countDesc:'Count and tap the number', memory:'Memory', memoryDesc:'Find the matching pairs', trace:'Trace', traceDesc:'Trace letters and numbers', clear:'Clear', next:'Next \u25b6',
-      play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it',
+      play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it', todayTitle:'Today’s words', todayHint:'Tap each one to hear it', todayDone:'Today’s words done!',
       vp:{ title:'Choose a voice', note:'These are the voices installed on this device. Pick one, then tap Test.', test:emo(0x1F50A)+' Test', done:'Done', tip:'Your choice is saved on this device. If none sound right, try a different browser or add a voice in your device settings.' },
       enh:{ whose:'Whose voice?', auto:emo(0x1F46A)+' Family', add:'＋ Add', rec:emo(0x1F399)+'️ Record family voices', studioTitle:'Record voices', studioTip:'Pick a person, then tap ● to record each word. Recordings save on this device.', tipReady:'Tap ● to record', tipRec:'Recording… tap ■ to stop', tipSaved:'Saved! ✓', tipDenied:'Microphone permission is needed to record.', tipUnsupported:'Recording is not supported in this browser.', stickers:'My Stickers', stickersSub:'Earn a sticker each time you fill the stars!', stickersEmpty:'Play to earn your first sticker!', addTitle:'Add a voice', addSub:'Who is recording?', name:'Name (e.g. Mama)', save:'Save', cancel:'Cancel', done:'Done', hint:'Tap to start!', recAll:'⏭ Record all', editTitle:'Edit voice', editDel:'🗑️ Delete voice', editDelAsk:'Remove this voice? Its recordings on this device will be deleted too.' }
     },
     ar:{
       dir:'rtl',
       subtitle:'ألعاب تعليمية صغيرة \u00b7 للأعمار ٢٠–٣٦ شهراً',
-      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', clothes:'ملابس', body:'الجسم', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
-      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', clothes:'اضغط على الشيء الذي تسمعه', body:'اضغط على الشيء الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
+      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', clothes:'ملابس', body:'الجسم', food:'أكل', family:'العيلة', everyday:'كلمات كل يوم', phrases:'عبارات', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
+      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', clothes:'اضغط على الشيء الذي تسمعه', body:'اضغط على الشيء الذي تسمعه', food:'اضغط على الأكل الذي تسمعه', family:'اضغط على الشخص الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
       home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
       count:'عُدّ', countDesc:'عُدّ واضغط الرقم', memory:'ذاكرة', memoryDesc:'جد البطاقات المتطابقة', trace:'تتبّع', traceDesc:'تتبّع الحروف والأرقام', clear:'مسح', next:'◀ التالي',
-      play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها',
+      play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها', todayTitle:'كلمات اليوم', todayHint:'اضغط كل واحدة لتسمعها', todayDone:'أنهيتم كلمات اليوم!',
       vp:{ title:'اختر الصوت', note:'هذه الأصوات مثبّتة على هذا الجهاز. اختر صوتاً ثم اضغط استماع.', test:emo(0x1F50A)+' استماع', done:'تم', tip:'تم حفظ اختيارك على هذا الجهاز. إذا لم يناسبك أي صوت، جرّب متصفحاً آخر أو أضف صوتاً عربياً من إعدادات جهازك.' },
       enh:{ whose:'صوت من؟', auto:emo(0x1F46A)+' العائلة', add:'＋ إضافة', rec:emo(0x1F399)+'️ سجّل أصوات العائلة', studioTitle:'تسجيل الأصوات', studioTip:'اختر شخصاً ثم اضغط ● لتسجيل كل كلمة. تُحفظ التسجيلات على هذا الجهاز.', tipReady:'اضغط ● للتسجيل', tipRec:'جارٍ التسجيل… اضغط ■ للإيقاف', tipSaved:'تم الحفظ ✓', tipDenied:'يلزم إذن الميكروفون للتسجيل.', tipUnsupported:'التسجيل غير مدعوم في هذا المتصفح.', stickers:'ملصقاتي', stickersSub:'احصل على ملصق كلما ملأت النجوم!', stickersEmpty:'العب لتحصل على أول ملصق!', addTitle:'إضافة صوت', addSub:'من سيسجّل؟', name:'الاسم (مثلاً ماما)', save:'حفظ', cancel:'إلغاء', done:'تم', hint:'اضغط للبدء!', recAll:'⏭ تسجيل الكل' }
     },
     hy:{
       dir:'ltr',
       subtitle:'Փոքրիկ ուսուցողական խաղեր \u00b7 20\u201336 ամսական',
-      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', clothes:'Հագուստ', body:'Մարմին', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
-      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', clothes:'Սեղմիր այն, ինչ լսում ես', body:'Սեղմիր այն, ինչ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
+      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', clothes:'Հագուստ', body:'Մարմին', food:'Ուտելիք', family:'Ընտանիք', everyday:'Ամեն օր', phrases:'Արտահայտություններ', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
+      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', clothes:'Սեղմիր այն, ինչ լսում ես', body:'Սեղմիր այն, ինչ լսում ես', food:'Սեղմիր այն ուտելիքը, որ լսում ես', family:'Սեղմիր այն, ինչ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
       home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
       count:'Հաշվիր', countDesc:'Հաշվիր և սեղմիր թիվը', memory:'Հիշողություն', memoryDesc:'Գտիր զույգերը', trace:'Գծիր', traceDesc:'Գծիր տառերն ու թվերը', clear:'Մաքրել', next:'Հաջորդ ▶',
-      play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար',
+      play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար', todayTitle:'Այսօրվա բառերը', todayHint:'Սեղմիր ամեն մեկը՝ լսելու համար', todayDone:'Այսօրվա բառերն ավարտված են!',
       vp:{ title:'Ընտրիր ձայնը', note:'Սրանք այս սարքում տեղադրված ձայներն են։ Ընտրիր մեկը և սեղմիր Փորձել։', test:emo(0x1F50A)+' Փորձել', done:'Լավ', tip:'Քո ընտրությունը պահվեց այս սարքում։ Եթե ոչ մի ձայն հարմար չէ, փորձիր այլ դիտարկիչ կամ ավելացրու ձայն սարքի կարգավորումներից։' },
       enh:{ whose:'Ո՞ւմ ձայնը', auto:emo(0x1F46A)+' Ընտանիք', add:'＋ Ավելացնել', rec:emo(0x1F399)+'️ Ձայնագրել ընտանիքի ձայները', studioTitle:'Ձայնագրել', studioTip:'Ընտրիր մարդ, ապա սեղմիր ●՝ յուրաքանչյուր բառ ձայնագրելու համար։ Ձայնագրությունները պահվում են այս սարքում։', tipReady:'Սեղմիր ●՝ ձայնագրելու', tipRec:'Ձայնագրվում է… սեղմիր ■՝ կանգնեցնելու', tipSaved:'Պահպանվեց ✓', tipDenied:'Ձայնագրելու համար անհրաժեշտ է խոսափողի թույլտվություն։', tipUnsupported:'Ձայնագրումը չի աջակցվում այս դիտարկիչում։', stickers:'Իմ կպչուկները', stickersSub:'Ստացիր կպչուկ՝ ամեն անգամ աստղերը լրացնելիս!', stickersEmpty:'Խաղա՝ առաջին կպչուկը ստանալու համար!', addTitle:'Ավելացնել ձայն', addSub:'Ո՞վ է ձայնագրում', name:'Անուն (օր.՝ Մամա)', save:'Պահել', cancel:'Չեղարկել', done:'Լավ', hint:'Սեղմիր՝ սկսելու!', recAll:'⏭ Ձայնագրել բոլորը' }
     },
     es:{
       dir:'ltr',
       subtitle:'Pequeños juegos de aprendizaje · 20–36 meses',
-      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', clothes:'Ropa', body:'Cuerpo', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
-      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', clothes:'Toca lo que escuchas', body:'Toca lo que escuchas', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
+      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', clothes:'Ropa', body:'Cuerpo', food:'Comida', family:'Familia', everyday:'Cada día', phrases:'Frases', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
+      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', clothes:'Toca lo que escuchas', body:'Toca lo que escuchas', food:'Toca la comida que escuchas', family:'Toca a quien escuchas', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
       home:'← Inicio', newRound:'Otra ronda ↻', voice:emo(0x1F399)+' Voz', replay:'Escuchar otra vez', cheer:'¡Muy bien!',
       count:'Contar', countDesc:'Cuenta y toca el número', memory:'Memoria', memoryDesc:'Encuentra las parejas', trace:'Trazar', traceDesc:'Traza letras y números', clear:'Borrar', next:'Siguiente ▶',
-      play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla',
+      play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla', todayTitle:'Palabras de hoy', todayHint:'Toca cada una para escucharla', todayDone:'¡Palabras de hoy completadas!',
       vp:{ title:'Elige una voz', note:'Estas son las voces instaladas en este dispositivo. Elige una y toca Probar.', test:emo(0x1F50A)+' Probar', done:'Listo', tip:'Tu elección se guarda en este dispositivo. Si ninguna suena bien, prueba otro navegador o añade una voz en los ajustes del dispositivo.' },
       enh:{ whose:'¿Voz de quién?', auto:emo(0x1F46A)+' Familia', add:'＋ Añadir', rec:emo(0x1F399)+'️ Grabar voces de la familia', studioTitle:'Grabar voces', studioTip:'Elige a una persona y toca ● para grabar cada palabra. Las grabaciones se guardan en este dispositivo.', tipReady:'Toca ● para grabar', tipRec:'Grabando… toca ■ para parar', tipSaved:'¡Guardado! ✓', tipDenied:'Se necesita permiso del micrófono para grabar.', tipUnsupported:'La grabación no es compatible con este navegador.', stickers:'Mis pegatinas', stickersSub:'¡Gana una pegatina cada vez que llenes las estrellas!', stickersEmpty:'¡Juega para ganar tu primera pegatina!', addTitle:'Añadir una voz', addSub:'¿Quién está grabando?', name:'Nombre (p. ej. Mamá)', save:'Guardar', cancel:'Cancelar', done:'Listo', hint:'¡Toca para empezar!', recAll:'⏭ Grabar todo' }
     },
     fr:{
       dir:'ltr',
       subtitle:'Petits jeux d’apprentissage · 20–36 mois',
-      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', clothes:'Vêtements', body:'Corps', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
-      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', clothes:'Touche ce que tu entends', body:'Touche ce que tu entends', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
+      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', clothes:'Vêtements', body:'Corps', food:'Nourriture', family:'Famille', everyday:'Tous les jours', phrases:'Phrases', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
+      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', clothes:'Touche ce que tu entends', body:'Touche ce que tu entends', food:'Touche l’aliment que tu entends', family:'Touche celui que tu entends', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
       home:'← Accueil', newRound:'Nouveau tour ↻', voice:emo(0x1F399)+' Voix', replay:'Réécouter', cheer:'Bravo !',
       count:'Compter', countDesc:'Compte et touche le chiffre', memory:'Mémoire', memoryDesc:'Trouve les paires', trace:'Tracer', traceDesc:'Trace les lettres et les chiffres', clear:'Effacer', next:'Suivant ▶',
-      play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre',
+      play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre', todayTitle:'Les mots du jour', todayHint:'Touche chacun pour l’entendre', todayDone:'Mots du jour terminés !',
       vp:{ title:'Choisis une voix', note:'Voici les voix installées sur cet appareil. Choisis-en une, puis touche Tester.', test:emo(0x1F50A)+' Tester', done:'OK', tip:'Ton choix est enregistré sur cet appareil. Si aucune voix ne convient, essaie un autre navigateur ou ajoute une voix dans les réglages de l’appareil.' },
       enh:{ whose:'La voix de qui ?', auto:emo(0x1F46A)+' Famille', add:'＋ Ajouter', rec:emo(0x1F399)+'️ Enregistrer les voix de la famille', studioTitle:'Enregistrer des voix', studioTip:'Choisis une personne, puis touche ● pour enregistrer chaque mot. Les enregistrements sont gardés sur cet appareil.', tipReady:'Touche ● pour enregistrer', tipRec:'Enregistrement… touche ■ pour arrêter', tipSaved:'Enregistré ! ✓', tipDenied:'L’autorisation du microphone est nécessaire pour enregistrer.', tipUnsupported:'L’enregistrement n’est pas pris en charge sur ce navigateur.', stickers:'Mes autocollants', stickersSub:'Gagne un autocollant chaque fois que tu remplis les étoiles !', stickersEmpty:'Joue pour gagner ton premier autocollant !', addTitle:'Ajouter une voix', addSub:'Qui enregistre ?', name:'Nom (p. ex. Maman)', save:'Enregistrer', cancel:'Annuler', done:'OK', hint:'Touche pour commencer !', recAll:'⏭ Tout enregistrer' }
     }
@@ -1129,7 +1310,11 @@
       introTitle:'Welcome! Three little tips', introRec:'Record your own voice saying the words — children learn best from the voices they love.', introBi:'“Also say in” repeats each word in a second language — great for two-language homes.', introSlow:'Learning a new language? Try the Slow speaking speed.', introBtn:'Got it!',
       recHint:'No recorded voice exists for this language yet, so words use a computer voice. Record them yourself and the games will use your voice!',
       songsSub:'Record a song or rhyme in your own voice — tap ● to record, ▶ to play.',
-      timeUp:'That’s enough for today — see you tomorrow!'
+      timeUp:'That’s enough for today — see you tomorrow!',
+      cheat:'Cheat sheet', cheatTitle:'Lebanese cheat sheet', cheatTitleGen:'Word list', cheatSub:'Everything the app teaches, with how to say it. Keep it handy at meals, bath time and getting dressed — that’s where the words stick.', cheatPhrases:'Everyday phrases', cheatPrint:'🖨️ Print', cheatRec:'▶ plays a family recording when one exists, otherwise a device voice.',
+      remind:'Daily reminder', remindTitle:'A little Arabic every day', remindSub:'Two minutes a day beats an hour on Sunday. Pick a time and add a repeating reminder to your phone’s calendar. Nothing leaves this device.', remindTime:'Remind me at', remindAdd:'📅 Add to my calendar', remindTip:'This saves a calendar file (.ics). On iPhone, tap it and choose Add to Calendar; on Android, open it with your calendar app. Or simply set a daily phone alarm named “Arabic with {name}”.', remindSaved:'Reminder file ready ✓',
+      latinHelper:'Grown-up helper text', todayStat:'Today’s words', daysDone:'Days practised', voiceCov:'Family voice', voiceCovSub:'{n} of {total} words have a family recording', recordRest:'🎙️ Record the rest', voiceCovDone:'Every word has a family voice ✓',
+      studioAr:'Say each word the way you say it at home (Lebanese). The Latin spelling under each word is your guide.'
     },
     es:{
       grownups:'Para adultos', current:'Peque actual:', noname:'(sin nombre)', thisChild:'Este peque',
@@ -1186,7 +1371,11 @@
       introTitle:'أهلاً! ثلاث نصائح صغيرة', introRec:'سجّل الكلمات بصوتك — يتعلم الأطفال أفضل من الأصوات التي يحبونها.', introBi:'خيار «قلها أيضاً بـ» يكرر كل كلمة بلغة ثانية — رائع للبيوت ثنائية اللغة.', introSlow:'تتعلمون لغة جديدة؟ جرّبوا السرعة البطيئة.', introBtn:'فهمت!',
       recHint:'لا يوجد صوت مسجّل لهذه اللغة بعد — تُنطق الكلمات بصوت آلي. سجّلها بنفسك وستستخدم الألعاب صوتك!',
       songsSub:'سجّل أغنية أو أنشودة بصوتك — اضغط ● للتسجيل و▶ للاستماع.',
-      timeUp:'يكفي لهذا اليوم — نراكم غداً!'
+      timeUp:'يكفي لهذا اليوم — نراكم غداً!',
+      cheat:'ورقة مساعدة', cheatTitle:'ورقة الكلمات اللبنانية', cheatTitleGen:'قائمة الكلمات', cheatSub:'كل ما يعلّمه التطبيق مع طريقة اللفظ. استخدمها على الأكل وفي الحمّام وعند اللبس — هناك تثبت الكلمات.', cheatPhrases:'عبارات يومية', cheatPrint:'🖨️ طباعة', cheatRec:'▶ يشغّل تسجيل العائلة إن وُجد، وإلا صوت الجهاز.',
+      remind:'تذكير يومي', remindTitle:'شوية عربي كل يوم', remindSub:'دقيقتان كل يوم أفضل من ساعة يوم الأحد. اختر وقتاً وأضف تذكيراً متكرراً إلى تقويم هاتفك. لا شيء يغادر هذا الجهاز.', remindTime:'ذكّرني الساعة', remindAdd:'📅 أضف إلى التقويم', remindTip:'يُحفظ كملف تقويم (.ics). على آيفون اضغطه واختر إضافة إلى التقويم؛ على أندرويد افتحه بتطبيق التقويم. أو ضع منبّهاً يومياً باسم «عربي مع {name}».', remindSaved:'ملف التذكير جاهز ✓',
+      latinHelper:'نص مساعد للكبار', todayStat:'كلمات اليوم', daysDone:'أيام التمرين', voiceCov:'صوت العائلة', voiceCovSub:'{n} من {total} كلمة لها تسجيل عائلي', recordRest:'🎙️ سجّل الباقي', voiceCovDone:'كل الكلمات لها صوت عائلي ✓',
+      studioAr:'قل كل كلمة كما تقولها في البيت (لبناني). الكتابة اللاتينية تحت كل كلمة هي دليلك.'
     },
     hy:{
       grownups:'Մեծերի համար', current:'Ընթացիկ երեխան՝', noname:'(անանուն)', thisChild:'Այս երեխան',
@@ -1209,6 +1398,7 @@
     }
   };
   function TG(){ return GRO[LANG]||GRO.en; }
+  function gs(k){ var g=GRO[LANG]; return (g && g[k]!=null) ? g[k] : GRO.en[k]; }   // grown-up string with English fallback
 
   // ---- privacy policy (CalOPPA / COPPA / CCPA-CPRA disclosures) ----
   // The app is deliberately zero-transmission: every disclosure below must stay true.
@@ -1541,9 +1731,9 @@
   function buildGames(lang){
     var letters, numbers, i;
     if(lang==='ar'){
-      letters = AR_LETTERS.map(function(L){ return {key:L, say:L, render:{type:'glyph',label:L}}; });
+      letters = AR_LETTERS.map(function(L){ return {key:L, say:L, tr:AR_LETTER_TR[L], render:{type:'glyph',label:L}}; });
       numbers = [];
-      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], render:{type:'glyph',label:eastern(i)}}); }
+      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], tr:AR_NUM_TR[i-1], render:{type:'glyph',label:eastern(i)}}); }
     } else if(lang==='hy'){
       letters = HY_LETTERS.map(function(L){ return {key:L, say:L, render:{type:'glyph',label:L}}; });
       numbers = [];
@@ -1561,7 +1751,8 @@
       numbers = [];
       for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:String(i), render:{type:'glyph',label:String(i)}}); }
     }
-    function L(arr){ return arr.map(function(it){ return {key:it.key, say:it.say[lang], render:it.render}; }); }
+    function L(arr){ return arr.map(function(it){ return {key:it.key, say:it.say[lang], tr:(lang==='ar')?AR_TR[it.key]:undefined, render:it.render}; }); }
+    var phrases = (lang==='ar') ? PHRASES.map(function(p){ return {key:p.key, say:p.ar, tr:p.tr, en:p.en, render:{type:'emoji',emoji:'\u{1F4AC}'}}; }) : [];
     var T = I18N[lang];
     return {
       letters:{prompt:T.prompts.letters, items:letters},
@@ -1571,7 +1762,11 @@
       shapes:{prompt:T.prompts.shapes,   items:L(SHAPES)},
       house:{prompt:T.prompts.house,     items:L(HOUSE)},
       clothes:{prompt:T.prompts.clothes, items:L(CLOTHES)},
-      body:{prompt:T.prompts.body,       items:L(BODY)}
+      body:{prompt:T.prompts.body,       items:L(BODY)},
+      food:{prompt:T.prompts.food,       items:L(FOOD)},
+      family:{prompt:T.prompts.family,   items:L(FAMILY)},
+      everyday:{prompt:'',               items:L(EVERYDAY)},
+      phrases:{prompt:'',                items:phrases}
     };
   }
 
@@ -1629,7 +1824,7 @@
     if(!('speechSynthesis' in window)) return false;
     return window.speechSynthesis.getVoices().some(function(v){ return !!v.lang && v.lang.toLowerCase().indexOf(code)===0; });
   }
-  function langName(code){ return code==='ar' ? 'Arabic' : code==='hy' ? 'Armenian' : 'English'; }
+  function langName(code){ return code==='ar' ? 'Arabic' : code==='hy' ? 'Armenian' : code==='es' ? 'Spanish' : code==='fr' ? 'French' : 'English'; }
   function updateNow(){
     if(!('speechSynthesis' in window)){ vpNow.textContent='Speech is not supported in this browser.'; vpNow.classList.add('warn'); return; }
     if(chosenVoice){
@@ -1698,7 +1893,7 @@
   var ES_PHONICS={A:'a',B:'ba',C:'ca',D:'da',E:'e',F:'fa',G:'ga',H:'ha',I:'i',J:'ja',K:'ka',L:'la',M:'ma',N:'na','Ñ':'ña',O:'o',P:'pa',Q:'que',R:'ra',S:'sa',T:'ta',U:'u',V:'va',W:'wa',X:'xa',Y:'ya',Z:'za'};
   function numberWord(n, lang){ return lang==='ar'?AR_NUMWORDS[n-1] : lang==='hy'?HY_NUMWORDS[n-1] : lang==='es'?ES_NUMWORDS[n-1] : lang==='fr'?FR_NUMWORDS[n-1] : String(n); }
   function wordFor(key, lang){
-    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE).concat(CLOTHES).concat(BODY);
+    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE).concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY);
     for(var i=0;i<src.length;i++){ if(src[i].key===key) return src[i].say[lang]||src[i].say.en; }
     var m=/^n([1-9]|10)$/.exec(key); if(m) return numberWord(+m[1], lang);
     return key;   // letters: the glyph itself
@@ -1747,10 +1942,10 @@
     for(var i=persons.length-1;i>=0;i--){ if(hasCustom(lang,persons[i].id,key)) return persons[i].id; }
     return null;
   }
-  function playItem(item){
+  function playItem(item, quiet){
     if(!item) return;
     var lang=LANG, key=item.key;
-    noteWordHeard(); scheduleBilingual(item);
+    if(!quiet){ noteWordHeard(key); scheduleBilingual(item); }
     var pid=resolveVoicePerson(lang,key);
     if(pid){
       setAttribution(pid);
@@ -1805,6 +2000,7 @@
       b.addEventListener('click', function(){ onPick(b,item); });
       cardsEl.appendChild(b);
     });
+    updateGrownupLine(target);
     if(speakNow!==false) roundTimers.push(setTimeout(function(){ playItem(target); }, 350));
   }
   function onPick(btn,item){
@@ -1958,8 +2154,8 @@
     playItem(item);
     learnSpeakTimer=setTimeout(function(){ el.classList.remove('speaking'); if(learnSpeakingEl===el) learnSpeakingEl=null; learnSpeakTimer=null; }, 1600);
   }
-  function buildLearn(type){
-    var g=GAMESBYTYPE[type]; if(!g) return;
+  function buildLearn(type, itemsOverride){
+    var g=itemsOverride ? {items:itemsOverride} : GAMESBYTYPE[type]; if(!g) return;
     clearLearnSpeak();
     learnGrid.innerHTML='';
     g.items.forEach(function(item,idx){
@@ -1972,10 +2168,12 @@
       } else {
         b.style.background=LEARN_PALETTE[idx%LEARN_PALETTE.length]; applyContent(b,item);
       }
-      var showCap = (type==='animals'||type==='shapes'||type==='colors'||type==='house'||type==='clothes'||type==='body') || (type==='numbers' && item.say && item.render && item.say!==item.render.label);
-      if(showCap && item.say){ var cap=document.createElement('span'); cap.className='lcap'; cap.textContent=item.say; cap.style.color=capColor; b.appendChild(cap); }
+      var showCap = !!item.say && type!=='letters' && !(type==='numbers' && item.render && item.say===item.render.label);
+      if(showCap){ var cap=document.createElement('span'); cap.className='lcap'; cap.textContent=item.say; cap.style.color=capColor; b.appendChild(cap); }
+      // grown-up helper: how the word sounds (Arabic), so a parent can say it along with the child
+      if(item.tr && settings().latin){ var tr=document.createElement('span'); tr.className='ltr'; tr.textContent=item.tr; tr.style.color=capColor; b.appendChild(tr); b.classList.add('hastr'); if(!showCap) b.classList.add('tronly'); }
       b.setAttribute('aria-label', item.say||item.key||'');
-      (function(it,btn){ btn.addEventListener('click', function(){ learnSpeak(it,btn); }); })(item,b);
+      (function(it,btn){ btn.addEventListener('click', function(){ learnSpeak(it,btn); if(type==='today') todayHeard(it.key); }); })(item,b);
       learnGrid.appendChild(b);
     });
   }
@@ -2029,7 +2227,7 @@
     streak=0; paintStars(); queue=[]; lastKey=null;
     showScreen('game'); newRound(true);
   }
-  function goHome(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('home'); }
+  function goHome(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('home'); if(typeof renderTodayCard==='function') renderTodayCard(); }
   function goMenu(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('menu'); }
   function chooseMode(mode){
     MODE=(mode==='learn')?'learn':'play';
@@ -2048,7 +2246,8 @@
   }); })(tiles[k]); }
   homeBtn.addEventListener('click', goMenu);
   menuBack.addEventListener('click', goHome);
-  learnBack.addEventListener('click', goMenu);
+  var learnFrom=null;
+  learnBack.addEventListener('click', function(){ if(learnFrom==='home'){ learnFrom=null; goHome(); } else goMenu(); });
   for(var mc=0;mc<modeCards.length;mc++){ (function(c){ c.addEventListener('click', function(){ dismissHint(); chooseMode(c.getAttribute('data-mode')); }); })(modeCards[mc]); }
   for(var p=0;p<langPills.length;p++){ (function(b){ b.addEventListener('click', function(){ applyLang(b.getAttribute('data-lang')); }); })(langPills[p]); }
 
@@ -2139,7 +2338,7 @@
   function newMemoryBoard(){
     memFirst=null; memLock=false; memMatched=0;
     // draw pairs from every picture category (emoji renders only — the table is an SVG)
-    var mix=GAMESBYTYPE.animals.items.concat(GAMESBYTYPE.house.items, GAMESBYTYPE.clothes.items, GAMESBYTYPE.body.items)
+    var mix=GAMESBYTYPE.animals.items.concat(GAMESBYTYPE.house.items, GAMESBYTYPE.clothes.items, GAMESBYTYPE.body.items, GAMESBYTYPE.food.items, GAMESBYTYPE.family.items)
       .filter(function(it){ return it.render && it.render.type==='emoji'; });
     var pool=shuffle(mix).slice(0,MEM_PAIRS);
     var deck=[]; pool.forEach(function(it){ deck.push(it); deck.push(it); }); shuffle(deck);
@@ -2370,6 +2569,7 @@
     if(s.sounds===undefined) s.sounds=true;
     if(s.countMax===undefined) s.countMax=9;
     if(s.countAloud===undefined) s.countAloud=false;
+    if(s.latin===undefined) s.latin=true;   // Latin spelling of Arabic words for grown-ups
     return s;
   }
   function setSetting(k,v){ settings()[k]=v; flushPD(); applyTheme(); }
@@ -2412,7 +2612,7 @@
     t.textContent=msg; t.classList.add('show');
     if(t._tm) clearTimeout(t._tm); t._tm=setTimeout(function(){ t.classList.remove('show'); }, 2600);
   }
-  function noteWordHeard(){ PD.wordsHeard=(PD.wordsHeard||0)+1; }
+  function noteWordHeard(key){ PD.wordsHeard=(PD.wordsHeard||0)+1; if(key){ PD.heard=PD.heard||{}; PD.heard[key]=(PD.heard[key]||0)+1; } flushPD(); }
   function noteCategory(cat){ if(!cat) return; PD.catCounts=PD.catCounts||{}; PD.catCounts[cat]=(PD.catCounts[cat]||0)+1; flushPD(); }
   function noteMiss(key){ PD.miss=PD.miss||{}; PD.miss[key]=(PD.miss[key]||0)+1; flushPD(); }
   function noteRight(key){ PD.right=PD.right||{}; PD.right[key]=(PD.right[key]||0)+1; flushPD(); }
@@ -2664,7 +2864,7 @@
     renderStudio();
     showScreen('studio');
   }
-  function studioCats(){ return ['letters','numbers','animals','colors','shapes','house','clothes','body']; }
+  function studioCats(){ var c=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday']; if(studioLang==='ar') c.push('phrases'); return c; }
   // record-all mode: after each save, automatically move on to the next unrecorded word
   var studioAuto=false, studioAutoTimer=null;
   function stopStudioAuto(){ studioAuto=false; if(studioAutoTimer){ clearTimeout(studioAutoTimer); studioAutoTimer=null; } var b=gid('studioAutoBtn'); if(b) b.classList.remove('vp-done'); }
@@ -2684,6 +2884,7 @@
   }
   function renderStudio(){
     var T=I18N[LANG];
+    if(studioCats().indexOf(studioCat)<0) studioCat='animals';   // e.g. Phrases exists only for Arabic
     // people row (tap the pencil to rename/delete a voice)
     var pr=gid('studioPersons'); pr.innerHTML='';
     persons.forEach(function(p){
@@ -2723,7 +2924,8 @@
   }
   function updateStudioHint(){
     var hint=gid('studioLangHint');
-    if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
+    if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr'); hint.style.display=''; }
+    else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
     else { hint.style.display='none'; }
   }
   function renderRecList(){
@@ -2738,7 +2940,9 @@
       var r=item.render; glyph.textContent = r.type==='emoji'?r.emoji : (r.type==='glyph'?r.label : (r.type==='color'?'\u{1F3A8}':(r.chip||'\u{1F537}')));
       if(r.type==='color'){ glyph.textContent='●'; glyph.style.color=r.color; }
       var txt=document.createElement('span'); txt.className='rt'; txt.textContent=item.say||item.key;
-      word.appendChild(glyph); word.appendChild(txt); row.appendChild(word);
+      word.appendChild(glyph); word.appendChild(txt);
+      if(item.tr){ var trs=document.createElement('span'); trs.className='rtr'; trs.textContent=item.tr; word.appendChild(trs); }
+      row.appendChild(word);
       var play=document.createElement('button'); play.className='iconBtn'+(customIndex[ck]?'':' hidden'); play.textContent='▶';
       play.addEventListener('click', function(){ idbGet(ck).then(function(b){ if(b) playBlob(b,'cust|'+ck); }); });
       var del=document.createElement('button'); del.className='iconBtn'+(customIndex[ck]?'':' hidden'); del.textContent='\u{1F5D1}️';
@@ -2798,7 +3002,7 @@
   // ---- language visibility (settings, always English) ----
   var HIDDEN_KEY='tinyTapsHiddenLangs';
   var ALL_LANGS=[{code:'en',name:'English'},{code:'ar',name:'العربية'},{code:'hy',name:'Հայերեն'},{code:'es',name:'Español'},{code:'fr',name:'Français'}];
-  var DEFAULT_HIDDEN_LANGS=['ar','hy','fr'];
+  var DEFAULT_HIDDEN_LANGS=['es','fr'];
   function getHidden(){ var raw=lsGet(HIDDEN_KEY); if(raw===null) return DEFAULT_HIDDEN_LANGS.slice(); try{ var a=JSON.parse(raw); return Array.isArray(a)?a:DEFAULT_HIDDEN_LANGS.slice(); }catch(e){ return DEFAULT_HIDDEN_LANGS.slice(); } }
   function setHidden(arr){ lsSet(HIDDEN_KEY, JSON.stringify(arr)); }
   function visibleLangs(){ var h=getHidden(); return ALL_LANGS.filter(function(l){ return h.indexOf(l.code)<0; }); }
@@ -2834,6 +3038,7 @@
     segRow(box,g.countAloud, [{label:g.off,val:false},{label:g.on,val:true}], !!s.countAloud, function(v){ setSetting('countAloud',v); renderOptRows(); });
     segRow(box,g.sfx, [{label:g.on,val:true},{label:g.off,val:false}], !!s.sounds, function(v){ setSetting('sounds',v); renderOptRows(); });
     segRow(box,g.bigText, [{label:g.off,val:false},{label:g.on,val:true}], !!s.bigText, function(v){ setSetting('bigText',v); renderOptRows(); });
+    segRow(box,gs('latinHelper'), [{label:g.off,val:false},{label:g.on,val:true}], !!s.latin, function(v){ setSetting('latin',v); renderOptRows(); renderTodayCard(); });
     segRow(box,g.lefty, [{label:g.off,val:false},{label:g.on,val:true}], !!s.lefty, function(v){ setSetting('lefty',v); renderOptRows(); });
   }
   function openSettings(){
@@ -2935,6 +3140,8 @@
     gid('pmDash').innerHTML='<span class="pmemo">📊</span>'+g.progress;
     gid('pmProfiles').innerHTML='<span class="pmemo">🧒</span>'+g.children;
     gid('pmBackup').innerHTML='<span class="pmemo">💾</span>'+g.backup;
+    gid('pmCheat').innerHTML='<span class="pmemo">📖</span>'+gs('cheat');
+    gid('pmRemind').innerHTML='<span class="pmemo">⏰</span>'+gs('remind');
     gid('pmPrivacy').innerHTML='<span class="pmemo">🔒</span>'+g.privacy;
     gid('pmTerms').innerHTML='<span class="pmemo">📄</span>'+(TERMS[LANG]||TERMS.en).link;
     gid('parentClose').textContent=g.done;
@@ -2948,7 +3155,7 @@
   var SHAPE_CHIP_EMOJI={circle:'⚪',square:'🟦',triangle:'🔺',star:'⭐',heart:'❤️',diamond:'🔷'};
   function chipVisual(key){
     for(var i=0;i<ANIMALS.length;i++){ if(ANIMALS[i].key===key) return {text:ANIMALS[i].render.emoji}; }
-    var hcb=HOUSE.concat(CLOTHES).concat(BODY);
+    var hcb=HOUSE.concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY);
     for(var h=0;h<hcb.length;h++){ if(hcb[h].key===key) return {text:hcb[h].render.emoji||hcb[h].render.chip}; }
     for(var j=0;j<COLORS.length;j++){ if(COLORS[j].key===key) return {text:'●', color:COLORS[j].render.color}; }
     if(SHAPE_CHIP_EMOJI[key]) return {text:SHAPE_CHIP_EMOJI[key]};
@@ -2997,9 +3204,13 @@
     stat((PD.streak||0),g.dayStreak);
     stat(fmtMins(timeTodaySecs()),g.minToday);
     stat((PD.wordsHeard||0),g.wordsHeard);
+    var tItems=todayItems(), tRec=todayRecord(), tN=0; tItems.forEach(function(it){ if(tRec.heard[it.key]) tN++; });
+    stat(tRec.done ? '✓' : (tN+'/'+tItems.length), gs('todayStat'));
+    stat((PD.todayCount||0), gs('daysDone'));
     renderWordChips();
+    renderVoiceCoverage();
     var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(cc[k]>maxc) maxc=cc[k]; }
-    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','count','memory','trace'];
+    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','count','memory','trace'];
     order.forEach(function(cat){ if(!cc[cat]) return; var row=document.createElement('div'); row.className='barRow';
       row.innerHTML='<span class="bl">'+(I18N[LANG].tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
     if(!cats.children.length){ cats.innerHTML='<p class="vp-tip">'+g.noPlay+'</p>'; }
@@ -3199,6 +3410,200 @@
     }catch(e){ fin(); }
   }
 
+  // ============================================================
+  //  ARABIC-FIRST: today's words · grown-up cheat sheet · daily reminder
+  // ============================================================
+
+  // ---- today's words: a two-minute daily ritual picked by spaced repetition ----
+  // Five words from the everyday categories: missed words first, then words the child has
+  // heard least, then a date-seeded shuffle so the set stays the same all day.
+  var TODAY_CATS=['animals','colors','shapes','house','clothes','body','food','family','everyday'], TODAY_N=5;
+  var todayCache={key:null, items:[]};
+  function seededRandom(seed){
+    var x=2166136261; for(var i=0;i<seed.length;i++){ x^=seed.charCodeAt(i); x=Math.imul(x,16777619)>>>0; }
+    return function(){ x=(Math.imul(x,1103515245)+12345)>>>0; return (x>>>8)/16777216; };
+  }
+  function findTodayItem(key){
+    for(var i=0;i<TODAY_CATS.length;i++){ var g=GAMESBYTYPE[TODAY_CATS[i]]; if(!g) continue; for(var j=0;j<g.items.length;j++){ if(g.items[j].key===key) return g.items[j]; } }
+    return null;
+  }
+  function todayItems(){
+    var key=todayStr()+'|'+curProfileId+'|'+LANG;
+    if(todayCache.key===key) return todayCache.items;
+    if(!GAMESBYTYPE) return [];
+    // the day's set is chosen once and stored, so tapping words (which changes the scores) never reshuffles it
+    var rec=todayRecord(), items=[];
+    if(rec.keys && rec.keys.length){ rec.keys.forEach(function(k){ var it=findTodayItem(k); if(it && it.say) items.push(it); }); }
+    if(!items.length){
+      var rnd=seededRandom(key), miss=PD.miss||{}, heard=PD.heard||{}, pool=[];
+      TODAY_CATS.forEach(function(cat){ var g=GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ if(!it.say) return; pool.push({cat:cat, item:it, score:(miss[it.key]||0)*10 - Math.min(heard[it.key]||0,8) + rnd()*3}); }); });
+      pool.sort(function(a,b){ return b.score-a.score; });
+      var perCat={};
+      for(var i=0;i<pool.length && items.length<TODAY_N;i++){ var c=pool[i].cat; if((perCat[c]||0)>=2) continue; perCat[c]=(perCat[c]||0)+1; items.push(pool[i].item); }
+      rec.keys=items.map(function(it){ return it.key; }); flushPD();
+    }
+    todayCache={key:key, items:items};
+    return items;
+  }
+  function todayRecord(){
+    PD.todayLog=PD.todayLog||{}; var k=todayStr()+'|'+LANG;
+    if(!PD.todayLog[k]){
+      PD.todayLog[k]={heard:{}, done:false};
+      var keys=Object.keys(PD.todayLog); if(keys.length>40){ keys.sort(); keys.slice(0, keys.length-40).forEach(function(old){ delete PD.todayLog[old]; }); }
+    }
+    return PD.todayLog[k];
+  }
+  function childName(){ return (curProfile().name||'').trim() || gs('thisChild'); }
+  function todayHeard(key){
+    var items=todayItems(), rec=todayRecord();
+    rec.heard[key]=1;
+    var all=items.length>0 && items.every(function(it){ return !!rec.heard[it.key]; });
+    if(all && !rec.done){
+      rec.done=true; PD.todayCount=(PD.todayCount||0)+1; flushPD();
+      setTimeout(function(){ showTransientToast(I18N[LANG].todayDone+' \u2b50'); celebrate(); }, 900);
+    } else { flushPD(); }
+    if(gid('learn').classList.contains('active')){ var hint=gid('learnHint'); if(hint){ var n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; }); hint.textContent=I18N[LANG].todayHint+'  \u00b7  '+n+'/'+items.length; } }
+  }
+  function renderTodayCard(){
+    var card=gid('todayCard'); if(!card) return;
+    var items=todayItems(); if(!items.length){ card.style.display='none'; return; }
+    card.style.display='';
+    var T=I18N[LANG], rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
+    gid('tcAv').textContent=curProfile().emoji||'\u{1F423}';
+    gid('tcTitle').textContent=T.todayTitle;
+    var st=gid('tcStatus'); st.textContent=rec.done ? '\u2713' : (n+'/'+items.length); st.classList.toggle('done', !!rec.done);
+    var row=gid('tcRow'); row.innerHTML='';
+    items.forEach(function(it){
+      var ch=document.createElement('span'); ch.className='tcchip'+(rec.heard[it.key]?' heard':'');
+      var vis=chipVisual(it.key), v=document.createElement('span'); v.className='tcv'; v.textContent=vis.text; if(vis.color) v.style.color=vis.color; ch.appendChild(v);
+      var w=document.createElement('span'); w.className='tcw'; w.textContent=it.say||''; ch.appendChild(w);
+      if(it.tr && settings().latin){ var t=document.createElement('span'); t.className='tct'; t.textContent=it.tr; ch.appendChild(t); }
+      row.appendChild(ch);
+    });
+  }
+  function openToday(){
+    var items=todayItems(); if(!items.length) return;
+    stopGameAudio();
+    var T=I18N[LANG], rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
+    learnTitle.textContent=T.todayTitle;
+    learnHint.textContent=T.todayHint+'  \u00b7  '+n+'/'+items.length;
+    buildLearn('today', items);
+    learnFrom='home';
+    showScreen('learn');
+    layoutLearn(); requestAnimationFrame(layoutLearn);
+  }
+
+  // ---- grown-up helper line in Play: the word being asked for, and how it sounds ----
+  function updateGrownupLine(item){
+    var el=gid('grownupLine'); if(!el) return;
+    el.textContent='';
+    if(!item || !settings().latin) return;
+    var isGlyph=item.render && item.render.type==='glyph';
+    var w = isGlyph ? '' : (item.say||'');
+    if(!w && !item.tr) return;
+    var b=document.createElement('b'); b.textContent=w; el.appendChild(b);
+    if(item.tr) el.appendChild(document.createTextNode((w?' \u00b7 ':'')+item.tr));
+  }
+
+  // ---- family-voice coverage: how many of this language's words have a recording ----
+  function voiceCoverage(){
+    var cats=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday'], n=0, total=0;
+    cats.forEach(function(cat){ var g=GAMESBYTYPE&&GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ total++; for(var i=0;i<persons.length;i++){ if(hasCustom(LANG,persons[i].id,it.key)){ n++; break; } } }); });
+    return {n:n, total:total};
+  }
+  function renderVoiceCoverage(){
+    var box=gid('voiceCov'); if(!box) return; box.innerHTML='';
+    gid('dashVoiceTitle').textContent=gs('voiceCov');
+    var c=voiceCoverage(), pct=c.total?Math.round(c.n/c.total*100):0;
+    var row=document.createElement('div'); row.className='barRow';
+    var track=document.createElement('span'); track.className='barTrack'; var fill=document.createElement('span'); fill.className='barFill'; fill.style.width=pct+'%'; track.appendChild(fill);
+    var pctEl=document.createElement('span'); pctEl.className='bl'; pctEl.style.width='auto'; pctEl.textContent=pct+'%';
+    row.appendChild(track); row.appendChild(pctEl); box.appendChild(row);
+    var line=document.createElement('p'); line.className='vp-tip'; line.style.textAlign='start'; line.style.marginTop='4px';
+    line.textContent = (c.n>=c.total && c.total) ? gs('voiceCovDone') : gs('voiceCovSub').replace('{n}', c.n).replace('{total}', c.total);
+    box.appendChild(line);
+    if(c.n<c.total){ var btn=document.createElement('button'); btn.className='mini vp-rec'; btn.style.marginTop='10px'; btn.textContent=gs('recordRest'); btn.addEventListener('click', function(){ gid('dashSheet').classList.remove('open'); openStudio('home'); }); box.appendChild(btn); }
+  }
+
+  // ---- grown-ups' cheat sheet: every word (and everyday phrases) with how to say it ----
+  var CHEAT_CATS=['everyday','family','food','animals','colors','shapes','house','clothes','body','numbers','letters'];
+  function openCheat(){
+    var sheet=gid('cheatSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    gid('cheatTitle').textContent='\u{1F4D6} '+(LANG==='ar' ? gs('cheatTitle') : gs('cheatTitleGen'));
+    gid('cheatSub').textContent=gs('cheatSub');
+    gid('cheatPrint').textContent=gs('cheatPrint');
+    gid('cheatClose').textContent=TG().done;
+    var body=gid('cheatBody'); body.innerHTML='';
+    function head(t){ var h=document.createElement('div'); h.className='settingsGroupTitle'; h.textContent=t; body.appendChild(h); }
+    function row(vis, main, tr, sub, item){
+      var r=document.createElement('div'); r.className='crow';
+      var v=document.createElement('span'); v.className='cv'; v.textContent=vis.text||''; if(vis.color) v.style.color=vis.color; r.appendChild(v);
+      var w=document.createElement('span'); w.className='cw';
+      var m=document.createElement('span'); m.className='car'; m.textContent=main||''; w.appendChild(m);
+      if(tr){ var t=document.createElement('span'); t.className='ctr'; t.textContent=tr; w.appendChild(t); }
+      if(sub){ var s=document.createElement('span'); s.className='cen'; s.textContent=sub; w.appendChild(s); }
+      r.appendChild(w);
+      var p=document.createElement('button'); p.className='iconBtn'; p.textContent='\u25b6'; p.setAttribute('aria-label', main||'');
+      p.addEventListener('click', function(){ playItem(item, true); }); r.appendChild(p);
+      body.appendChild(r);
+    }
+    var g=GAMESBYTYPE;
+    if(LANG==='ar' && g.phrases && g.phrases.items.length){ head(gs('cheatPhrases')); g.phrases.items.forEach(function(it){ row({text:'\u{1F4AC}'}, it.say, it.tr, it.en, it); }); }
+    CHEAT_CATS.forEach(function(cat){
+      var gc=g[cat]; if(!gc || !gc.items.length) return;
+      head(I18N[LANG].tiles[cat]);
+      gc.items.forEach(function(it){
+        var vis=chipVisual(it.key), sub='';
+        if(cat==='letters'){ vis={text:''}; }
+        else if(cat!=='numbers' && LANG!=='en'){ sub=wordFor(it.key,'en'); if(sub===it.say) sub=''; }
+        row(vis, it.say, it.tr, sub, it);
+      });
+    });
+    var note=document.createElement('p'); note.className='vp-tip'; note.style.textAlign='start'; note.textContent=gs('cheatRec'); body.appendChild(note);
+    sheet.classList.add('open');
+  }
+  function printCheat(){
+    document.body.classList.add('printcheat');
+    setTimeout(function(){ try{ window.print(); }catch(e){} setTimeout(function(){ document.body.classList.remove('printcheat'); }, 2000); }, 60);
+  }
+
+  // ---- daily reminder: a repeating calendar event, generated on-device (no network, no accounts) ----
+  function icsEscape(s){ return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n'); }
+  function icsPad(n){ return (n<10?'0':'')+n; }
+  function icsStampUTC(d){ return d.getUTCFullYear()+icsPad(d.getUTCMonth()+1)+icsPad(d.getUTCDate())+'T'+icsPad(d.getUTCHours())+icsPad(d.getUTCMinutes())+icsPad(d.getUTCSeconds())+'Z'; }
+  function icsLocal(d){ return d.getFullYear()+icsPad(d.getMonth()+1)+icsPad(d.getDate())+'T'+icsPad(d.getHours())+icsPad(d.getMinutes())+'00'; }   // floating local time: fires at the same wall-clock time anywhere
+  function buildReminderICS(hhmm){
+    var m=/^(\d{1,2}):(\d{2})$/.exec(hhmm||''); var hh=m?Math.min(23,+m[1]):18, mi=m?Math.min(59,+m[2]):0;
+    var now=new Date(), start=new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mi, 0);
+    if(start<now) start.setDate(start.getDate()+1);
+    var nm=(curProfile().name||'').trim();
+    var summary=(nm ? langName(LANG)+' with '+nm : langName(LANG)+' time')+' \u00b7 Tiny Hands';
+    var desc='Open Tiny Hands and do Today\u2019s words together (about two minutes). Then use one of them at dinner, in the bath or at bedtime.';
+    return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tiny Hands//Daily reminder//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+      'BEGIN:VEVENT','UID:tinyhands-daily-'+curProfileId+'-'+LANG+'@local','DTSTAMP:'+icsStampUTC(now),'DTSTART:'+icsLocal(start),'DURATION:PT10M','RRULE:FREQ=DAILY',
+      'SUMMARY:'+icsEscape(summary),'DESCRIPTION:'+icsEscape(desc),
+      'BEGIN:VALARM','ACTION:DISPLAY','TRIGGER:PT0M','DESCRIPTION:'+icsEscape(summary),'END:VALARM',
+      'END:VEVENT','END:VCALENDAR'].join('\r\n')+'\r\n';
+  }
+  function openReminder(){
+    var sheet=gid('remindSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    gid('remindTitle').textContent='\u23f0 '+gs('remindTitle');
+    gid('remindSub').textContent=gs('remindSub');
+    gid('remindTimeLbl').textContent=gs('remindTime');
+    gid('remindTime').value=PD.remindAt||'18:00';
+    gid('remindAdd').textContent=gs('remindAdd');
+    gid('remindTip').textContent=gs('remindTip').replace('{name}', childName());
+    gid('remindClose').textContent=TG().done;
+    sheet.classList.add('open');
+  }
+  function downloadReminder(){
+    var t=gid('remindTime').value||'18:00'; PD.remindAt=t; flushPD();
+    var blob=new Blob([buildReminderICS(t)],{type:'text/calendar;charset=utf-8'});
+    var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='tiny-hands-daily-'+LANG+'.ics'; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
+    showTransientToast(gs('remindSaved'));
+  }
+
   // ---- mascot ----
   function setMascot(){ var m=gid('mascot'); if(!m) return; var em=curProfile().emoji||'🐣'; m.textContent=em; }
 
@@ -3228,6 +3633,7 @@
     refreshLangbarVisibility();
     setAttribution(activePersonId);
     if(PD){ PD.lastLang=LANG; flushPD(); }   // remember language per child
+    renderTodayCard();
     if(gid('studio') && gid('studio').classList.contains('active')){ gid('studioTitle').textContent=EN.enh.studioTitle; gid('studioBack').textContent=EN.back; renderStudio(); }
   }
 
@@ -3256,6 +3662,18 @@
     gid('pmDash').addEventListener('click', function(){ closeParent(); openDashboard(); });
     gid('pmProfiles').addEventListener('click', function(){ closeParent(); openProfiles(); });
     gid('pmBackup').addEventListener('click', function(){ closeParent(); openBackup(); });
+    gid('pmCheat').addEventListener('click', function(){ closeParent(); openCheat(); });
+    gid('pmRemind').addEventListener('click', function(){ closeParent(); openReminder(); });
+    // today's words (home card)
+    gid('todayCard').addEventListener('click', function(){ if(overDailyLimit()){ showTransientToast(TG().timeUp); return; } dismissHint(); openToday(); });
+    // cheat sheet + reminder sheets
+    gid('cheatClose').addEventListener('click', function(){ stopAllAudio(); gid('cheatSheet').classList.remove('open'); });
+    gid('cheatSheet').addEventListener('click', function(e){ if(e.target===gid('cheatSheet')){ stopAllAudio(); gid('cheatSheet').classList.remove('open'); } });
+    gid('cheatPrint').addEventListener('click', printCheat);
+    window.addEventListener('afterprint', function(){ document.body.classList.remove('printcheat'); });
+    gid('remindClose').addEventListener('click', function(){ gid('remindSheet').classList.remove('open'); });
+    gid('remindSheet').addEventListener('click', function(e){ if(e.target===gid('remindSheet')) gid('remindSheet').classList.remove('open'); });
+    gid('remindAdd').addEventListener('click', downloadReminder);
     gid('pmPrivacy').addEventListener('click', function(){ closeParent(); openPrivacy(); });
     gid('pmTerms').addEventListener('click', function(){ closeParent(); openTerms(); });
     // legal docs: reachable from the home page without the parent gate (CalOPPA conspicuous posting)
