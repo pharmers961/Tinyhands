@@ -584,6 +584,17 @@
   .crow .cen{ font-size:12px; color:var(--soft); unicode-bidi:plaintext; }
   .crow .iconBtn{ width:36px; height:36px; font-size:13px; }
   .timeInput{ width:auto !important; margin:0 !important; padding:9px 12px !important; font-size:16px !important; }
+  /* photos of her own things */
+  .cardPhoto{ width:82%; max-height:82%; aspect-ratio:1/1; object-fit:cover; border-radius:22px; background:#fff; box-shadow:0 5px 0 rgba(0,0,0,.14), inset 0 0 0 4px rgba(255,255,255,.85); pointer-events:none; }
+  .lcard .cardPhoto{ width:66%; max-height:66%; border-radius:14px; box-shadow:0 3px 0 rgba(0,0,0,.14), inset 0 0 0 3px rgba(255,255,255,.85); }
+  .lcard.hastr:not(.tronly) .cardPhoto{ transform:translateY(-14%); }
+  .memPhoto{ width:84%; height:84%; object-fit:cover; border-radius:14px; }
+  .tcPhoto, .cvPhoto, .rgPhoto{ width:30px; height:30px; object-fit:cover; border-radius:9px; vertical-align:middle; display:block; }
+  .tcPhoto{ width:32px; height:32px; }
+  .wpPreview{ display:flex; align-items:center; justify-content:center; min-height:140px; margin:6px 0 14px; }
+  .wpImg{ width:180px; height:180px; object-fit:cover; border-radius:22px; box-shadow:0 8px 20px rgba(0,0,0,.18); }
+  .wpEmoji{ font-size:84px; line-height:1; }
+  .iconBtn.cam.has{ box-shadow:0 4px 0 rgba(59,58,82,.12), inset 0 0 0 3px var(--good); }
   @media print{
     body.printcheat{ display:block; height:auto; overflow:visible; background:#fff !important; }
     body.printcheat .stage{ max-height:none; height:auto; overflow:visible; max-width:none; }
@@ -921,9 +932,23 @@
       <h2 id="remindTitle"></h2>
       <p class="sheet-sub" id="remindSub"></p>
       <div class="optRow"><span class="optname" id="remindTimeLbl"></span><input type="time" id="remindTime" value="18:00" class="timeInput" /></div>
-      <button class="mini vp-rec" id="remindAdd" style="margin-top:14px;"></button>
+      <button class="mini vp-rec" id="remindGoogle" style="margin-top:14px;"></button>
+      <p class="vp-tip" id="remindGoogleNote" style="text-align:start; margin-top:6px;"></p>
+      <button class="mini vp-test" id="remindAdd" style="margin-top:14px; width:100%; padding:13px; font-size:15px;"></button>
       <p class="vp-tip" id="remindTip" style="text-align:start;"></p>
       <button class="mini sheet-close" id="remindClose"></button>
+    </div>
+  </div>
+
+  <!-- PHOTO OF HER OWN THING (per word, from the studio) -->
+  <div class="sheet" id="wphotoSheet">
+    <div class="sheet-card" style="max-width:380px; text-align:center;">
+      <h2 id="wpTitle"></h2>
+      <p class="sheet-sub" id="wpSub"></p>
+      <div class="wpPreview" id="wpPreview"></div>
+      <button class="mini vp-rec" id="wpTake"></button>
+      <button class="mini vp-danger" id="wpRemove" style="width:100%; padding:12px; margin-bottom:4px;"></button>
+      <button class="mini sheet-close" id="wpClose"></button>
     </div>
   </div>
 
@@ -1312,9 +1337,12 @@
       songsSub:'Record a song or rhyme in your own voice — tap ● to record, ▶ to play.',
       timeUp:'That’s enough for today — see you tomorrow!',
       cheat:'Cheat sheet', cheatTitle:'Lebanese cheat sheet', cheatTitleGen:'Word list', cheatSub:'Everything the app teaches, with how to say it. Keep it handy at meals, bath time and getting dressed — that’s where the words stick.', cheatPhrases:'Everyday phrases', cheatPrint:'🖨️ Print', cheatRec:'▶ plays a family recording when one exists, otherwise a device voice.',
-      remind:'Daily reminder', remindTitle:'A little Arabic every day', remindSub:'Two minutes a day beats an hour on Sunday. Pick a time and add a repeating reminder to your phone’s calendar. Nothing leaves this device.', remindTime:'Remind me at', remindAdd:'📅 Add to my calendar', remindTip:'This saves a calendar file (.ics). On iPhone, tap it and choose Add to Calendar; on Android, open it with your calendar app. Or simply set a daily phone alarm named “Arabic with {name}”.', remindSaved:'Reminder file ready ✓',
+      remind:'Daily reminder', remindTitle:'A little Arabic every day', remindSub:'Two minutes a day beats an hour on Sunday. Pick a time and add a repeating reminder to the calendar you actually look at.', remindTime:'Remind me at', remindAdd:'💾 Save a calendar file (Apple Calendar and others)', remindTip:'The file (.ics) works with Apple Calendar and most others: on iPhone tap it and choose Add to Calendar. Or simply set a daily phone alarm named “Arabic with {name}”.', remindSaved:'Reminder file ready ✓',
       latinHelper:'Grown-up helper text', todayStat:'Today’s words', daysDone:'Days practised', voiceCov:'Family voice', voiceCovSub:'{n} of {total} words have a family recording', recordRest:'🎙️ Record the rest', voiceCovDone:'Every word has a family voice ✓',
-      studioAr:'Say each word the way you say it at home (Lebanese). The Latin spelling under each word is your guide.'
+      studioAr:'Say each word the way you say it at home (Lebanese). The Latin spelling under each word is your guide.',
+      remindGoogle:'📅 Add to Google Calendar', remindGoogleNote:'Opens Google Calendar with a daily event filled in (the time, and your child’s name if you entered one). That is the only moment anything leaves the app, and only because you tapped.', remindIcs:'💾 Save a calendar file (Apple Calendar and others)',
+      photoTitle:'Photo for “{w}”', photoSub:'A photo of your child’s own thing (or the real person) works far better than a cartoon. Plain background, good light, the thing filling the frame.', photoTake:'📷 Take or choose a photo', photoRemove:'🗑️ Remove photo', photoSaved:'Photo saved ✓', photoFail:'Could not read that image.',
+      photoHint:'Tap 📷 to use a photo of your child’s own things instead of the cartoon.', photoCov:'Photos of her own things', photoCovSub:'{n} of {total} picture words have a real photo', addPhotos:'📷 Add photos'
     },
     es:{
       grownups:'Para adultos', current:'Peque actual:', noname:'(sin nombre)', thisChild:'Este peque',
@@ -1373,9 +1401,12 @@
       songsSub:'سجّل أغنية أو أنشودة بصوتك — اضغط ● للتسجيل و▶ للاستماع.',
       timeUp:'يكفي لهذا اليوم — نراكم غداً!',
       cheat:'ورقة مساعدة', cheatTitle:'ورقة الكلمات اللبنانية', cheatTitleGen:'قائمة الكلمات', cheatSub:'كل ما يعلّمه التطبيق مع طريقة اللفظ. استخدمها على الأكل وفي الحمّام وعند اللبس — هناك تثبت الكلمات.', cheatPhrases:'عبارات يومية', cheatPrint:'🖨️ طباعة', cheatRec:'▶ يشغّل تسجيل العائلة إن وُجد، وإلا صوت الجهاز.',
-      remind:'تذكير يومي', remindTitle:'شوية عربي كل يوم', remindSub:'دقيقتان كل يوم أفضل من ساعة يوم الأحد. اختر وقتاً وأضف تذكيراً متكرراً إلى تقويم هاتفك. لا شيء يغادر هذا الجهاز.', remindTime:'ذكّرني الساعة', remindAdd:'📅 أضف إلى التقويم', remindTip:'يُحفظ كملف تقويم (.ics). على آيفون اضغطه واختر إضافة إلى التقويم؛ على أندرويد افتحه بتطبيق التقويم. أو ضع منبّهاً يومياً باسم «عربي مع {name}».', remindSaved:'ملف التذكير جاهز ✓',
+      remind:'تذكير يومي', remindTitle:'شوية عربي كل يوم', remindSub:'دقيقتان كل يوم أفضل من ساعة يوم الأحد. اختر وقتاً وأضف تذكيراً متكرراً إلى التقويم الذي تنظر إليه فعلاً.', remindTime:'ذكّرني الساعة', remindAdd:'💾 حفظ ملف تقويم (تقويم Apple وغيره)', remindTip:'الملف (.ics) يعمل مع تقويم Apple ومعظم التقويمات: على آيفون اضغطه واختر إضافة إلى التقويم. أو ضع منبّهاً يومياً باسم «عربي مع {name}».', remindSaved:'ملف التذكير جاهز ✓',
       latinHelper:'نص مساعد للكبار', todayStat:'كلمات اليوم', daysDone:'أيام التمرين', voiceCov:'صوت العائلة', voiceCovSub:'{n} من {total} كلمة لها تسجيل عائلي', recordRest:'🎙️ سجّل الباقي', voiceCovDone:'كل الكلمات لها صوت عائلي ✓',
-      studioAr:'قل كل كلمة كما تقولها في البيت (لبناني). الكتابة اللاتينية تحت كل كلمة هي دليلك.'
+      studioAr:'قل كل كلمة كما تقولها في البيت (لبناني). الكتابة اللاتينية تحت كل كلمة هي دليلك.',
+      remindGoogle:'📅 أضف إلى تقويم Google', remindGoogleNote:'يفتح تقويم Google مع حدث يومي جاهز (الوقت، واسم طفلك إن أدخلته). هذه اللحظة الوحيدة التي يخرج فيها شيء من التطبيق، وفقط لأنك ضغطت.', remindIcs:'💾 حفظ ملف تقويم (تقويم Apple وغيره)',
+      photoTitle:'صورة لكلمة «{w}»', photoSub:'صورة غرض طفلك الحقيقي (أو الشخص نفسه) أفضل بكثير من الرسم. خلفية بسيطة، إضاءة جيدة، والغرض يملأ الصورة.', photoTake:'📷 التقط أو اختر صورة', photoRemove:'🗑️ إزالة الصورة', photoSaved:'تم حفظ الصورة ✓', photoFail:'تعذّر قراءة هذه الصورة.',
+      photoHint:'اضغط 📷 لاستخدام صورة أغراض طفلك الحقيقية بدل الرسم.', photoCov:'صور أغراضها الحقيقية', photoCovSub:'{n} من {total} كلمة مصوّرة لها صورة حقيقية', addPhotos:'📷 أضف صوراً'
     },
     hy:{
       grownups:'Մեծերի համար', current:'Ընթացիկ երեխան՝', noname:'(անանուն)', thisChild:'Այս երեխան',
@@ -1405,16 +1436,17 @@
   // If any network feature is ever added, this policy (and the CSP in <head>) must change with it.
   var PRIVACY = {
     en:{
-      link:'Privacy', title:'Privacy Policy', updated:'Effective date: July 10, 2026',
+      link:'Privacy', title:'Privacy Policy', updated:'Effective date: September 30, 2026',
       sections:[
         ['The short version','Tiny Hands runs entirely on your device. We do not collect, receive, transmit, sell, or share any personal information — and we could not even if we wanted to, because the app has no server and makes no network requests. Everything it saves stays in your device’s own storage.'],
         ['Who we are','Tiny Hands is a learning app for young children. For privacy questions or requests, contact: akram.aboukhalil@gmail.com.'],
-        ['Information stored on your device','If you choose to use these features, the app stores locally: a child’s first name or nickname, names and optional photos of family members you add, voice recordings you make in the recording studio, learning progress, and settings. All of it lives only in this browser’s storage on this device. It is never uploaded anywhere.'],
+        ['Information stored on your device','If you choose to use these features, the app stores locally: a child’s first name or nickname, names and optional photos of family members you add, photos you take of your child’s own things for the word cards, voice recordings you make in the recording studio, learning progress, and settings. All of it lives only in this browser’s storage on this device. It is never uploaded anywhere.'],
         ['What we never do','No accounts. No analytics. No advertising. No tracking cookies. No third-party services — fonts, sounds and pictures are built into the app itself. We do not sell or share personal information as those terms are defined in the California Consumer Privacy Act, and we never have.'],
         ['Payments (if you ever buy something)','The app currently has no paid features. If paid features are offered in the future, payment will be handled by your app store or a dedicated payment processor — the app itself will never see or store card numbers, purchases will only be possible for a grown-up behind the parent gate, and this policy will be updated before any payment feature launches. The processor’s handling of your payment information is described in its own privacy policy.'],
         ['Children’s privacy','Tiny Hands is made for young children to use together with their grown-ups. Because the app makes no network connections, no personal information is collected from children over the internet (COPPA, 16 CFR Part 312). The microphone is used only if a grown-up starts a recording behind the parent gate and grants the browser’s microphone permission; recordings are saved only on this device and can be played back or deleted at any time in the recording studio.'],
         ['Your rights and parental controls','You can review everything the app knows in the grown-ups area (Children, Progress, Record voices) and delete it at any time: delete individual recordings in the studio, remove a child in the Children screen, or use “Delete everything” in Backup & data to erase all app data at once. Clearing this site’s data in your browser does the same. California residents have rights under the CCPA/CPRA to know, delete, correct, and opt out of sale or sharing — because we hold no data about you on any server, every one of these rights is satisfied directly on your device, and there is nothing for us to disclose, sell, or delete remotely. California minors’ right to remove posted content (Bus. & Prof. Code §22581): the app never posts or publishes anything, and the deletion controls above remove any content a child created.'],
         ['“Do Not Track” and third parties','We do not track anyone over time or across websites, so the app behaves the same whether or not your browser sends a “Do Not Track” or Global Privacy Control signal. No third party collects personal information through this app.'],
+        ['Optional link to Google Calendar','The “Daily reminder” screen offers an “Add to Google Calendar” button. It does nothing until a grown-up taps it; then your browser opens Google Calendar with a daily event filled in from the link: the reminder time and, if you entered one, your child’s first name. The app itself still makes no network requests. What happens on Google’s site is governed by Google’s privacy policy, not this one. The “Save a calendar file” option is fully offline.'],
         ['Backups','“Save backup” creates a file on your device only, and only when you tap it. It is never uploaded. The backup file contains your recordings, names, and progress — store it somewhere safe, and delete it if you no longer want it.'],
         ['Device voices (text-to-speech)','Words are spoken by voices installed on your device by its operating system. Depending on your device’s settings, some system voices may be processed by the device maker; you can choose which voice is used in the app’s voice picker and in your device’s speech settings. The app itself sends nothing to anyone.'],
         ['Security and retention','Your data is kept on this device until you delete it. Because it is never transmitted, it cannot be intercepted in transit. The app’s security policy (CSP) blocks all connections to other servers as an extra safeguard.'],
@@ -1456,16 +1488,17 @@
       ]
     },
     ar:{
-      link:'الخصوصية', title:'سياسة الخصوصية', updated:'تاريخ السريان: 10 يوليو 2026',
+      link:'الخصوصية', title:'سياسة الخصوصية', updated:'تاريخ السريان: 30 سبتمبر 2026',
       sections:[
         ['الخلاصة','يعمل تطبيق Tiny Hands بالكامل على جهازك. نحن لا نجمع أو نستقبل أو نرسل أو نبيع أو نشارك أي معلومات شخصية — ولا نستطيع ذلك حتى لو أردنا، لأن التطبيق بلا خادم ولا يجري أي اتصالات بالشبكة. كل ما يحفظه يبقى في تخزين جهازك فقط.'],
         ['من نحن','Tiny Hands تطبيق تعليمي للأطفال الصغار. للأسئلة أو الطلبات المتعلقة بالخصوصية: akram.aboukhalil@gmail.com.'],
-        ['المعلومات المحفوظة على جهازك','إذا اخترت استخدام هذه الميزات، يحفظ التطبيق محلياً: اسم الطفل أو لقبه، وأسماء أفراد العائلة وصورهم الاختيارية، والتسجيلات الصوتية من الاستوديو، وتقدم التعلم، والإعدادات. كل ذلك يبقى في تخزين هذا المتصفح على هذا الجهاز فقط، ولا يُرفع إلى أي مكان.'],
+        ['المعلومات المحفوظة على جهازك','إذا اخترت استخدام هذه الميزات، يحفظ التطبيق محلياً: اسم الطفل أو لقبه، وأسماء أفراد العائلة وصورهم الاختيارية، وصور أغراض طفلك التي تلتقطها لبطاقات الكلمات، والتسجيلات الصوتية من الاستوديو، وتقدم التعلم، والإعدادات. كل ذلك يبقى في تخزين هذا المتصفح على هذا الجهاز فقط، ولا يُرفع إلى أي مكان.'],
         ['ما لا نفعله أبداً','لا حسابات. لا تحليلات. لا إعلانات. لا ملفات تعقب. لا خدمات طرف ثالث — فالخطوط والأصوات والصور مدمجة في التطبيق نفسه. نحن لا نبيع المعلومات الشخصية ولا نشاركها بالمعنى الوارد في قانون خصوصية المستهلك في كاليفورنيا (CCPA)، ولم نفعل ذلك قط.'],
         ['المدفوعات (إذا اشتريت شيئاً يوماً ما)','لا يحتوي التطبيق حالياً على ميزات مدفوعة. إذا طُرحت ميزات مدفوعة مستقبلاً، فسيتولى الدفع متجر التطبيقات أو معالج دفع مخصص — ولن يرى التطبيق نفسه أرقام البطاقات أو يخزنها أبداً، ولن يتمكن من الشراء إلا شخص بالغ خلف بوابة الوالدين، وستُحدَّث هذه السياسة قبل إطلاق أي ميزة دفع. وتوضح سياسة خصوصية المعالج كيفية تعامله مع بيانات الدفع.'],
         ['خصوصية الأطفال','صُمم Tiny Hands ليستخدمه الأطفال مع ذويهم. ولأن التطبيق لا يجري أي اتصالات بالشبكة، فلا تُجمع أي معلومات شخصية من الأطفال عبر الإنترنت (COPPA). لا يُستخدم الميكروفون إلا إذا بدأ شخص بالغ التسجيل خلف بوابة الوالدين ومنح إذن المتصفح؛ وتُحفظ التسجيلات على هذا الجهاز فقط ويمكن تشغيلها أو حذفها في أي وقت من الاستوديو.'],
         ['حقوقك وأدوات الرقابة الأبوية','يمكنك مراجعة كل ما يعرفه التطبيق في قسم الكبار (الأطفال، التقدم، تسجيل الأصوات) وحذفه في أي وقت: احذف تسجيلات بعينها من الاستوديو، أو أزل طفلاً من شاشة الأطفال، أو استخدم «حذف كل شيء» في النسخ الاحتياطي. مسح بيانات هذا الموقع من المتصفح يؤدي الغرض نفسه. ولسكان كاليفورنيا حقوق بموجب CCPA/CPRA (المعرفة والحذف والتصحيح ورفض البيع أو المشاركة): ولأننا لا نحتفظ بأي بيانات عنك على أي خادم، تُمارس هذه الحقوق كلها مباشرة على جهازك. أما حق القاصرين في كاليفورنيا في إزالة المحتوى المنشور (§22581) فالتطبيق لا ينشر شيئاً مطلقاً، وأدوات الحذف أعلاه تزيل أي محتوى أنشأه الطفل.'],
         ['«Do Not Track» والأطراف الثالثة','نحن لا نتتبع أحداً عبر الوقت أو بين المواقع، لذا يعمل التطبيق بالطريقة نفسها سواء أرسل متصفحك إشارة «Do Not Track» أم لا. ولا يجمع أي طرف ثالث معلومات شخصية عبر هذا التطبيق.'],
+        ['رابط اختياري إلى تقويم Google','تعرض شاشة «تذكير يومي» زر «أضف إلى تقويم Google». لا يفعل شيئاً حتى يضغطه شخص بالغ؛ عندها يفتح متصفحك تقويم Google مع حدث يومي معبأ من الرابط: وقت التذكير، واسم طفلك الأول إن أدخلته. التطبيق نفسه لا يزال لا يجري أي اتصالات بالشبكة. وما يحدث على موقع Google تحكمه سياسة خصوصية Google لا هذه السياسة. أما خيار «حفظ ملف تقويم» فيعمل دون اتصال بالكامل.'],
         ['النسخ الاحتياطية','زر «حفظ نسخة» ينشئ ملفاً على جهازك فقط وعند طلبك فقط، ولا يُرفع أبداً. يحتوي الملف على تسجيلاتك والأسماء والتقدم، فاحفظه في مكان آمن واحذفه إذا لم تعد تريده.'],
         ['أصوات الجهاز (تحويل النص إلى كلام)','تُنطق الكلمات بأصوات مثبتة على جهازك من نظام التشغيل. بحسب إعدادات جهازك، قد تُعالج بعض أصوات النظام لدى الشركة المصنعة؛ ويمكنك اختيار الصوت من التطبيق ومن إعدادات النطق في الجهاز. التطبيق نفسه لا يرسل شيئاً لأحد.'],
         ['الأمان والاحتفاظ بالبيانات','تبقى بياناتك على هذا الجهاز حتى تحذفها. ولأنها لا تُرسل أبداً، فلا يمكن اعتراضها. كما تحظر سياسة أمان التطبيق (CSP) أي اتصال بخوادم أخرى كطبقة حماية إضافية.'],
@@ -1978,6 +2011,7 @@
   }
   function applyContent(card,item){
     var r=item.render;
+    if((r.type==='emoji'||r.type==='shape') && hasWordPhoto(item.key)){ card.appendChild(photoImg(item.key,'cardPhoto')); return; }
     if(r.type==='glyph'){ card.insertAdjacentText('beforeend', r.label); }
     else if(r.type==='emoji'){ var e=document.createElement('span'); e.className='cardEmoji'; e.textContent=r.emoji; card.appendChild(e); }
     else if(r.type==='shape'){ var sh=document.createElement('span'); sh.className='cardShape'; sh.innerHTML=r.svg; card.appendChild(sh); }
@@ -2346,7 +2380,7 @@
     deck.forEach(function(item){
       var b=document.createElement('button'); b.className='memcard';
       var back=document.createElement('span'); back.className='memback'; back.textContent=emo(0x2753);
-      var face=document.createElement('span'); face.className='memface'; face.textContent=item.render.emoji;
+      var face=document.createElement('span'); face.className='memface'; if(hasWordPhoto(item.key)) face.appendChild(photoImg(item.key,'memPhoto')); else face.textContent=item.render.emoji;
       b.appendChild(back); b.appendChild(face);
       b._item=item;
       b.setAttribute('aria-label', item.say||item.key||'');
@@ -2755,6 +2789,89 @@
     return av;
   }
 
+  // ---- photos of the child's own things (replace the cartoon on a word card) ----
+  // Stored in IndexedDB under 'wphoto|<word key>', language-independent: her cup is her cup in any language.
+  var wordPhotoURLs={};
+  function wordPhotoKey(key){ return 'wphoto|'+key; }
+  function hasWordPhoto(key){ return !!wordPhotoURLs[key]; }
+  function loadWordPhotos(){
+    var keys=Object.keys(customIndex).filter(function(k){ return k.indexOf('wphoto|')===0; }), chain=Promise.resolve();
+    keys.forEach(function(k){ var key=k.slice(7); if(wordPhotoURLs[key]) return; chain=chain.then(function(){ return idbGet(k).then(function(b){ if(b){ try{ wordPhotoURLs[key]=URL.createObjectURL(b); }catch(e){} } }); }); });
+    return chain.then(function(){ if(keys.length && typeof renderTodayCard==='function') renderTodayCard(); }).catch(function(){});
+  }
+  function setWordPhoto(key, blob){
+    return idbPut(wordPhotoKey(key), blob).then(function(){
+      customIndex[wordPhotoKey(key)]=1;
+      try{ if(wordPhotoURLs[key]) URL.revokeObjectURL(wordPhotoURLs[key]); wordPhotoURLs[key]=URL.createObjectURL(blob); }catch(e){}
+    });
+  }
+  function deleteWordPhoto(key){
+    return idbDelete(wordPhotoKey(key)).then(function(){
+      delete customIndex[wordPhotoKey(key)];
+      try{ if(wordPhotoURLs[key]) URL.revokeObjectURL(wordPhotoURLs[key]); }catch(e){} delete wordPhotoURLs[key];
+    });
+  }
+  // Downscale on-device (longest side 640px, JPEG) so a hundred photos stay a few megabytes.
+  function shrinkImage(file){
+    var MAX=640;
+    function draw(img, w, h){
+      var s=Math.min(1, MAX/Math.max(w,h)), cw=Math.max(1,Math.round(w*s)), ch=Math.max(1,Math.round(h*s));
+      var c=document.createElement('canvas'); c.width=cw; c.height=ch; c.getContext('2d').drawImage(img,0,0,cw,ch);
+      return new Promise(function(res,rej){ c.toBlob(function(b){ if(b) res(b); else rej(new Error('encode')); }, 'image/jpeg', 0.85); });
+    }
+    if(window.createImageBitmap){
+      return createImageBitmap(file, {imageOrientation:'from-image'}).catch(function(){ return createImageBitmap(file); })
+        .then(function(bm){ var p=draw(bm, bm.width, bm.height); try{ bm.close(); }catch(e){} return p; });
+    }
+    return new Promise(function(res,rej){
+      var url=URL.createObjectURL(file), img=new Image();
+      img.onload=function(){ draw(img, img.naturalWidth, img.naturalHeight).then(res,rej); URL.revokeObjectURL(url); };
+      img.onerror=function(){ URL.revokeObjectURL(url); rej(new Error('decode')); };
+      img.src=url;
+    });
+  }
+  function photoImg(key, cls){ var img=document.createElement('img'); img.className=cls; img.src=wordPhotoURLs[key]; img.alt=''; img.draggable=false; return img; }
+  function canHavePhoto(item, cat){ return !!item && item.render && (item.render.type==='emoji' || item.render.type==='shape') && cat!=='phrases'; }
+  // photo sheet (from the studio): preview, take/choose, remove
+  var wpKey=null;
+  function openWordPhoto(item){
+    wpKey=item.key;
+    var sheet=gid('wphotoSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    gid('wpTitle').textContent=gs('photoTitle').replace('{w}', item.say||item.key);
+    gid('wpSub').textContent=gs('photoSub');
+    gid('wpTake').textContent=gs('photoTake');
+    gid('wpRemove').textContent=gs('photoRemove');
+    gid('wpClose').textContent=TG().done;
+    renderWordPhotoPreview(item);
+    sheet.classList.add('open');
+  }
+  function renderWordPhotoPreview(item){
+    var box=gid('wpPreview'); box.innerHTML='';
+    if(hasWordPhoto(item.key)){ box.appendChild(photoImg(item.key,'wpImg')); gid('wpRemove').style.display=''; }
+    else { var e=document.createElement('div'); e.className='wpEmoji'; e.textContent=item.render.type==='emoji'?item.render.emoji:'\u{1F537}'; box.appendChild(e); gid('wpRemove').style.display='none'; }
+  }
+  function currentWpItem(){ var items=studioItems(); for(var i=0;i<items.length;i++){ if(items[i].key===wpKey) return items[i]; } return null; }
+  function pickWordPhoto(){
+    var item=currentWpItem(); if(!item) return;
+    var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.setAttribute('capture','environment');
+    inp.addEventListener('change', function(){
+      var f=inp.files&&inp.files[0]; if(!f) return;
+      shrinkImage(f).then(function(blob){ return setWordPhoto(item.key, blob); })
+        .then(function(){ renderWordPhotoPreview(item); renderRecList(); renderTodayCard(); showTransientToast(gs('photoSaved')); })
+        .catch(function(){ showTransientToast(gs('photoFail')); });
+    });
+    inp.click();
+  }
+  function removeWordPhoto(){
+    var item=currentWpItem(); if(!item) return;
+    deleteWordPhoto(item.key).then(function(){ renderWordPhotoPreview(item); renderRecList(); renderTodayCard(); });
+  }
+  function photoCoverage(){
+    var cats=['animals','shapes','house','clothes','body','food','family','everyday'], n=0, total=0;
+    cats.forEach(function(cat){ var g=GAMESBYTYPE&&GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ if(!canHavePhoto(it,cat)) return; total++; if(hasWordPhoto(it.key)) n++; }); });
+    return {n:n, total:total};
+  }
+
   // ---- voice panel: whose-voice chips (settings UI: always English) ----
   function renderPersonChips(){
     var box=gid('personChips'); if(!box) return; box.innerHTML='';
@@ -2924,8 +3041,11 @@
   }
   function updateStudioHint(){
     var hint=gid('studioLangHint');
-    if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr'); hint.style.display=''; }
-    else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint; hint.style.display=''; }
+    var photoable = ['letters','numbers','colors','phrases'].indexOf(studioCat)<0;
+    var ph = photoable ? ' \u{1F4F7} '+gs('photoHint') : '';
+    if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr')+ph; hint.style.display=''; }
+    else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint+ph; hint.style.display=''; }
+    else if(photoable){ hint.textContent=ph.trim(); hint.style.display=''; }
     else { hint.style.display='none'; }
   }
   function renderRecList(){
@@ -2939,6 +3059,7 @@
       var glyph=document.createElement('span'); glyph.className='rg';
       var r=item.render; glyph.textContent = r.type==='emoji'?r.emoji : (r.type==='glyph'?r.label : (r.type==='color'?'\u{1F3A8}':(r.chip||'\u{1F537}')));
       if(r.type==='color'){ glyph.textContent='●'; glyph.style.color=r.color; }
+      if(hasWordPhoto(item.key)){ glyph.textContent=''; glyph.appendChild(photoImg(item.key,'rgPhoto')); }
       var txt=document.createElement('span'); txt.className='rt'; txt.textContent=item.say||item.key;
       word.appendChild(glyph); word.appendChild(txt);
       if(item.tr){ var trs=document.createElement('span'); trs.className='rtr'; trs.textContent=item.tr; word.appendChild(trs); }
@@ -2956,6 +3077,7 @@
         if(recordingKey){ stopRecording(); }
         startRecItem(item);
       });
+      if(canHavePhoto(item, studioCat)){ var cam=document.createElement('button'); cam.className='iconBtn cam'+(hasWordPhoto(item.key)?' has':''); cam.textContent='\u{1F4F7}'; cam.setAttribute('aria-label', gs('photoTake')); cam.addEventListener('click', function(){ openWordPhoto(item); }); row.appendChild(cam); }
       row.appendChild(play); row.appendChild(del); row.appendChild(rec);
       list.appendChild(row);
     });
@@ -3326,7 +3448,7 @@
   }
   function bkClipEntry(k,u){
     var isRec=/^rec\|[a-z]{2}\|[A-Za-z0-9_.-]{1,64}\|[^|]{1,64}$/.test(k);
-    var isPhoto=/^photo\|[A-Za-z0-9_.-]{1,64}$/.test(k);
+    var isPhoto=/^w?photo\|[A-Za-z0-9_.-]{1,64}$/.test(k);
     if(!isRec && !isPhoto) return null;
     if(typeof u!=='string' || u.length>15*1024*1024) return null;
     var m=/^data:(audio\/[a-z0-9.+-]+|image\/[a-z0-9.+-]+);base64,/i.exec(u);
@@ -3475,7 +3597,7 @@
     var row=gid('tcRow'); row.innerHTML='';
     items.forEach(function(it){
       var ch=document.createElement('span'); ch.className='tcchip'+(rec.heard[it.key]?' heard':'');
-      var vis=chipVisual(it.key), v=document.createElement('span'); v.className='tcv'; v.textContent=vis.text; if(vis.color) v.style.color=vis.color; ch.appendChild(v);
+      var vis=chipVisual(it.key), v=document.createElement('span'); v.className='tcv'; if(hasWordPhoto(it.key)) v.appendChild(photoImg(it.key,'tcPhoto')); else { v.textContent=vis.text; if(vis.color) v.style.color=vis.color; } ch.appendChild(v);
       var w=document.createElement('span'); w.className='tcw'; w.textContent=it.say||''; ch.appendChild(w);
       if(it.tr && settings().latin){ var t=document.createElement('span'); t.className='tct'; t.textContent=it.tr; ch.appendChild(t); }
       row.appendChild(ch);
@@ -3523,6 +3645,14 @@
     line.textContent = (c.n>=c.total && c.total) ? gs('voiceCovDone') : gs('voiceCovSub').replace('{n}', c.n).replace('{total}', c.total);
     box.appendChild(line);
     if(c.n<c.total){ var btn=document.createElement('button'); btn.className='mini vp-rec'; btn.style.marginTop='10px'; btn.textContent=gs('recordRest'); btn.addEventListener('click', function(){ gid('dashSheet').classList.remove('open'); openStudio('home'); }); box.appendChild(btn); }
+    var pc=photoCoverage(), ppct=pc.total?Math.round(pc.n/pc.total*100):0;
+    var pt=document.createElement('div'); pt.className='settingsGroupTitle'; pt.textContent=gs('photoCov'); box.appendChild(pt);
+    var prow=document.createElement('div'); prow.className='barRow';
+    var ptrack=document.createElement('span'); ptrack.className='barTrack'; var pfill=document.createElement('span'); pfill.className='barFill'; pfill.style.width=ppct+'%'; ptrack.appendChild(pfill);
+    var ppctEl=document.createElement('span'); ppctEl.className='bl'; ppctEl.style.width='auto'; ppctEl.textContent=ppct+'%';
+    prow.appendChild(ptrack); prow.appendChild(ppctEl); box.appendChild(prow);
+    var pline=document.createElement('p'); pline.className='vp-tip'; pline.style.textAlign='start'; pline.style.marginTop='4px'; pline.textContent=gs('photoCovSub').replace('{n}', pc.n).replace('{total}', pc.total); box.appendChild(pline);
+    if(pc.n<pc.total){ var pbtn=document.createElement('button'); pbtn.className='mini vp-rec'; pbtn.style.marginTop='10px'; pbtn.textContent=gs('addPhotos'); pbtn.addEventListener('click', function(){ gid('dashSheet').classList.remove('open'); openStudio('home'); }); box.appendChild(pbtn); }
   }
 
   // ---- grown-ups' cheat sheet: every word (and everyday phrases) with how to say it ----
@@ -3537,7 +3667,7 @@
     function head(t){ var h=document.createElement('div'); h.className='settingsGroupTitle'; h.textContent=t; body.appendChild(h); }
     function row(vis, main, tr, sub, item){
       var r=document.createElement('div'); r.className='crow';
-      var v=document.createElement('span'); v.className='cv'; v.textContent=vis.text||''; if(vis.color) v.style.color=vis.color; r.appendChild(v);
+      var v=document.createElement('span'); v.className='cv'; if(item && hasWordPhoto(item.key)) v.appendChild(photoImg(item.key,'cvPhoto')); else { v.textContent=vis.text||''; if(vis.color) v.style.color=vis.color; } r.appendChild(v);
       var w=document.createElement('span'); w.className='cw';
       var m=document.createElement('span'); m.className='car'; m.textContent=main||''; w.appendChild(m);
       if(tr){ var t=document.createElement('span'); t.className='ctr'; t.textContent=tr; w.appendChild(t); }
@@ -3578,15 +3708,40 @@
     if(start<now) start.setDate(start.getDate()+1);
     var nm=(curProfile().name||'').trim();
     var summary=(nm ? langName(LANG)+' with '+nm : langName(LANG)+' time')+' \u00b7 Tiny Hands';
-    var desc='Open Tiny Hands and do Today\u2019s words together (about two minutes). Then use one of them at dinner, in the bath or at bedtime.';
+    var desc=reminderParts(hhmm).desc;
     return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tiny Hands//Daily reminder//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
       'BEGIN:VEVENT','UID:tinyhands-daily-'+curProfileId+'-'+LANG+'@local','DTSTAMP:'+icsStampUTC(now),'DTSTART:'+icsLocal(start),'DURATION:PT10M','RRULE:FREQ=DAILY',
       'SUMMARY:'+icsEscape(summary),'DESCRIPTION:'+icsEscape(desc),
       'BEGIN:VALARM','ACTION:DISPLAY','TRIGGER:PT0M','DESCRIPTION:'+icsEscape(summary),'END:VALARM',
       'END:VEVENT','END:VCALENDAR'].join('\r\n')+'\r\n';
   }
+  // Google Calendar's event template link: opened only when the grown-up taps, carries the event text in the URL.
+  function reminderParts(hhmm){
+    var m=/^(\d{1,2}):(\d{2})$/.exec(hhmm||''); var hh=m?Math.min(23,+m[1]):18, mi=m?Math.min(59,+m[2]):0;
+    var now=new Date(), start=new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mi, 0);
+    if(start<now) start.setDate(start.getDate()+1);
+    var end=new Date(start.getTime()+10*60000), nm=(curProfile().name||'').trim();
+    return { start:start, end:end,
+      summary:(nm ? langName(LANG)+' with '+nm : langName(LANG)+' time')+' \u00b7 Tiny Hands',
+      desc:'Open Tiny Hands and do Today\u2019s words together (about two minutes). Then use one of them at dinner, in the bath or at bedtime.' };
+  }
+  function googleCalendarURL(hhmm){
+    var p=reminderParts(hhmm);
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      +'&text='+encodeURIComponent(p.summary)
+      +'&dates='+icsLocal(p.start)+'/'+icsLocal(p.end)
+      +'&recur='+encodeURIComponent('RRULE:FREQ=DAILY')
+      +'&details='+encodeURIComponent(p.desc);
+  }
+  function openGoogleReminder(){
+    var t=gid('remindTime').value||'18:00'; PD.remindAt=t; flushPD();
+    var w=window.open(googleCalendarURL(t), '_blank', 'noopener');
+    if(!w){ var a=document.createElement('a'); a.href=googleCalendarURL(t); a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.parentNode.removeChild(a); }
+  }
   function openReminder(){
     var sheet=gid('remindSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    gid('remindGoogle').textContent=gs('remindGoogle');
+    gid('remindGoogleNote').textContent=gs('remindGoogleNote');
     gid('remindTitle').textContent='\u23f0 '+gs('remindTitle');
     gid('remindSub').textContent=gs('remindSub');
     gid('remindTimeLbl').textContent=gs('remindTime');
@@ -3674,6 +3829,12 @@
     gid('remindClose').addEventListener('click', function(){ gid('remindSheet').classList.remove('open'); });
     gid('remindSheet').addEventListener('click', function(e){ if(e.target===gid('remindSheet')) gid('remindSheet').classList.remove('open'); });
     gid('remindAdd').addEventListener('click', downloadReminder);
+    gid('remindGoogle').addEventListener('click', openGoogleReminder);
+    // word photos
+    gid('wpTake').addEventListener('click', pickWordPhoto);
+    gid('wpRemove').addEventListener('click', removeWordPhoto);
+    gid('wpClose').addEventListener('click', function(){ gid('wphotoSheet').classList.remove('open'); });
+    gid('wphotoSheet').addEventListener('click', function(e){ if(e.target===gid('wphotoSheet')) gid('wphotoSheet').classList.remove('open'); });
     gid('pmPrivacy').addEventListener('click', function(){ closeParent(); openPrivacy(); });
     gid('pmTerms').addEventListener('click', function(){ closeParent(); openTerms(); });
     // legal docs: reachable from the home page without the parent gate (CalOPPA conspicuous posting)
@@ -3744,7 +3905,7 @@
   applyTheme();
   loadPersons();
   loadPhotos();
-  refreshCustomIndex();
+  refreshCustomIndex().then(loadWordPhotos);
   wireEnhancements();
   var savedLang = PD.lastLang || lsGet('tinyTapsLang') || '';
   if(!savedLang){ var dl=((navigator.language||'en').slice(0,2)).toLowerCase(); savedLang=(['en','ar','hy','es','fr'].indexOf(dl)>=0)?dl:'en'; }   // auto-detect device language on first run
