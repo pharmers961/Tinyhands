@@ -591,7 +591,17 @@
   .sceneprompt{ margin:2px 0 6px; }
   .sceneSpeaker{ width:76px; height:76px; font-size:34px; }
   .sceneStage{ z-index:2; flex:1; width:100%; min-height:0; position:relative; display:flex; flex-direction:column; }
-  .room{ position:relative; flex:1; width:100%; min-height:0; border-radius:26px; overflow:hidden; background:linear-gradient(to bottom, var(--wall,#fff3d6) 0 58%, var(--floor,#e6c9a3) 58% 100%); box-shadow:inset 0 0 0 4px rgba(255,255,255,.55), 0 8px 18px rgba(0,0,0,.10); }
+  .room{ position:relative; flex:1; width:100%; min-height:0; border-radius:26px; overflow:hidden; background:linear-gradient(to bottom, var(--wall,#fff) 0 60.7%, var(--floor,#eee) 60.7% 100%); box-shadow:0 8px 18px rgba(0,0,0,.10); display:flex; align-items:center; justify-content:center; }
+  .roomSvg{ width:100%; height:100%; display:block; }
+  .roomSvg .rf, .roomSvg .loose{ cursor:pointer; transform-box:fill-box; transform-origin:center; -webkit-tap-highlight-color:transparent; }
+  .roomSvg .loose{ animation:popIn .3s ease both; filter:drop-shadow(0 2px 2px rgba(0,0,0,.22)); }
+  .roomSvg .loose text{ font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif; }
+  .roomSvg .shapeInk *{ fill:#8fa4c9; }
+  .roomSvg .rf.correct, .roomSvg .loose.correct{ animation:pop .55s ease; filter:drop-shadow(0 0 4px #7bd389) drop-shadow(0 0 10px #7bd389); }
+  .roomSvg .rf.wrong, .roomSvg .loose.wrong{ animation:wiggle .45s ease; }
+  .roomSvg .rf.dimmed, .roomSvg .loose.dimmed{ opacity:.35; pointer-events:none; }
+  .roomSvg .loose.fade{ opacity:0; transition:opacity .25s; }
+  @media (prefers-reduced-motion: reduce){ .roomSvg .loose{ animation:none; } }
   .roomLabel{ position:absolute; top:10px; left:12px; font-family:'Fredoka',sans-serif; font-weight:700; font-size:14px; color:rgba(59,58,82,.7); background:rgba(255,255,255,.7); border-radius:999px; padding:4px 11px; pointer-events:none; }
   .sitem{ position:absolute; width:27%; max-width:118px; aspect-ratio:1/1; transform:translate(-50%,-50%); border:none; background:none; padding:0; cursor:pointer; }
   .sitem .sin{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; border-radius:22px; background:rgba(255,255,255,.88); box-shadow:0 6px 0 rgba(59,58,82,.16), 0 8px 14px rgba(0,0,0,.10); overflow:hidden; animation:popIn .3s ease both; }
@@ -3854,12 +3864,75 @@
   //  One mechanic: a prompt, a few pictures (her own photos when set), tap the right one.
   //  Find and Feed chain a family-recorded phrase ("wen el…", "baddi…") before the word.
   // ============================================================
+  // Each room is a small SVG illustration (320x420 units). Furniture that is also a vocabulary word
+  // (bed, sofa, table, chair, lamp, door, window) is drawn and tappable; loose objects (cup, banana,
+  // book, ball…) are placed on anchors that sit on the shelves, counter, table, bed, sofa and floor.
+  function sv(tag, attrs, inner){ var s='<'+tag; for(var k in attrs){ s+=' '+k+'="'+attrs[k]+'"'; } return inner!=null ? s+'>'+inner+'</'+tag+'>' : s+'/>'; }
+  function rct(x,y,w,h,fill,rx){ return sv('rect',{x:x,y:y,width:w,height:h,fill:fill,rx:rx||0}); }
+  function rf(key, inner){ return '<g class="rf" data-key="'+key+'">'+inner+'</g>'; }
+  var FURN={
+    window:function(x,y,w,h){ return rct(x-16,y-14,w+32,8,'#d9a066',3)+rct(x-6,y-6,w+12,h+12,'#f7f1e6',6)+rct(x,y,w,h,'#bfe6ff',3)+rct(x,y,w,h*0.45,'#d8f1ff',3)+sv('circle',{cx:x+w*0.7,cy:y+h*0.3,r:9,fill:'#fff3b0'})+rct(x+w/2-2,y,4,h,'#f7f1e6')+rct(x,y+h/2-2,w,4,'#f7f1e6')+rct(x-14,y-10,16,h+20,'#f9b8c8',5)+rct(x+w-2,y-10,16,h+20,'#f9b8c8',5); },
+    door:function(x,y,w,h){ return rct(x-5,y-5,w+10,h+5,'#c98a4b',6)+rct(x,y,w,h,'#e8b97a',4)+rct(x+8,y+10,w-16,h*0.4,'#dca965',3)+rct(x+8,y+h*0.55,w-16,h*0.38,'#dca965',3)+sv('circle',{cx:x+w-10,cy:y+h*0.52,r:3.5,fill:'#5b4a2f'}); },
+    shelf:function(x,y,w){ return rct(x,y,w,7,'#b98453',2)+rct(x+6,y+7,6,10,'#a06f3f')+rct(x+w-12,y+7,6,10,'#a06f3f'); },
+    table:function(x,y,w){ return rct(x+8,y+12,8,46,'#a06f3f',2)+rct(x+w-16,y+12,8,46,'#a06f3f',2)+rct(x,y,w,12,'#c98a4b',5)+rct(x+4,y+2,w-8,4,'#dca965',2); },
+    chair:function(x,y){ return rct(x,y,34,40,'#c98a4b',6)+rct(x+5,y+6,24,26,'#dca965',4)+rct(x-3,y+40,40,10,'#c98a4b',3)+rct(x,y+50,6,22,'#a06f3f')+rct(x+28,y+50,6,22,'#a06f3f'); },
+    bed:function(x,y,w,h){ return rct(x-4,y+h-2,8,16,'#a06f3f')+rct(x+w-4,y+h-2,8,16,'#a06f3f')+rct(x,y,w,26,'#b98453',8)+rct(x,y+22,w,h-22,'#ffffff',8)+rct(x,y+22+(h-22)*0.42,w,(h-22)*0.58,'#9fd3e8',8)+rct(x+10,y+28,w*0.42,16,'#fff0f5',6); },
+    lamp:function(x,y){ return sv('polygon',{points:(x-20)+','+(y+28)+' '+(x+20)+','+(y+28)+' '+(x+12)+','+y+' '+(x-12)+','+y,fill:'#ffd98a'})+sv('circle',{cx:x,cy:y+16,r:6,fill:'#fff6d6',opacity:.9})+rct(x-3,y+28,6,22,'#8a6d4b')+rct(x-14,y+48,28,6,'#8a6d4b',3); },
+    sofa:function(x,y,w){ return rct(x,y+54,8,12,'#3f5f88')+rct(x+w-8,y+54,8,12,'#3f5f88')+rct(x,y,w,40,'#7aa8d8',10)+rct(x-8,y+24,w+16,30,'#5f8fc4',10)+rct(x+6,y+26,w/2-9,22,'#8fb8e6',6)+rct(x+w/2+3,y+26,w/2-9,22,'#8fb8e6',6)+rct(x-8,y+22,22,34,'#6d9bd0',8)+rct(x+w-14,y+22,22,34,'#6d9bd0',8); },
+    counter:function(x,y,w){ return rct(x,y,w,64,'#cfe3d9',6)+rct(x-4,y-8,w+8,12,'#e9dcc7',3)+rct(x+8,y+14,w/2-12,42,'#b8d3c6',4)+rct(x+w/2+4,y+14,w/2-12,42,'#b8d3c6',4)+sv('circle',{cx:x+w/2-12,cy:y+36,r:2.5,fill:'#5b6f66'})+sv('circle',{cx:x+w/2+12,cy:y+36,r:2.5,fill:'#5b6f66'}); },
+    fridge:function(x,y){ return rct(x,y,64,112,'#f4f6f8',8)+rct(x+6,y+8,52,36,'#e4e8ec',5)+rct(x+6,y+50,52,54,'#e4e8ec',5)+rct(x+48,y+16,4,18,'#9aa3ad',2)+rct(x+48,y+58,4,26,'#9aa3ad',2); },
+    bookshelf:function(x,y,w,h){ var s=rct(x,y,w,h,'#c98a4b',6)+rct(x+6,y+6,w-12,h-12,'#e8b97a',3); for(var i=1;i<3;i++){ s+=rct(x+6,y+6+(h-12)*i/3-3,w-12,6,'#b07843'); } return s; },
+    rug:function(cx,cy,rx,ry,fill){ return sv('ellipse',{cx:cx,cy:cy,rx:rx,ry:ry,fill:fill})+sv('ellipse',{cx:cx,cy:cy,rx:rx-12,ry:ry-8,fill:'none',stroke:'rgba(255,255,255,.55)','stroke-width':3}); },
+    plant:function(x,y){ return rct(x-14,y+30,28,26,'#c26a4a',4)+sv('ellipse',{cx:x,cy:y+16,rx:22,ry:20,fill:'#5fb56b'})+sv('ellipse',{cx:x-12,cy:y+8,rx:12,ry:14,fill:'#7ccf7d'})+sv('ellipse',{cx:x+12,cy:y+8,rx:12,ry:14,fill:'#7ccf7d'}); },
+    toybox:function(x,y){ return rct(x,y,66,36,'#f6c76b',6)+rct(x-4,y-6,74,12,'#e9a83a',4)+sv('circle',{cx:x+33,cy:y+18,r:6,fill:'#ff7a92'}); },
+    frame:function(x,y){ return rct(x,y,44,36,'#8a6d4b',3)+rct(x+5,y+5,34,26,'#bfe0ff',2)+sv('circle',{cx:x+30,cy:y+13,r:5,fill:'#ffd166'})+sv('polygon',{points:(x+5)+','+(y+31)+' '+(x+18)+','+(y+17)+' '+(x+27)+','+(y+25)+' '+(x+39)+','+(y+31),fill:'#7ccfa6'}); },
+    coffee:function(x,y,w){ return rct(x+6,y+10,6,30,'#a06f3f')+rct(x+w-12,y+10,6,30,'#a06f3f')+rct(x,y,w,10,'#b98453',5); },
+    nightstand:function(x,y){ return rct(x,y,50,46,'#b98453',5)+rct(x+8,y+8,34,12,'#dca965',3)+rct(x+8,y+26,34,12,'#dca965',3); }
+  };
+  var ROOM_W=320, ROOM_H=420, ROOM_WALL=255;
   var ROOMS=[
-    {key:'kitchen', emoji:'\u{1F37D}️', wall:'#fff3d6', floor:'#e6c9a3', items:['table','chair','cup','plate','spoon','apple','banana','milk','bread','egg']},
-    {key:'bedroom', emoji:'\u{1F6CF}️', wall:'#e8e4ff', floor:'#cdbfe8', items:['bed','lamp','book','toy','ball','socks','shirt','pants','hat','dress']},
-    {key:'living',  emoji:'\u{1F6CB}️', wall:'#e2f5ee', floor:'#b9d9c8', items:['sofa','phone','key','door','window','car','cat','dog','shoes','jacket']}
+    {key:'kitchen', emoji:'\u{1F37D}️', wall:'#fff3d6', floor:'#e6c9a3', base:'#d9b58a',
+     furniture:['door','window','chair','table'], loose:['cup','plate','spoon','apple','banana','milk','bread','egg','cheese','juice','tomato','carrot'],
+     anchors:[[100,58],[134,58],[168,58],[98,166],[134,166],[170,166],[160,268],[210,268],[40,362],[150,384],[282,376]],
+     draw:function(){ return rf('door',FURN.door(10,105,50,150))+FURN.shelf(78,72,112)+rf('window',FURN.window(218,42,86,76))+FURN.counter(72,190,124)+FURN.fridge(238,142)+rf('chair',FURN.chair(78,262))+FURN.chair(250,262)+rf('table',FURN.table(130,284,110)); }},
+    {key:'bedroom', emoji:'\u{1F6CF}️', wall:'#ece6ff', floor:'#d9cbe8', base:'#bfb2dc',
+     furniture:['window','bed','lamp'], loose:['book','toy','ball','socks','shirt','pants','hat','dress','jacket','shoes'],
+     anchors:[[52,92],[84,92],[116,92],[55,214],[112,214],[269,202],[60,332],[150,372],[262,338],[220,396]],
+     draw:function(){ return FURN.frame(150,52)+FURN.shelf(30,105,104)+rf('window',FURN.window(206,40,90,78))+FURN.rug(160,352,105,34,'#f4b6c2')+rf('bed',FURN.bed(18,160,140,96))+FURN.nightstand(172,210)+rf('lamp',FURN.lamp(197,154))+FURN.toybox(236,218); }},
+    {key:'living',  emoji:'\u{1F6CB}️', wall:'#e6f4ee', floor:'#c8dccf', base:'#a9c4b4',
+     furniture:['window','door','sofa'], loose:['phone','key','book','car','toy','ball','cat','dog','shoes','hat','cup','socks'],
+     anchors:[[160,124],[202,124],[160,173],[202,222],[52,232],[100,232],[85,284],[135,284],[200,352],[258,384]],
+     draw:function(){ return rf('window',FURN.window(24,42,92,78))+FURN.bookshelf(136,96,90,158)+rf('door',FURN.door(244,100,54,155))+FURN.rug(150,372,110,32,'#f1d7a3')+rf('sofa',FURN.sofa(20,196,120))+FURN.coffee(60,300,100)+FURN.plant(285,306); }}
   ];
-  var FIND_SLOTS=[[20,24],[50,18],[80,26],[22,66],[52,72],[80,64]];
+  function looseMarkup(item, x, y, idx){
+    var inner='<rect x="-28" y="-28" width="56" height="56" fill="transparent"/>';
+    if(hasWordPhoto(item.key)){ inner+='<rect x="-23" y="-23" width="46" height="46" rx="11" fill="#fff"/><image href="'+wordPhotoURLs[item.key]+'" x="-21" y="-21" width="42" height="42" clip-path="url(#looseClip)" preserveAspectRatio="xMidYMid slice"/>'; }
+    else { var r=item.render; if(r.type==='shape'){ inner+='<g transform="translate(-18,-18) scale(.36)"><g class="shapeInk">'+r.svg.replace(/<svg[^>]*>|<\/svg>/g,'')+'</g></g>'; } else { inner+='<text y="13" text-anchor="middle" font-size="36">'+r.emoji+'</text>'; } }
+    return '<g transform="translate('+x+','+y+')"><g class="loose" data-key="'+item.key+'" style="animation-delay:'+(idx*0.06)+'s">'+inner+'</g></g>';
+  }
+  function renderRoom(target){
+    var room=ROOMS[sceneRoomIdx], T=TU();
+    var looseAll=room.loose.map(findItemByKey).filter(function(it){ return it && it.say; });
+    var targetLoose=room.loose.indexOf(target.key)>=0;
+    var shown=shuffle(looseAll.filter(function(it){ return it.key!==target.key; })).slice(0, targetLoose?5:6);
+    if(targetLoose) shown.push(target);
+    shown=shuffle(shown);
+    var anchors=shuffle(room.anchors.slice());
+    var s='<svg class="roomSvg" viewBox="0 0 '+ROOM_W+' '+ROOM_H+'" preserveAspectRatio="xMidYMid meet"><defs><clipPath id="looseClip"><rect x="-21" y="-21" width="42" height="42" rx="10"/></clipPath></defs>';
+    s+=rct(0,0,ROOM_W,ROOM_WALL,room.wall)+rct(0,ROOM_WALL,ROOM_W,ROOM_H-ROOM_WALL,room.floor)+rct(0,ROOM_WALL-6,ROOM_W,7,room.base);
+    for(var y=ROOM_WALL+22;y<ROOM_H;y+=24){ s+=rct(0,y,ROOM_W,1.5,'rgba(0,0,0,.06)'); }
+    s+=room.draw();
+    shown.forEach(function(it,i){ var a=anchors[i]; s+=looseMarkup(it, a[0], a[1], i); });
+    s+='</svg>';
+    var rm=document.createElement('div'); rm.className='room'; rm.style.setProperty('--wall',room.wall); rm.style.setProperty('--floor',room.floor); rm.innerHTML=s;
+    var lbl=document.createElement('div'); lbl.className='roomLabel'; lbl.textContent=room.emoji+' '+((T.rooms||I18N.en.rooms)[room.key]); rm.appendChild(lbl);
+    Array.prototype.forEach.call(rm.querySelectorAll('[data-key]'), function(el){
+      var it=findItemByKey(el.getAttribute('data-key')); if(!it) return;
+      el.setAttribute('role','button'); el.setAttribute('aria-label', it.say||it.key);
+      el.addEventListener('click', function(){ onScenePick(el,it); });
+    });
+    sceneStageEl.appendChild(rm);
+  }
   var sceneMode='find', sceneRoomIdx=0, sceneTarget=null, sceneLocked=false, sceneStreak=0, sceneQueue=[], sceneLast=null;
   var sceneStageEl=gid('sceneStage'), scenePromptEl=gid('scenePrompt'), sceneStarsEl=gid('sceneStars'), sceneSpeakerEl=gid('sceneSpeaker');
   for(var ss=0;ss<MAX_STARS;ss++){ var sst=document.createElement('span'); sst.className='star'; sst.textContent=emo(0x2B50); sceneStarsEl.appendChild(sst); }
@@ -3871,11 +3944,13 @@
   }
   function soundFor(animalKey){ var g=GAMESBYTYPE.sounds; for(var i=0;i<g.items.length;i++){ if(g.items[i].animal===animalKey) return g.items[i]; } return null; }
   function scenePool(){
-    if(sceneMode==='find'){ return ROOMS[sceneRoomIdx].items.map(findItemByKey).filter(function(it){ return it && it.say; }); }
+    if(sceneMode==='find'){ var rm=ROOMS[sceneRoomIdx]; return rm.furniture.concat(rm.loose).map(findItemByKey).filter(function(it){ return it && it.say; }); }
     if(sceneMode==='sounds'){ return GAMESBYTYPE.animals.items.filter(function(it){ return !!soundFor(it.key); }); }
     return GAMESBYTYPE.food.items.filter(function(it){ return !!it.say; });
   }
   function sceneNext(pool){
+    var inPool={}; pool.forEach(function(it){ inPool[it.key]=1; });
+    sceneQueue=sceneQueue.filter(function(it){ return inPool[it.key]; });   // a room change drops words that aren't here
     if(!sceneQueue.length){
       var bag=[]; pool.forEach(function(it){ var w=missWeight(it.key); for(var k=0;k<w;k++) bag.push(it); }); shuffle(bag);
       var seen={}; bag.forEach(function(it){ if(!seen[it.key]){ seen[it.key]=1; sceneQueue.push(it); } });
@@ -3913,10 +3988,7 @@
     scenePromptEl.textContent=T.prompts[sceneMode];
     sceneStageEl.innerHTML='';
     if(sceneMode==='find'){
-      var room=ROOMS[sceneRoomIdx], rm=document.createElement('div'); rm.className='room'; rm.style.setProperty('--wall',room.wall); rm.style.setProperty('--floor',room.floor);
-      var lbl=document.createElement('div'); lbl.className='roomLabel'; lbl.textContent=room.emoji+' '+((T.rooms||I18N.en.rooms)[room.key]); rm.appendChild(lbl);
-      shown.forEach(function(item,i){ var b=sceneItemButton(item,'sitem'); var s=FIND_SLOTS[i%FIND_SLOTS.length]; b.style.left=(s[0]+(Math.random()*8-4))+'%'; b.style.top=(s[1]+(Math.random()*6-3))+'%'; b.firstChild.style.animationDelay=(i*0.06)+'s'; rm.appendChild(b); });
-      sceneStageEl.appendChild(rm);
+      renderRoom(sceneTarget);
     } else {
       if(sceneMode==='feed'){ var head=document.createElement('div'); head.className='feedHead'; var face=document.createElement('div'); face.className='babyFace'; face.id='babyFace'; face.appendChild(babyVisual()); var yum=document.createElement('span'); yum.className='yum'; yum.id='babyYum'; yum.textContent='\u{1F60B}'; face.appendChild(yum); head.appendChild(face); sceneStageEl.appendChild(head); }
       var grid=document.createElement('div'); grid.className='sceneGrid'+(sceneMode==='feed'?' feed':'');
@@ -3949,10 +4021,10 @@
       playDing();
       if(sceneMode==='feed'){ btn.classList.add('eaten'); var f=gid('babyFace'); if(f) f.classList.add('happy'); }
       roundTimers.push(setTimeout(function(){ playItem(sceneTarget); }, 450));   // the name, in the family voice
-      roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(sceneStageEl.querySelectorAll('.sitem,.scard'),function(c){ c.classList.add('fade'); }); }, 1000));
+      roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(sceneStageEl.querySelectorAll('.scard,.loose'),function(c){ c.classList.add('fade'); }); }, 1000));
       roundTimers.push(setTimeout(function(){
         if(sceneStreak>=MAX_STARS){ celebrate(); sceneStreak=0; paintSceneStars(); roundTimers.push(setTimeout(newSceneRound,1400)); }
-        else { if(sceneMode==='find' && Math.random()<0.34) sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; newSceneRound(); }
+        else { if(sceneMode==='find' && Math.random()<0.34){ sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; sceneQueue=[]; } newSceneRound(); }
       }, 1700));
     } else {
       btn.classList.add('wrong'); buzz(45); noteMiss(sceneTarget.key);
@@ -3970,7 +4042,7 @@
     showScreen('scene'); newSceneRound();
   }
   gid('sceneBack').addEventListener('click', goMenu);
-  gid('sceneNew').addEventListener('click', function(){ if(!sceneLocked){ if(sceneMode==='find') sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; newSceneRound(); } });
+  gid('sceneNew').addEventListener('click', function(){ if(!sceneLocked){ if(sceneMode==='find'){ sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; sceneQueue=[]; } newSceneRound(); } });
   sceneSpeakerEl.addEventListener('click', function(){ clearRoundTimers(); sceneSpeak(); });
 
   // ---- mascot ----
