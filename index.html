@@ -135,7 +135,7 @@
   body.lefty .bottombar{ flex-direction:row-reverse; }
   body.arabic, body.arabic *{ font-family:'Baloo Bhaijaan 2','Cairo','Quicksand',sans-serif; }
   body.armenian, body.armenian *{ font-family:'Noto Sans Armenian','Fredoka','Quicksand',sans-serif; }
-  .stage{ width:100%; max-width:760px; height:100dvh; max-height:900px; position:relative; overflow:hidden; }
+  .stage{ width:100%; max-width:760px; height:100dvh; max-height:900px; position:relative; overflow:hidden; overflow:clip; }   /* clip: nothing (focus, toasts, tests) can scroll the stage */
 
   .blob{position:absolute; border-radius:50%; filter:blur(2px); opacity:.5; z-index:0; pointer-events:none;}
   .blob.b1{width:90px;height:90px;background:#ffb3c1;top:8%;left:6%;animation:float 7s ease-in-out infinite;}
@@ -308,10 +308,13 @@
   .tile.t11{ background:linear-gradient(160deg,#ffc36b,#f7931e); }
   .tile.t12{ background:linear-gradient(160deg,#ffb7b2,#ef7b7b); }
   .tile.t13{ background:linear-gradient(160deg,#7ee8c8,#2bb5a0); }
+  .tile.t14{ background:linear-gradient(160deg,#ffd6a5,#ff9f68); }
+  .tile.t15{ background:linear-gradient(160deg,#b8e994,#6ab04c); }
+  .tile.t16{ background:linear-gradient(160deg,#fbc4e0,#e77fb3); }
   /* Learn shows 11 tiles (4 rows of 3, Everyday spans two); Play shows 13 (5 rows, Trace fills the last) */
   #menu:not(.show-games) .grid{ grid-template-rows:repeat(4,1fr); }
   #menu:not(.show-games) .tile.t13{ grid-column:span 2; }
-  #menu.show-games .grid{ grid-template-rows:repeat(5,1fr); }
+  #menu.show-games .grid{ grid-template-rows:repeat(6,1fr); }
   #menu.show-games .tile.t7{ grid-column:1 / -1; }
   #menu.show-games .learnonly{ display:none; }
   /* truly-centered, larger screen titles */
@@ -584,6 +587,41 @@
   .crow .cen{ font-size:12px; color:var(--soft); unicode-bidi:plaintext; }
   .crow .iconBtn{ width:36px; height:36px; font-size:13px; }
   .timeInput{ width:auto !important; margin:0 !important; padding:9px 12px !important; font-size:16px !important; }
+  /* scene games */
+  .sceneprompt{ margin:2px 0 6px; }
+  .sceneSpeaker{ width:76px; height:76px; font-size:34px; }
+  .sceneStage{ z-index:2; flex:1; width:100%; min-height:0; position:relative; display:flex; flex-direction:column; }
+  .room{ position:relative; flex:1; width:100%; min-height:0; border-radius:26px; overflow:hidden; background:linear-gradient(to bottom, var(--wall,#fff3d6) 0 58%, var(--floor,#e6c9a3) 58% 100%); box-shadow:inset 0 0 0 4px rgba(255,255,255,.55), 0 8px 18px rgba(0,0,0,.10); }
+  .roomLabel{ position:absolute; top:10px; left:12px; font-family:'Fredoka',sans-serif; font-weight:700; font-size:14px; color:rgba(59,58,82,.7); background:rgba(255,255,255,.7); border-radius:999px; padding:4px 11px; pointer-events:none; }
+  .sitem{ position:absolute; width:27%; max-width:118px; aspect-ratio:1/1; transform:translate(-50%,-50%); border:none; background:none; padding:0; cursor:pointer; }
+  .sitem .sin{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; border-radius:22px; background:rgba(255,255,255,.88); box-shadow:0 6px 0 rgba(59,58,82,.16), 0 8px 14px rgba(0,0,0,.10); overflow:hidden; animation:popIn .3s ease both; }
+  .sitem .sEmoji{ font-size:clamp(34px,10vw,58px); line-height:1; }
+  .sitem .sPhoto, .scard .sPhoto{ width:100%; height:100%; object-fit:cover; }
+  .sitem .cardShape, .scard .cardShape{ width:60%; height:60%; filter:drop-shadow(0 2px 0 rgba(0,0,0,.15)); }
+  .sitem .cardShape svg *, .scard .cardShape svg *{ fill:#8fa4c9; }
+  .sitem:active .sin{ transform:translateY(4px); box-shadow:0 2px 0 rgba(59,58,82,.16); }
+  .sitem.correct .sin{ animation:pop .55s ease; box-shadow:0 0 0 6px var(--good), 0 8px 14px rgba(0,0,0,.10); }
+  .sitem.wrong .sin{ animation:wiggle .45s ease; }
+  .sitem.dimmed, .scard.dimmed{ opacity:.35; filter:grayscale(.4); pointer-events:none; }
+  .sitem.fade, .scard.fade{ opacity:0; transition:opacity .25s; }
+  .sceneGrid{ flex:1; min-height:0; width:100%; display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr); gap:clamp(10px,3vw,18px); padding:4px 2px; }
+  .sceneGrid.feed{ flex:0 0 46%; }
+  .scard{ border:none; border-radius:26px; background:#fff; box-shadow:0 9px 0 var(--shadow), 0 12px 20px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; overflow:hidden; min-height:0; transition:transform .12s, box-shadow .12s; }
+  .scard:nth-child(1){ background:linear-gradient(160deg,#ff9aa2,#ff7a92); } .scard:nth-child(2){ background:linear-gradient(160deg,#7fd8d4,#4fb8c9); } .scard:nth-child(3){ background:linear-gradient(160deg,#ffd166,#ffae42); } .scard:nth-child(4){ background:linear-gradient(160deg,#c9b1ff,#a98cf0); }
+  .scard .sEmoji{ font-size:clamp(50px,15vw,92px); line-height:1; }
+  .scard:active{ transform:translateY(6px); box-shadow:0 3px 0 var(--shadow); }
+  .scard.correct{ animation:pop .55s ease; box-shadow:0 0 0 6px var(--good), 0 12px 20px rgba(0,0,0,.12); }
+  .scard.wrong{ animation:wiggle .45s ease; }
+  .scard.eaten{ animation:eaten .9s ease forwards; }
+  @keyframes eaten{ 0%{ transform:scale(1); } 100%{ transform:translateY(-55vh) scale(.15); opacity:0; } }
+  .feedHead{ flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:4px 0 10px; }
+  .babyFace{ position:relative; width:min(38vw,170px); aspect-ratio:1/1; border-radius:50%; background:#fff; box-shadow:0 8px 0 var(--shadow), 0 12px 22px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; overflow:hidden; animation:mascotBob 3.2s ease-in-out infinite; }
+  .babyFace .babyEmoji{ font-size:min(24vw,108px); line-height:1; }
+  .babyFace .babyPhoto{ width:100%; height:100%; object-fit:cover; }
+  .babyFace .yum{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:min(24vw,108px); background:#fff; opacity:0; transition:opacity .2s; }
+  .babyFace.happy .yum{ opacity:1; }
+  .babyFace.happy{ animation:pop .55s ease; }
+  @media (prefers-reduced-motion: reduce){ .sitem .sin, .scard.eaten, .babyFace{ animation:none; } }
   /* photos of her own things */
   .cardPhoto{ width:82%; max-height:82%; aspect-ratio:1/1; object-fit:cover; border-radius:22px; background:#fff; box-shadow:0 5px 0 rgba(0,0,0,.14), inset 0 0 0 4px rgba(255,255,255,.85); pointer-events:none; }
   .lcard .cardPhoto{ width:66%; max-height:66%; border-radius:14px; box-shadow:0 3px 0 rgba(0,0,0,.14), inset 0 0 0 3px rgba(255,255,255,.85); }
@@ -658,6 +696,9 @@
       <button class="tile t12" data-game="family"><span class="emoji">&#x1F46A;</span><span class="name"></span></button>
       <button class="tile t13 learnonly" data-game="everyday"><span class="emoji">&#x1F44B;</span><span class="name"></span></button>
       <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
+      <button class="tile t14 playonly" data-game="find"><span class="emoji">&#x1F50D;</span><span class="name"></span></button>
+      <button class="tile t15 playonly" data-game="sounds"><span class="emoji">&#x1F42E;</span><span class="name"></span></button>
+      <button class="tile t16 playonly" data-game="feed"><span class="emoji">&#x1F37C;</span><span class="name"></span></button>
       <button class="tile t5 playonly" data-game="count"><span class="emoji">&#x1F9EE;</span><span class="name"></span></button>
       <button class="tile t6 playonly" data-game="memory"><span class="emoji">&#x1F9E0;</span><span class="name"></span></button>
       <button class="tile t7 playonly" data-game="trace"><span class="emoji">&#x270F;&#xFE0F;</span><span class="name"></span></button>
@@ -709,6 +750,23 @@
     </div>
     <p class="learnhint" id="learnHint"></p>
     <div class="learnGrid" id="learnGrid"></div>
+  </div>
+
+  <!-- SCENE GAMES: find it in the room / animal sounds / feed the baby -->
+  <div class="screen" id="scene">
+    <div class="gametop">
+      <button class="homebtn" id="sceneBack"></button>
+      <div class="stars" id="sceneStars"></div>
+    </div>
+    <div class="prompt sceneprompt">
+      <p id="scenePrompt"></p>
+      <button class="speaker sceneSpeaker" id="sceneSpeaker" aria-label="Play again"><span class="ring"></span>&#x1F50A;</button>
+      <p class="grownup" id="sceneGrownup"></p>
+    </div>
+    <div class="sceneStage" id="sceneStage"></div>
+    <div class="bottombar">
+      <button class="mini" id="sceneNew"></button>
+    </div>
   </div>
 
   <!-- COUNT -->
@@ -1103,6 +1161,18 @@
     {key:"book",     render:{type:"emoji",emoji:emo(0x1F4D6)}, say:{en:"book",       ar:"كتاب",   hy:"գիրք"}},
     {key:"car",      render:{type:"emoji",emoji:emo(0x1F697)}, say:{en:"car",        ar:"سيارة",  hy:"մեքենա"}}
   ];
+  // What each animal says, the way Lebanese families say it (recordable in the studio; the
+  // Animal sounds game plays the sound and asks which animal made it).
+  var SOUNDS = [
+    {key:"snd_dog",   animal:"dog",   say:{en:"woof woof",  ar:"هَو هَو",     tr:"haw haw",   hy:"հաֆ հաֆ",   es:"guau guau", fr:"ouaf ouaf"}},
+    {key:"snd_cat",   animal:"cat",   say:{en:"meow",       ar:"مياو",       tr:"miaw",      hy:"մյաու",     es:"miau",      fr:"miaou"}},
+    {key:"snd_cow",   animal:"cow",   say:{en:"moo",        ar:"مووو",       tr:"mouu",      hy:"մու",       es:"mu",        fr:"meuh"}},
+    {key:"snd_sheep", animal:"sheep", say:{en:"baa",        ar:"بااع",       tr:"baa3",      hy:"բեե",       es:"bee",       fr:"bêê"}},
+    {key:"snd_duck",  animal:"duck",  say:{en:"quack quack",ar:"كواك كواك",  tr:"kwak kwak", hy:"կվակ կվակ", es:"cuac cuac", fr:"coin coin"}},
+    {key:"snd_frog",  animal:"frog",  say:{en:"ribbit",     ar:"كروك كروك",  tr:"krok krok", hy:"կռա կռա",   es:"croac",     fr:"coa coa"}},
+    {key:"snd_horse", animal:"horse", say:{en:"neigh",      ar:"هييييه",     tr:"hiiii",     hy:"իհահա",     es:"iiih",      fr:"hiii"}},
+    {key:"snd_lion",  animal:"lion",  say:{en:"roar",       ar:"روااار",     tr:"roaar",     hy:"ռռռ",       es:"grrr",      fr:"grrr"}}
+  ];
   // Everyday Lebanese phrases for the grown-ups' cheat sheet and the recording studio.
   // Where the form depends on who you're talking to, the girl form comes first (then the boy form).
   var PHRASES = [
@@ -1125,7 +1195,8 @@
     {key:"ph_night",   en:"Good night",           ar:"تصبحي على خير",        tr:"tesba7i 3ala kheir · (boy) tesba7 3ala kheir"},
     {key:"ph_love",    en:"I love you",           ar:"بحبّك",                tr:"b7ebbik · (boy) b7ebbak"},
     {key:"ph_bravo",   en:"Well done!",           ar:"برافو عليكي!",         tr:"bravo 3layki! · (boy) bravo 3layk!"},
-    {key:"ph_bye",     en:"Bye bye",              ar:"باي باي / مع السلامة", tr:"bye bye · ma3 el saleme"}
+    {key:"ph_bye",     en:"Bye bye",              ar:"باي باي / مع السلامة", tr:"bye bye · ma3 el saleme"},
+    {key:"ph_want",    en:"I want…",              ar:"بدّي…",                tr:"baddi…"}
   ];
   // How each Arabic word sounds, in the Latin "chat" spelling Lebanese families use
   // (2 = hamza/qaf, 3 = ʿayn, 7 = ḥa, kh, gh). Shown to grown-ups only.
@@ -1261,55 +1332,55 @@
     en:{
       dir:'ltr',
       subtitle:'Little learning games \u00b7 ages 20\u201336 months',
-      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', clothes:'Clothes', body:'Body', food:'Food', family:'Family', everyday:'Everyday', phrases:'Phrases', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
-      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', clothes:'Tap the one you hear', body:'Tap the one you hear', food:'Tap the food you hear', family:'Tap the one you hear', count:'How many?', memory:'Find the matching pairs!'},
+      tiles:{letters:'Letters', animals:'Animals', colors:'Colors', shapes:'Shapes', house:'House', clothes:'Clothes', body:'Body', food:'Food', family:'Family', everyday:'Everyday', phrases:'Phrases', find:'Find it', sounds:'Animal sounds', feed:'Feed the baby', numbers:'Numbers', count:'Count', memory:'Memory', trace:'Trace'},
+      prompts:{letters:'Tap the letter you hear', numbers:'Tap the number you hear', animals:'Tap the animal you hear', colors:'Tap the color you hear', shapes:'Tap the shape you hear', house:'Tap the thing you hear', clothes:'Tap the one you hear', body:'Tap the one you hear', food:'Tap the food you hear', family:'Tap the one you hear', find:'Where is the…', sounds:'Who makes this sound?', feed:'The baby wants…', count:'How many?', memory:'Find the matching pairs!'},
       home:'\u2190 Home', newRound:'New round \u21bb', voice:emo(0x1F399)+' Voice', replay:'Play again', cheer:'Yay! Great job!',
       count:'Count', countDesc:'Count and tap the number', memory:'Memory', memoryDesc:'Find the matching pairs', trace:'Trace', traceDesc:'Trace letters and numbers', clear:'Clear', next:'Next \u25b6',
-      play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it', todayTitle:'Today’s words', todayHint:'Tap each one to hear it', todayDone:'Today’s words done!',
+      play:'Play', learn:'Learn', playDesc:'Listen and tap the right one', learnDesc:'Tap anything to hear it', back:'\u2190 Back', learnHint:'Tap a picture to hear it', todayTitle:'Today’s words', todayHint:'Tap each one to hear it', todayDone:'Today’s words done!', rooms:{kitchen:'Kitchen', bedroom:'Bedroom', living:'Living room'},
       vp:{ title:'Choose a voice', note:'These are the voices installed on this device. Pick one, then tap Test.', test:emo(0x1F50A)+' Test', done:'Done', tip:'Your choice is saved on this device. If none sound right, try a different browser or add a voice in your device settings.' },
       enh:{ whose:'Whose voice?', auto:emo(0x1F46A)+' Family', add:'＋ Add', rec:emo(0x1F399)+'️ Record family voices', studioTitle:'Record voices', studioTip:'Pick a person, then tap ● to record each word. Recordings save on this device.', tipReady:'Tap ● to record', tipRec:'Recording… tap ■ to stop', tipSaved:'Saved! ✓', tipDenied:'Microphone permission is needed to record.', tipUnsupported:'Recording is not supported in this browser.', stickers:'My Stickers', stickersSub:'Earn a sticker each time you fill the stars!', stickersEmpty:'Play to earn your first sticker!', addTitle:'Add a voice', addSub:'Who is recording?', name:'Name (e.g. Mama)', save:'Save', cancel:'Cancel', done:'Done', hint:'Tap to start!', recAll:'⏭ Record all', editTitle:'Edit voice', editDel:'🗑️ Delete voice', editDelAsk:'Remove this voice? Its recordings on this device will be deleted too.' }
     },
     ar:{
       dir:'rtl',
       subtitle:'ألعاب تعليمية صغيرة \u00b7 للأعمار ٢٠–٣٦ شهراً',
-      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', clothes:'ملابس', body:'الجسم', food:'أكل', family:'العيلة', everyday:'كلمات كل يوم', phrases:'عبارات', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
-      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', clothes:'اضغط على الشيء الذي تسمعه', body:'اضغط على الشيء الذي تسمعه', food:'اضغط على الأكل الذي تسمعه', family:'اضغط على الشخص الذي تسمعه', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
+      tiles:{letters:'حروف', animals:'حيوانات', colors:'ألوان', shapes:'أشكال', house:'البيت', clothes:'ملابس', body:'الجسم', food:'أكل', family:'العيلة', everyday:'كلمات كل يوم', phrases:'عبارات', find:'وين؟', sounds:'أصوات الحيوانات', feed:'طعمي البيبي', numbers:'أرقام', count:'عُدّ', memory:'ذاكرة', trace:'تتبّع'},
+      prompts:{letters:'اضغط على الحرف الذي تسمعه', numbers:'اضغط على الرقم الذي تسمعه', animals:'اضغط على الحيوان الذي تسمعه', colors:'اضغط على اللون الذي تسمعه', shapes:'اضغط على الشكل الذي تسمعه', house:'اضغط على الشيء الذي تسمعه', clothes:'اضغط على الشيء الذي تسمعه', body:'اضغط على الشيء الذي تسمعه', food:'اضغط على الأكل الذي تسمعه', family:'اضغط على الشخص الذي تسمعه', find:'وين الـ…؟', sounds:'مين بيعمل هالصوت؟', feed:'البيبي بدّو…', count:'كم العدد؟', memory:'جد البطاقات المتطابقة!'},
       home:'الرئيسية \u2192', newRound:'جولة جديدة \u21bb', voice:emo(0x1F399)+' الصوت', replay:'استمع مرة أخرى', cheer:'أحسنت! رائع',
       count:'عُدّ', countDesc:'عُدّ واضغط الرقم', memory:'ذاكرة', memoryDesc:'جد البطاقات المتطابقة', trace:'تتبّع', traceDesc:'تتبّع الحروف والأرقام', clear:'مسح', next:'◀ التالي',
-      play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها', todayTitle:'كلمات اليوم', todayHint:'اضغط كل واحدة لتسمعها', todayDone:'أنهيتم كلمات اليوم!',
+      play:'العب', learn:'تعلّم', playDesc:'استمع واضغط على الصحيح', learnDesc:'اضغط أي شيء لتسمعه', back:'رجوع', learnHint:'اضغط صورة لتسمعها', todayTitle:'كلمات اليوم', todayHint:'اضغط كل واحدة لتسمعها', todayDone:'أنهيتم كلمات اليوم!', rooms:{kitchen:'المطبخ', bedroom:'غرفة النوم', living:'الصالون'},
       vp:{ title:'اختر الصوت', note:'هذه الأصوات مثبّتة على هذا الجهاز. اختر صوتاً ثم اضغط استماع.', test:emo(0x1F50A)+' استماع', done:'تم', tip:'تم حفظ اختيارك على هذا الجهاز. إذا لم يناسبك أي صوت، جرّب متصفحاً آخر أو أضف صوتاً عربياً من إعدادات جهازك.' },
       enh:{ whose:'صوت من؟', auto:emo(0x1F46A)+' العائلة', add:'＋ إضافة', rec:emo(0x1F399)+'️ سجّل أصوات العائلة', studioTitle:'تسجيل الأصوات', studioTip:'اختر شخصاً ثم اضغط ● لتسجيل كل كلمة. تُحفظ التسجيلات على هذا الجهاز.', tipReady:'اضغط ● للتسجيل', tipRec:'جارٍ التسجيل… اضغط ■ للإيقاف', tipSaved:'تم الحفظ ✓', tipDenied:'يلزم إذن الميكروفون للتسجيل.', tipUnsupported:'التسجيل غير مدعوم في هذا المتصفح.', stickers:'ملصقاتي', stickersSub:'احصل على ملصق كلما ملأت النجوم!', stickersEmpty:'العب لتحصل على أول ملصق!', addTitle:'إضافة صوت', addSub:'من سيسجّل؟', name:'الاسم (مثلاً ماما)', save:'حفظ', cancel:'إلغاء', done:'تم', hint:'اضغط للبدء!', recAll:'⏭ تسجيل الكل' }
     },
     hy:{
       dir:'ltr',
       subtitle:'Փոքրիկ ուսուցողական խաղեր \u00b7 20\u201336 ամսական',
-      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', clothes:'Հագուստ', body:'Մարմին', food:'Ուտելիք', family:'Ընտանիք', everyday:'Ամեն օր', phrases:'Արտահայտություններ', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
-      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', clothes:'Սեղմիր այն, ինչ լսում ես', body:'Սեղմիր այն, ինչ լսում ես', food:'Սեղմիր այն ուտելիքը, որ լսում ես', family:'Սեղմիր այն, ինչ լսում ես', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
+      tiles:{letters:'Տառեր', animals:'Կենդանիներ', colors:'Գույներ', shapes:'Ձևեր', house:'Տուն', clothes:'Հագուստ', body:'Մարմին', food:'Ուտելիք', family:'Ընտանիք', everyday:'Ամեն օր', phrases:'Արտահայտություններ', find:'Գտիր', sounds:'Կենդանիների ձայներ', feed:'Կերակրիր', numbers:'Թվեր', count:'Հաշվիր', memory:'Հիշողություն', trace:'Գծիր'},
+      prompts:{letters:'Սեղմիր այն տառը, որ լսում ես', numbers:'Սեղմիր այն թիվը, որ լսում ես', animals:'Սեղմիր այն կենդանուն, որ լսում ես', colors:'Սեղմիր այն գույնը, որ լսում ես', shapes:'Սեղմիր այն ձևը, որ լսում ես', house:'Սեղմիր այն իրը, որ լսում ես', clothes:'Սեղմիր այն, ինչ լսում ես', body:'Սեղմիր այն, ինչ լսում ես', food:'Սեղմիր այն ուտելիքը, որ լսում ես', family:'Սեղմիր այն, ինչ լսում ես', find:'Որտե՞ղ է…', sounds:'Ո՞վ է այսպես ձայն հանում', feed:'Փոքրիկն ուզում է…', count:'Քանի՞ հատ', memory:'Գտիր զույգերը'},
       home:'\u2190 Տուն', newRound:'Նոր փուլ \u21bb', voice:emo(0x1F399)+' Ձայն', replay:'Կրկնել', cheer:'Ապրե՛ս',
       count:'Հաշվիր', countDesc:'Հաշվիր և սեղմիր թիվը', memory:'Հիշողություն', memoryDesc:'Գտիր զույգերը', trace:'Գծիր', traceDesc:'Գծիր տառերն ու թվերը', clear:'Մաքրել', next:'Հաջորդ ▶',
-      play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար', todayTitle:'Այսօրվա բառերը', todayHint:'Սեղմիր ամեն մեկը՝ լսելու համար', todayDone:'Այսօրվա բառերն ավարտված են!',
+      play:'Խաղալ', learn:'Սովորել', playDesc:'Լսիր և սեղմիր ճիշտը', learnDesc:'Սեղմիր որ լսես', back:'← Հետ', learnHint:'Սեղմիր նկարը՝ լսելու համար', todayTitle:'Այսօրվա բառերը', todayHint:'Սեղմիր ամեն մեկը՝ լսելու համար', todayDone:'Այսօրվա բառերն ավարտված են!', rooms:{kitchen:'Խոհանոց', bedroom:'Ննջասենյակ', living:'Հյուրասենյակ'},
       vp:{ title:'Ընտրիր ձայնը', note:'Սրանք այս սարքում տեղադրված ձայներն են։ Ընտրիր մեկը և սեղմիր Փորձել։', test:emo(0x1F50A)+' Փորձել', done:'Լավ', tip:'Քո ընտրությունը պահվեց այս սարքում։ Եթե ոչ մի ձայն հարմար չէ, փորձիր այլ դիտարկիչ կամ ավելացրու ձայն սարքի կարգավորումներից։' },
       enh:{ whose:'Ո՞ւմ ձայնը', auto:emo(0x1F46A)+' Ընտանիք', add:'＋ Ավելացնել', rec:emo(0x1F399)+'️ Ձայնագրել ընտանիքի ձայները', studioTitle:'Ձայնագրել', studioTip:'Ընտրիր մարդ, ապա սեղմիր ●՝ յուրաքանչյուր բառ ձայնագրելու համար։ Ձայնագրությունները պահվում են այս սարքում։', tipReady:'Սեղմիր ●՝ ձայնագրելու', tipRec:'Ձայնագրվում է… սեղմիր ■՝ կանգնեցնելու', tipSaved:'Պահպանվեց ✓', tipDenied:'Ձայնագրելու համար անհրաժեշտ է խոսափողի թույլտվություն։', tipUnsupported:'Ձայնագրումը չի աջակցվում այս դիտարկիչում։', stickers:'Իմ կպչուկները', stickersSub:'Ստացիր կպչուկ՝ ամեն անգամ աստղերը լրացնելիս!', stickersEmpty:'Խաղա՝ առաջին կպչուկը ստանալու համար!', addTitle:'Ավելացնել ձայն', addSub:'Ո՞վ է ձայնագրում', name:'Անուն (օր.՝ Մամա)', save:'Պահել', cancel:'Չեղարկել', done:'Լավ', hint:'Սեղմիր՝ սկսելու!', recAll:'⏭ Ձայնագրել բոլորը' }
     },
     es:{
       dir:'ltr',
       subtitle:'Pequeños juegos de aprendizaje · 20–36 meses',
-      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', clothes:'Ropa', body:'Cuerpo', food:'Comida', family:'Familia', everyday:'Cada día', phrases:'Frases', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
-      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', clothes:'Toca lo que escuchas', body:'Toca lo que escuchas', food:'Toca la comida que escuchas', family:'Toca a quien escuchas', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
+      tiles:{letters:'Letras', animals:'Animales', colors:'Colores', shapes:'Formas', house:'Casa', clothes:'Ropa', body:'Cuerpo', food:'Comida', family:'Familia', everyday:'Cada día', phrases:'Frases', find:'Búscalo', sounds:'Sonidos', feed:'Dar de comer', numbers:'Números', count:'Contar', memory:'Memoria', trace:'Trazar'},
+      prompts:{letters:'Toca la letra que escuchas', numbers:'Toca el número que escuchas', animals:'Toca el animal que escuchas', colors:'Toca el color que escuchas', shapes:'Toca la forma que escuchas', house:'Toca la cosa que escuchas', clothes:'Toca lo que escuchas', body:'Toca lo que escuchas', food:'Toca la comida que escuchas', family:'Toca a quien escuchas', find:'¿Dónde está…?', sounds:'¿Quién hace este sonido?', feed:'El bebé quiere…', count:'¿Cuántos hay?', memory:'¡Encuentra las parejas!'},
       home:'← Inicio', newRound:'Otra ronda ↻', voice:emo(0x1F399)+' Voz', replay:'Escuchar otra vez', cheer:'¡Muy bien!',
       count:'Contar', countDesc:'Cuenta y toca el número', memory:'Memoria', memoryDesc:'Encuentra las parejas', trace:'Trazar', traceDesc:'Traza letras y números', clear:'Borrar', next:'Siguiente ▶',
-      play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla', todayTitle:'Palabras de hoy', todayHint:'Toca cada una para escucharla', todayDone:'¡Palabras de hoy completadas!',
+      play:'Jugar', learn:'Aprender', playDesc:'Escucha y toca el correcto', learnDesc:'Toca cualquier cosa para escucharla', back:'← Atrás', learnHint:'Toca una imagen para escucharla', todayTitle:'Palabras de hoy', todayHint:'Toca cada una para escucharla', todayDone:'¡Palabras de hoy completadas!', rooms:{kitchen:'Cocina', bedroom:'Dormitorio', living:'Sala'},
       vp:{ title:'Elige una voz', note:'Estas son las voces instaladas en este dispositivo. Elige una y toca Probar.', test:emo(0x1F50A)+' Probar', done:'Listo', tip:'Tu elección se guarda en este dispositivo. Si ninguna suena bien, prueba otro navegador o añade una voz en los ajustes del dispositivo.' },
       enh:{ whose:'¿Voz de quién?', auto:emo(0x1F46A)+' Familia', add:'＋ Añadir', rec:emo(0x1F399)+'️ Grabar voces de la familia', studioTitle:'Grabar voces', studioTip:'Elige a una persona y toca ● para grabar cada palabra. Las grabaciones se guardan en este dispositivo.', tipReady:'Toca ● para grabar', tipRec:'Grabando… toca ■ para parar', tipSaved:'¡Guardado! ✓', tipDenied:'Se necesita permiso del micrófono para grabar.', tipUnsupported:'La grabación no es compatible con este navegador.', stickers:'Mis pegatinas', stickersSub:'¡Gana una pegatina cada vez que llenes las estrellas!', stickersEmpty:'¡Juega para ganar tu primera pegatina!', addTitle:'Añadir una voz', addSub:'¿Quién está grabando?', name:'Nombre (p. ej. Mamá)', save:'Guardar', cancel:'Cancelar', done:'Listo', hint:'¡Toca para empezar!', recAll:'⏭ Grabar todo' }
     },
     fr:{
       dir:'ltr',
       subtitle:'Petits jeux d’apprentissage · 20–36 mois',
-      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', clothes:'Vêtements', body:'Corps', food:'Nourriture', family:'Famille', everyday:'Tous les jours', phrases:'Phrases', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
-      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', clothes:'Touche ce que tu entends', body:'Touche ce que tu entends', food:'Touche l’aliment que tu entends', family:'Touche celui que tu entends', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
+      tiles:{letters:'Lettres', animals:'Animaux', colors:'Couleurs', shapes:'Formes', house:'Maison', clothes:'Vêtements', body:'Corps', food:'Nourriture', family:'Famille', everyday:'Tous les jours', phrases:'Phrases', find:'Trouve-le', sounds:'Cris des animaux', feed:'Nourris bébé', numbers:'Chiffres', count:'Compter', memory:'Mémoire', trace:'Tracer'},
+      prompts:{letters:'Touche la lettre que tu entends', numbers:'Touche le chiffre que tu entends', animals:'Touche l’animal que tu entends', colors:'Touche la couleur que tu entends', shapes:'Touche la forme que tu entends', house:'Touche l’objet que tu entends', clothes:'Touche ce que tu entends', body:'Touche ce que tu entends', food:'Touche l’aliment que tu entends', family:'Touche celui que tu entends', find:'Où est… ?', sounds:'Qui fait ce bruit ?', feed:'Bébé veut…', count:'Combien y en a-t-il ?', memory:'Trouve les paires !'},
       home:'← Accueil', newRound:'Nouveau tour ↻', voice:emo(0x1F399)+' Voix', replay:'Réécouter', cheer:'Bravo !',
       count:'Compter', countDesc:'Compte et touche le chiffre', memory:'Mémoire', memoryDesc:'Trouve les paires', trace:'Tracer', traceDesc:'Trace les lettres et les chiffres', clear:'Effacer', next:'Suivant ▶',
-      play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre', todayTitle:'Les mots du jour', todayHint:'Touche chacun pour l’entendre', todayDone:'Mots du jour terminés !',
+      play:'Jouer', learn:'Apprendre', playDesc:'Écoute et touche le bon', learnDesc:'Touche pour entendre', back:'← Retour', learnHint:'Touche une image pour l’entendre', todayTitle:'Les mots du jour', todayHint:'Touche chacun pour l’entendre', todayDone:'Mots du jour terminés !', rooms:{kitchen:'Cuisine', bedroom:'Chambre', living:'Salon'},
       vp:{ title:'Choisis une voix', note:'Voici les voix installées sur cet appareil. Choisis-en une, puis touche Tester.', test:emo(0x1F50A)+' Tester', done:'OK', tip:'Ton choix est enregistré sur cet appareil. Si aucune voix ne convient, essaie un autre navigateur ou ajoute une voix dans les réglages de l’appareil.' },
       enh:{ whose:'La voix de qui ?', auto:emo(0x1F46A)+' Famille', add:'＋ Ajouter', rec:emo(0x1F399)+'️ Enregistrer les voix de la famille', studioTitle:'Enregistrer des voix', studioTip:'Choisis une personne, puis touche ● pour enregistrer chaque mot. Les enregistrements sont gardés sur cet appareil.', tipReady:'Touche ● pour enregistrer', tipRec:'Enregistrement… touche ■ pour arrêter', tipSaved:'Enregistré ! ✓', tipDenied:'L’autorisation du microphone est nécessaire pour enregistrer.', tipUnsupported:'L’enregistrement n’est pas pris en charge sur ce navigateur.', stickers:'Mes autocollants', stickersSub:'Gagne un autocollant chaque fois que tu remplis les étoiles !', stickersEmpty:'Joue pour gagner ton premier autocollant !', addTitle:'Ajouter une voix', addSub:'Qui enregistre ?', name:'Nom (p. ex. Maman)', save:'Enregistrer', cancel:'Annuler', done:'OK', hint:'Touche pour commencer !', recAll:'⏭ Tout enregistrer' }
     }
@@ -1792,6 +1863,7 @@
       for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:String(i), render:{type:'glyph',label:String(i)}}); }
     }
     function L(arr){ return arr.map(function(it){ return {key:it.key, say:it.say[lang], tr:(lang==='ar')?AR_TR[it.key]:undefined, render:it.render}; }); }
+    var sounds = SOUNDS.map(function(s){ var an=null; for(var a=0;a<ANIMALS.length;a++){ if(ANIMALS[a].key===s.animal) an=ANIMALS[a]; } return {key:s.key, animal:s.animal, say:s.say[lang]||s.say.en, tr:(lang==='ar')?s.say.tr:undefined, render:an?an.render:{type:'emoji',emoji:'\u{1F43E}'}}; });
     var phrases = (lang==='ar') ? PHRASES.map(function(p){ return {key:p.key, say:p.ar, tr:p.tr, en:p.en, render:{type:'emoji',emoji:'\u{1F4AC}'}}; }) : [];
     var T = TU();   // prompts are read by the grown-up
     return {
@@ -1806,6 +1878,7 @@
       food:{prompt:T.prompts.food,       items:L(FOOD)},
       family:{prompt:T.prompts.family,   items:L(FAMILY)},
       everyday:{prompt:'',               items:L(EVERYDAY)},
+      sounds:{prompt:'',                 items:sounds},
       phrases:{prompt:'',                items:phrases}
     };
   }
@@ -1877,48 +1950,52 @@
     }
   }
 
-  function speakLocal(text){
-    if(!('speechSynthesis' in window)) return;
+  // Games can chain sounds ("wen el…" then the word). playItem hands out a token; whichever
+  // backend finishes calls endedFor(token), and only the newest token's callback fires.
+  var playToken=0, playEndCb=null;
+  function endedFor(tok){ ringOff(); if(playEndCb && playEndCb.tok===tok){ var f=playEndCb.fn; playEndCb=null; if(f) f(); } }
+  function speakLocal(text, tok){
+    if(!('speechSynthesis' in window)){ endedFor(tok); return; }
     try{
       window.speechSynthesis.cancel();
       var u=new SpeechSynthesisUtterance(text);
       if(chosenVoice) u.voice=chosenVoice;
       u.rate=(settings().speed==='slow')?0.6:0.82; u.pitch=1.1; u.volume=1;
-      speakerEl.classList.add('playing');
-      u.onend=function(){ speakerEl.classList.remove('playing'); };
-      u.onerror=function(){ speakerEl.classList.remove('playing'); };
+      ringOn();
+      u.onend=function(){ endedFor(tok); };
+      u.onerror=function(){ endedFor(tok); };
       window.speechSynthesis.speak(u);
-    }catch(e){ speakerEl.classList.remove('playing'); }
+    }catch(e){ endedFor(tok); }
   }
 
   var onlineAudio=null, onlineGuard=null, roundTimers=[];
   function clearRoundTimers(){ for(var i=0;i<roundTimers.length;i++) clearTimeout(roundTimers[i]); roundTimers=[]; }
   // Halt every pending game sound/timer on navigation so audio never bleeds onto the home screen.
   function stopGameAudio(){
-    clearRoundTimers();
+    clearRoundTimers(); playEndCb=null; playToken++;
     if(onlineGuard){ clearTimeout(onlineGuard); onlineGuard=null; }
     if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
     if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
     waStop();
-    speakerEl.classList.remove('playing');
+    ringOff();
     var cf=document.querySelectorAll('.confetti'); for(var i=0;i<cf.length;i++){ if(cf[i].parentNode) cf[i].parentNode.removeChild(cf[i]); }
   }
-  function speak(text){
-    if(text==null || text==='') return;
-    speakLocal(text);
+  function speak(text, tok){
+    if(text==null || text===''){ endedFor(tok); return; }
+    speakLocal(text, tok);
   }
 
   // Recorded clips take priority (currently Armenian). Falls back to TTS if a clip is missing.
-  function playClip(src){
+  function playClip(src, tok){
     try{
       if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
       if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
       var a=new Audio(src); onlineAudio=a;
-      speakerEl.classList.add('playing');
-      a.addEventListener('ended', function(){ speakerEl.classList.remove('playing'); });
-      a.addEventListener('error', function(){ speakerEl.classList.remove('playing'); });
-      a.play().catch(function(){ speakerEl.classList.remove('playing'); });
-    }catch(e){ speakerEl.classList.remove('playing'); }
+      ringOn();
+      a.addEventListener('ended', function(){ endedFor(tok); });
+      a.addEventListener('error', function(){ endedFor(tok); });
+      a.play().catch(function(){ endedFor(tok); });
+    }catch(e){ endedFor(tok); }
   }
   function builtinClip(lang,key){
     if(lang==='hy' && typeof HY_CLIPS!=='undefined') return HY_CLIPS[key]||null;
@@ -1958,15 +2035,15 @@
     var w=wordFor(item.key, sec); if(!w) return;
     biTimer=setTimeout(function(){ speakWordLang(w, sec); }, 1150);
   }
-  function fallbackBuiltin(lang,key,item){
+  function fallbackBuiltin(lang,key,item,tok){
     var b=builtinClip(lang,key);
-    if(b){ playSrcSmart('builtin|'+lang+'|'+key, b, 'auto'); }
+    if(b){ playSrcSmart('builtin|'+lang+'|'+key, b, 'auto', tok); }
     else {
       setAttribution('auto');
       var say=item.say;
       var PHON = lang==='en'?EN_PHONICS : lang==='es'?ES_PHONICS : null;
       if(PHON && settings().letterMode==='sound' && item.render && item.render.type==='glyph' && !/^n\d/.test(key) && PHON[key]) say=PHON[key];
-      speak(say);
+      speak(say, tok);
     }
   }
   // Resolution order: the selected person's own recording -> built-in family clip -> device/online TTS.
@@ -1982,22 +2059,25 @@
     for(var i=persons.length-1;i>=0;i--){ if(hasCustom(lang,persons[i].id,key)) return persons[i].id; }
     return null;
   }
-  function playItem(item, quiet){
+  function playItem(item, quiet, onend){
     if(!item) return;
-    var lang=LANG, key=item.key;
+    var lang=LANG, key=item.key, tok=++playToken;
+    playEndCb = onend ? {tok:tok, fn:onend} : null;
     if(!quiet){ noteWordHeard(key); scheduleBilingual(item); }
     var pid=resolveVoicePerson(lang,key);
     if(pid){
       setAttribution(pid);
       stopAllAudio();
       idbGet(customKey(lang,pid,key)).then(function(blob){
-        if(blob) playBlob(blob, 'cust|'+customKey(lang,pid,key));
-        else fallbackBuiltin(lang,key,item);
-      }).catch(function(){ fallbackBuiltin(lang,key,item); });
+        if(tok!==playToken) return;   // something newer started while the clip was loading
+        if(blob) playBlob(blob, 'cust|'+customKey(lang,pid,key), tok);
+        else fallbackBuiltin(lang,key,item,tok);
+      }).catch(function(){ if(tok===playToken) fallbackBuiltin(lang,key,item,tok); });
       return;
     }
-    fallbackBuiltin(lang,key,item);
+    fallbackBuiltin(lang,key,item,tok);
   }
+  function hasAnyRecording(item){ return !!(item && resolveVoicePerson(LANG,item.key)); }
 
   // ---- rounds (no-repeat target cycling) ----
   function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
@@ -2281,6 +2361,7 @@
     if(overDailyLimit()){ showTransientToast(TG().timeUp); return; }
     var type=t.getAttribute('data-game');
     if(type==='count'){ launchCount(); return; }
+    if(type==='find'||type==='sounds'||type==='feed'){ launchScene(type); return; }
     if(type==='memory'){ launchMemory(); return; }
     if(type==='trace'){ launchTrace(); return; }
     if(MODE==='learn') openLearn(type); else launchGame(type);
@@ -2718,31 +2799,31 @@
     src.onended=function(){ if(waCurrent===src) waCurrent=null; if(onend) onend(); };
     waCurrent=src; try{ src.start(); }catch(e){ if(onend) onend(); }
   }
-  function ringOn(){ speakerEl.classList.add('playing'); }
-  function ringOff(){ speakerEl.classList.remove('playing'); }
+  function ringOn(){ speakerEl.classList.add('playing'); if(sceneSpeakerEl) sceneSpeakerEl.classList.add('playing'); }
+  function ringOff(){ speakerEl.classList.remove('playing'); if(sceneSpeakerEl) sceneSpeakerEl.classList.remove('playing'); }
   // play a built-in data-URI clip (Web Audio with fade; falls back to <audio> element)
-  function playSrcSmart(cacheKey, dataURI, pid){
+  function playSrcSmart(cacheKey, dataURI, pid, tok){
     setAttribution(pid);
     if(waCtx()){
       stopAllAudio(); ringOn();
-      decodeTo(cacheKey, dataURIToArrayBuffer(dataURI)).then(function(buf){ waPlayBuffer(buf, ringOff); }).catch(function(){ playClip(dataURI); });
-    } else { playClip(dataURI); }
+      decodeTo(cacheKey, dataURIToArrayBuffer(dataURI)).then(function(buf){ if(tok==null||tok===playToken) waPlayBuffer(buf, function(){ endedFor(tok); }); }).catch(function(){ playClip(dataURI, tok); });
+    } else { playClip(dataURI, tok); }
   }
   // play a recorded Blob (from IndexedDB)
-  function playBlob(blob, cacheKey){
+  function playBlob(blob, cacheKey, tok){
     if(waCtx()){
       ringOn();
       blobToArrayBuffer(blob).then(function(ab){ return decodeTo(cacheKey, ab); })
-        .then(function(buf){ waPlayBuffer(buf, ringOff); })
-        .catch(function(){ playBlobEl(blob); });
-    } else { playBlobEl(blob); }
+        .then(function(buf){ if(tok==null||tok===playToken) waPlayBuffer(buf, function(){ endedFor(tok); }); })
+        .catch(function(){ playBlobEl(blob, tok); });
+    } else { playBlobEl(blob, tok); }
   }
-  function playBlobEl(blob){
+  function playBlobEl(blob, tok){
     try{ var url=URL.createObjectURL(blob); var a=new Audio(url); onlineAudio=a; ringOn();
-      a.addEventListener('ended', function(){ ringOff(); URL.revokeObjectURL(url); });
-      a.addEventListener('error', function(){ ringOff(); });
-      a.play().catch(function(){ ringOff(); });
-    }catch(e){ ringOff(); }
+      a.addEventListener('ended', function(){ endedFor(tok); URL.revokeObjectURL(url); });
+      a.addEventListener('error', function(){ endedFor(tok); });
+      a.play().catch(function(){ endedFor(tok); });
+    }catch(e){ endedFor(tok); }
   }
 
   // ---- IndexedDB store for recorded clips ----
@@ -2838,7 +2919,7 @@
     });
   }
   function photoImg(key, cls){ var img=document.createElement('img'); img.className=cls; img.src=wordPhotoURLs[key]; img.alt=''; img.draggable=false; return img; }
-  function canHavePhoto(item, cat){ return !!item && item.render && (item.render.type==='emoji' || item.render.type==='shape') && cat!=='phrases'; }
+  function canHavePhoto(item, cat){ return !!item && item.render && (item.render.type==='emoji' || item.render.type==='shape') && cat!=='phrases' && cat!=='sounds'; }
   // photo sheet (from the studio): preview, take/choose, remove
   var wpKey=null;
   function openWordPhoto(item){
@@ -2988,7 +3069,7 @@
     renderStudio();
     showScreen('studio');
   }
-  function studioCats(){ var c=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday']; if(studioLang==='ar') c.push('phrases'); return c; }
+  function studioCats(){ var c=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','sounds']; if(studioLang==='ar') c.push('phrases'); return c; }
   // record-all mode: after each save, automatically move on to the next unrecorded word
   var studioAuto=false, studioAutoTimer=null;
   function stopStudioAuto(){ studioAuto=false; if(studioAutoTimer){ clearTimeout(studioAutoTimer); studioAutoTimer=null; } var b=gid('studioAutoBtn'); if(b) b.classList.remove('vp-done'); }
@@ -3048,7 +3129,7 @@
   }
   function updateStudioHint(){
     var hint=gid('studioLangHint');
-    var photoable = ['letters','numbers','colors','phrases'].indexOf(studioCat)<0;
+    var photoable = ['letters','numbers','colors','phrases','sounds'].indexOf(studioCat)<0;
     var ph = photoable ? ' '+gs('photoHint') : '';
     if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr')+ph; hint.style.display=''; }
     else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint+ph; hint.style.display=''; }
@@ -3285,6 +3366,7 @@
   var SHAPE_CHIP_EMOJI={circle:'⚪',square:'🟦',triangle:'🔺',star:'⭐',heart:'❤️',diamond:'🔷'};
   function chipVisual(key){
     for(var i=0;i<ANIMALS.length;i++){ if(ANIMALS[i].key===key) return {text:ANIMALS[i].render.emoji}; }
+    for(var s=0;s<SOUNDS.length;s++){ if(SOUNDS[s].key===key) return chipVisual(SOUNDS[s].animal); }
     var hcb=HOUSE.concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY);
     for(var h=0;h<hcb.length;h++){ if(hcb[h].key===key) return {text:hcb[h].render.emoji||hcb[h].render.chip}; }
     for(var j=0;j<COLORS.length;j++){ if(COLORS[j].key===key) return {text:'●', color:COLORS[j].render.color}; }
@@ -3340,7 +3422,7 @@
     renderWordChips();
     renderVoiceCoverage();
     var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(cc[k]>maxc) maxc=cc[k]; }
-    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','count','memory','trace'];
+    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','find','sounds','feed','count','memory','trace'];
     order.forEach(function(cat){ if(!cc[cat]) return; var row=document.createElement('div'); row.className='barRow';
       row.innerHTML='<span class="bl">'+(TU().tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
     if(!cats.children.length){ cats.innerHTML='<p class="vp-tip">'+g.noPlay+'</p>'; }
@@ -3637,7 +3719,7 @@
 
   // ---- family-voice coverage: how many of this language's words have a recording ----
   function voiceCoverage(){
-    var cats=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday'], n=0, total=0;
+    var cats=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','sounds'], n=0, total=0;
     cats.forEach(function(cat){ var g=GAMESBYTYPE&&GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ total++; for(var i=0;i<persons.length;i++){ if(hasCustom(LANG,persons[i].id,it.key)){ n++; break; } } }); });
     return {n:n, total:total};
   }
@@ -3664,7 +3746,7 @@
   }
 
   // ---- grown-ups' cheat sheet: every word (and everyday phrases) with how to say it ----
-  var CHEAT_CATS=['everyday','family','food','animals','colors','shapes','house','clothes','body','numbers','letters'];
+  var CHEAT_CATS=['everyday','family','food','animals','sounds','colors','shapes','house','clothes','body','numbers','letters'];
   function openCheat(){
     var sheet=gid('cheatSheet'); sheet.setAttribute('dir', TU().dir);
     gid('cheatTitle').textContent='\u{1F4D6} '+(LANG==='ar' ? gs('cheatTitle') : gs('cheatTitleGen'));
@@ -3766,6 +3848,130 @@
     setTimeout(function(){ URL.revokeObjectURL(url); if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
     showTransientToast(gs('remindSaved'));
   }
+
+  // ============================================================
+  //  SCENE GAMES: Find it in the room · Animal sounds · Feed the baby
+  //  One mechanic: a prompt, a few pictures (her own photos when set), tap the right one.
+  //  Find and Feed chain a family-recorded phrase ("wen el…", "baddi…") before the word.
+  // ============================================================
+  var ROOMS=[
+    {key:'kitchen', emoji:'\u{1F37D}️', wall:'#fff3d6', floor:'#e6c9a3', items:['table','chair','cup','plate','spoon','apple','banana','milk','bread','egg']},
+    {key:'bedroom', emoji:'\u{1F6CF}️', wall:'#e8e4ff', floor:'#cdbfe8', items:['bed','lamp','book','toy','ball','socks','shirt','pants','hat','dress']},
+    {key:'living',  emoji:'\u{1F6CB}️', wall:'#e2f5ee', floor:'#b9d9c8', items:['sofa','phone','key','door','window','car','cat','dog','shoes','jacket']}
+  ];
+  var FIND_SLOTS=[[20,24],[50,18],[80,26],[22,66],[52,72],[80,64]];
+  var sceneMode='find', sceneRoomIdx=0, sceneTarget=null, sceneLocked=false, sceneStreak=0, sceneQueue=[], sceneLast=null;
+  var sceneStageEl=gid('sceneStage'), scenePromptEl=gid('scenePrompt'), sceneStarsEl=gid('sceneStars'), sceneSpeakerEl=gid('sceneSpeaker');
+  for(var ss=0;ss<MAX_STARS;ss++){ var sst=document.createElement('span'); sst.className='star'; sst.textContent=emo(0x2B50); sceneStarsEl.appendChild(sst); }
+  function paintSceneStars(){ var n=sceneStarsEl.children; for(var i=0;i<n.length;i++){ if(i<sceneStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
+  function findItemByKey(key){
+    var cats=['animals','colors','shapes','house','clothes','body','food','family','everyday','sounds','phrases'];
+    for(var i=0;i<cats.length;i++){ var g=GAMESBYTYPE[cats[i]]; if(!g) continue; for(var j=0;j<g.items.length;j++){ if(g.items[j].key===key) return g.items[j]; } }
+    return null;
+  }
+  function soundFor(animalKey){ var g=GAMESBYTYPE.sounds; for(var i=0;i<g.items.length;i++){ if(g.items[i].animal===animalKey) return g.items[i]; } return null; }
+  function scenePool(){
+    if(sceneMode==='find'){ return ROOMS[sceneRoomIdx].items.map(findItemByKey).filter(function(it){ return it && it.say; }); }
+    if(sceneMode==='sounds'){ return GAMESBYTYPE.animals.items.filter(function(it){ return !!soundFor(it.key); }); }
+    return GAMESBYTYPE.food.items.filter(function(it){ return !!it.say; });
+  }
+  function sceneNext(pool){
+    if(!sceneQueue.length){
+      var bag=[]; pool.forEach(function(it){ var w=missWeight(it.key); for(var k=0;k<w;k++) bag.push(it); }); shuffle(bag);
+      var seen={}; bag.forEach(function(it){ if(!seen[it.key]){ seen[it.key]=1; sceneQueue.push(it); } });
+      if(sceneLast && sceneQueue.length>1 && sceneQueue[0].key===sceneLast){ sceneQueue.push(sceneQueue.shift()); }
+    }
+    var it=sceneQueue.shift(); sceneLast=it.key; return it;
+  }
+  function sceneVisual(item, cls){
+    if(hasWordPhoto(item.key)) return photoImg(item.key, cls||'sPhoto');
+    var e=document.createElement('span'); e.className='sEmoji';
+    var r=item.render; e.textContent = r.type==='emoji' ? r.emoji : '\u{1F537}';
+    if(r.type==='shape'){ e.innerHTML=''; var sh=document.createElement('span'); sh.className='cardShape'; sh.innerHTML=r.svg; e.appendChild(sh); }
+    return e;
+  }
+  function sceneItemButton(item, cls){
+    var b=document.createElement('button'); b.className=cls;
+    if(cls==='sitem'){ var inner=document.createElement('span'); inner.className='sin'; inner.appendChild(sceneVisual(item)); b.appendChild(inner); }
+    else b.appendChild(sceneVisual(item));
+    b.setAttribute('aria-label', item.say||item.key);
+    b.addEventListener('click', function(){ onScenePick(b,item); });
+    return b;
+  }
+  function babyVisual(){
+    if(hasWordPhoto('baby')) return photoImg('baby','babyPhoto');
+    var e=document.createElement('span'); e.className='babyEmoji'; e.textContent='\u{1F476}'; return e;
+  }
+  function newSceneRound(){
+    sceneLocked=false; clearRoundTimers();
+    var pool=scenePool(); if(pool.length<2){ sceneStageEl.innerHTML=''; return; }
+    sceneTarget=sceneNext(pool);
+    var n=Math.min(sceneMode==='find'?6:4, pool.length);
+    var others=shuffle(pool.filter(function(it){ return it.key!==sceneTarget.key; })).slice(0,n-1);
+    var shown=shuffle([sceneTarget].concat(others));
+    var T=TU();
+    scenePromptEl.textContent=T.prompts[sceneMode];
+    sceneStageEl.innerHTML='';
+    if(sceneMode==='find'){
+      var room=ROOMS[sceneRoomIdx], rm=document.createElement('div'); rm.className='room'; rm.style.setProperty('--wall',room.wall); rm.style.setProperty('--floor',room.floor);
+      var lbl=document.createElement('div'); lbl.className='roomLabel'; lbl.textContent=room.emoji+' '+((T.rooms||I18N.en.rooms)[room.key]); rm.appendChild(lbl);
+      shown.forEach(function(item,i){ var b=sceneItemButton(item,'sitem'); var s=FIND_SLOTS[i%FIND_SLOTS.length]; b.style.left=(s[0]+(Math.random()*8-4))+'%'; b.style.top=(s[1]+(Math.random()*6-3))+'%'; b.firstChild.style.animationDelay=(i*0.06)+'s'; rm.appendChild(b); });
+      sceneStageEl.appendChild(rm);
+    } else {
+      if(sceneMode==='feed'){ var head=document.createElement('div'); head.className='feedHead'; var face=document.createElement('div'); face.className='babyFace'; face.id='babyFace'; face.appendChild(babyVisual()); var yum=document.createElement('span'); yum.className='yum'; yum.id='babyYum'; yum.textContent='\u{1F60B}'; face.appendChild(yum); head.appendChild(face); sceneStageEl.appendChild(head); }
+      var grid=document.createElement('div'); grid.className='sceneGrid'+(sceneMode==='feed'?' feed':'');
+      shown.forEach(function(item,i){ var b=sceneItemButton(item,'scard dealin'); b.style.animationDelay=(i*0.06)+'s'; grid.appendChild(b); });
+      sceneStageEl.appendChild(grid);
+    }
+    updateSceneGrownup();
+    roundTimers.push(setTimeout(sceneSpeak, 400));
+  }
+  function updateSceneGrownup(){
+    var el=gid('sceneGrownup'); el.textContent=''; if(!settings().latin || !sceneTarget) return;
+    var it = sceneMode==='sounds' ? soundFor(sceneTarget.key) : sceneTarget; if(!it) return;
+    var b=document.createElement('b'); b.textContent=it.say||''; el.appendChild(b);
+    if(it.tr) el.appendChild(document.createTextNode(' · '+it.tr));
+  }
+  // the prompt: recorded phrase first when the family has one, then the word (or just the animal's sound)
+  function sceneSpeak(){
+    if(!sceneTarget) return;
+    if(sceneMode==='sounds'){ var snd=soundFor(sceneTarget.key); if(snd) playItem(snd); return; }
+    var ph=findItemByKey(sceneMode==='find'?'ph_where':'ph_want');
+    if(ph && hasAnyRecording(ph)){ var tgt=sceneTarget; playItem(ph, true, function(){ if(sceneTarget===tgt && !sceneLocked) playItem(tgt); }); }
+    else playItem(sceneTarget);
+  }
+  function onScenePick(btn,item){
+    if(sceneLocked) return;
+    clearRoundTimers();
+    if(item.key===sceneTarget.key){
+      sceneLocked=true; btn.classList.add('correct');
+      sceneStreak=Math.min(MAX_STARS,sceneStreak+1); paintSceneStars(); bumpCorrect(); clearMiss(item.key); noteRight(item.key); buzz(18);
+      playDing();
+      if(sceneMode==='feed'){ btn.classList.add('eaten'); var f=gid('babyFace'); if(f) f.classList.add('happy'); }
+      roundTimers.push(setTimeout(function(){ playItem(sceneTarget); }, 450));   // the name, in the family voice
+      roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(sceneStageEl.querySelectorAll('.sitem,.scard'),function(c){ c.classList.add('fade'); }); }, 1000));
+      roundTimers.push(setTimeout(function(){
+        if(sceneStreak>=MAX_STARS){ celebrate(); sceneStreak=0; paintSceneStars(); roundTimers.push(setTimeout(newSceneRound,1400)); }
+        else { if(sceneMode==='find' && Math.random()<0.34) sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; newSceneRound(); }
+      }, 1700));
+    } else {
+      btn.classList.add('wrong'); buzz(45); noteMiss(sceneTarget.key);
+      roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); btn.classList.add('dimmed'); }, 460));
+      roundTimers.push(setTimeout(function(){ playItem(item); }, 250));          // say what they tapped
+      roundTimers.push(setTimeout(function(){ if(!sceneLocked) sceneSpeak(); }, 1400));   // then ask again
+    }
+  }
+  function launchScene(mode){
+    stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
+    sceneMode=mode; noteCategory(mode);
+    if(mode==='find') sceneRoomIdx=Math.floor(Math.random()*ROOMS.length);
+    sceneStreak=0; paintSceneStars(); sceneQueue=[]; sceneLast=null;
+    gid('sceneBack').textContent=TU().back; gid('sceneNew').textContent=TU().newRound;
+    showScreen('scene'); newSceneRound();
+  }
+  gid('sceneBack').addEventListener('click', goMenu);
+  gid('sceneNew').addEventListener('click', function(){ if(!sceneLocked){ if(sceneMode==='find') sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; newSceneRound(); } });
+  sceneSpeakerEl.addEventListener('click', function(){ clearRoundTimers(); sceneSpeak(); });
 
   // ---- mascot ----
   function setMascot(){ var m=gid('mascot'); if(!m) return; var em=curProfile().emoji||'🐣'; m.textContent=em; }
