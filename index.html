@@ -1342,7 +1342,7 @@
       studioAr:'Say each word the way you say it at home (Lebanese). The Latin spelling under each word is your guide.',
       remindGoogle:'📅 Add to Google Calendar', remindGoogleNote:'Opens Google Calendar with a daily event filled in (the time, and your child’s name if you entered one). That is the only moment anything leaves the app, and only because you tapped.', remindIcs:'💾 Save a calendar file (Apple Calendar and others)',
       photoTitle:'Photo for “{w}”', photoSub:'A photo of your child’s own thing (or the real person) works far better than a cartoon. Plain background, good light, the thing filling the frame.', photoTake:'📷 Take or choose a photo', photoRemove:'🗑️ Remove photo', photoSaved:'Photo saved ✓', photoFail:'Could not read that image.',
-      photoHint:'Tap 📷 to use a photo of your child’s own things instead of the cartoon.', photoCov:'Photos of her own things', photoCovSub:'{n} of {total} picture words have a real photo', addPhotos:'📷 Add photos'
+      photoHint:'Tap 📷 to use a photo of your child’s own things instead of the cartoon.', uiText:'Grown-up text', uiEn:'English', uiMatch:'Child’s language', photoCov:'Photos of her own things', photoCovSub:'{n} of {total} picture words have a real photo', addPhotos:'📷 Add photos'
     },
     es:{
       grownups:'Para adultos', current:'Peque actual:', noname:'(sin nombre)', thisChild:'Este peque',
@@ -1406,7 +1406,7 @@
       studioAr:'قل كل كلمة كما تقولها في البيت (لبناني). الكتابة اللاتينية تحت كل كلمة هي دليلك.',
       remindGoogle:'📅 أضف إلى تقويم Google', remindGoogleNote:'يفتح تقويم Google مع حدث يومي جاهز (الوقت، واسم طفلك إن أدخلته). هذه اللحظة الوحيدة التي يخرج فيها شيء من التطبيق، وفقط لأنك ضغطت.', remindIcs:'💾 حفظ ملف تقويم (تقويم Apple وغيره)',
       photoTitle:'صورة لكلمة «{w}»', photoSub:'صورة غرض طفلك الحقيقي (أو الشخص نفسه) أفضل بكثير من الرسم. خلفية بسيطة، إضاءة جيدة، والغرض يملأ الصورة.', photoTake:'📷 التقط أو اختر صورة', photoRemove:'🗑️ إزالة الصورة', photoSaved:'تم حفظ الصورة ✓', photoFail:'تعذّر قراءة هذه الصورة.',
-      photoHint:'اضغط 📷 لاستخدام صورة أغراض طفلك الحقيقية بدل الرسم.', photoCov:'صور أغراضها الحقيقية', photoCovSub:'{n} من {total} كلمة مصوّرة لها صورة حقيقية', addPhotos:'📷 أضف صوراً'
+      photoHint:'اضغط 📷 لاستخدام صورة أغراض طفلك الحقيقية بدل الرسم.', uiText:'نص الكبار', uiEn:'الإنجليزية', uiMatch:'لغة الطفل', photoCov:'صور أغراضها الحقيقية', photoCovSub:'{n} من {total} كلمة مصوّرة لها صورة حقيقية', addPhotos:'📷 أضف صوراً'
     },
     hy:{
       grownups:'Մեծերի համար', current:'Ընթացիկ երեխան՝', noname:'(անանուն)', thisChild:'Այս երեխան',
@@ -1428,8 +1428,15 @@
       timeUp:'Այսօրվա համար բավական է — կհանդիպենք վաղը!'
     }
   };
-  function TG(){ return GRO[LANG]||GRO.en; }
-  function gs(k){ var g=GRO[LANG]; return (g && g[k]!=null) ? g[k] : GRO.en[k]; }   // grown-up string with English fallback
+  // The child's language (LANG) drives the words and audio. Everything a grown-up reads — buttons,
+  // sheets, prompts, hints, layout direction — follows the grown-up text preference (English by default),
+  // so a parent who can't read Arabic script can still run Arabic lessons.
+  var UILANG_KEY='tinyHandsGrownupLang';
+  function grownupLangPref(){ try{ return window.localStorage.getItem(UILANG_KEY)||'en'; }catch(e){ return 'en'; } }   // 'en' | 'match'
+  function uiLang(){ return grownupLangPref()==='match' ? LANG : 'en'; }
+  function TU(){ return I18N[uiLang()]||I18N.en; }
+  function TG(){ return GRO[uiLang()]||GRO.en; }
+  function gs(k){ var g=GRO[uiLang()]; return (g && g[k]!=null) ? g[k] : GRO.en[k]; }   // grown-up string with English fallback
 
   // ---- privacy policy (CalOPPA / COPPA / CCPA-CPRA disclosures) ----
   // The app is deliberately zero-transmission: every disclosure below must stay true.
@@ -1766,7 +1773,7 @@
     if(lang==='ar'){
       letters = AR_LETTERS.map(function(L){ return {key:L, say:L, tr:AR_LETTER_TR[L], render:{type:'glyph',label:L}}; });
       numbers = [];
-      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], tr:AR_NUM_TR[i-1], render:{type:'glyph',label:eastern(i)}}); }
+      for(i=1;i<=10;i++){ numbers.push({key:'n'+i, say:AR_NUMWORDS[i-1], tr:AR_NUM_TR[i-1], render:{type:'glyph',label:String(i)}}); }
     } else if(lang==='hy'){
       letters = HY_LETTERS.map(function(L){ return {key:L, say:L, render:{type:'glyph',label:L}}; });
       numbers = [];
@@ -1786,7 +1793,7 @@
     }
     function L(arr){ return arr.map(function(it){ return {key:it.key, say:it.say[lang], tr:(lang==='ar')?AR_TR[it.key]:undefined, render:it.render}; }); }
     var phrases = (lang==='ar') ? PHRASES.map(function(p){ return {key:p.key, say:p.ar, tr:p.tr, en:p.en, render:{type:'emoji',emoji:'\u{1F4AC}'}}; }) : [];
-    var T = I18N[lang];
+    var T = TU();   // prompts are read by the grown-up
     return {
       letters:{prompt:T.prompts.letters, items:letters},
       numbers:{prompt:T.prompts.numbers, items:numbers},
@@ -2137,7 +2144,7 @@
   });
   voiceTest.addEventListener('click', function(){
     var v=voiceByURI(voiceSelect.value); if(v){ chosenVoice=v; saveVoiceURI(v.voiceURI); }
-    updateNow(); speak(vpSample()); voiceTip.textContent=I18N[LANG].vp.tip;
+    updateNow(); speak(vpSample()); voiceTip.textContent=TU().vp.tip;
   });
   voiceClose.addEventListener('click', function(){ voicePanel.classList.remove('open'); if(target) playItem(target); });
 
@@ -2145,12 +2152,12 @@
   function applyLang(lang){
     LANG = (lang==='ar' || lang==='hy' || lang==='es' || lang==='fr') ? lang : 'en';
     try{ window.localStorage.setItem('tinyTapsLang', LANG); }catch(e){}
-    var T = I18N[LANG];
+    var T = TU();
     document.documentElement.setAttribute('dir', T.dir);
-    document.documentElement.setAttribute('lang', LANG);
+    document.documentElement.setAttribute('lang', uiLang());
     speakerEl.setAttribute('aria-label', T.replay);
-    var pl=gid('privacyLink'); if(pl){ pl.textContent=(PRIVACY[LANG]||PRIVACY.en).link; }
-    var tl=gid('termsLink'); if(tl){ tl.textContent=(TERMS[LANG]||TERMS.en).link; }
+    var pl=gid('privacyLink'); if(pl){ pl.textContent=(PRIVACY[uiLang()]||PRIVACY.en).link; }
+    var tl=gid('termsLink'); if(tl){ tl.textContent=(TERMS[uiLang()]||TERMS.en).link; }
     document.body.classList.toggle('arabic', LANG==='ar');
     document.body.classList.toggle('armenian', LANG==='hy');
     subtitleEl.textContent = T.subtitle;
@@ -2240,8 +2247,8 @@
   function openLearn(type){
     if(!GAMESBYTYPE[type]) return;
     stopGameAudio(); noteCategory(type);
-    learnTitle.textContent=I18N[LANG].tiles[type];
-    learnHint.textContent=I18N[LANG].learnHint;
+    learnTitle.textContent=TU().tiles[type];
+    learnHint.textContent=TU().learnHint;
     buildLearn(type);
     showScreen('learn');
     layoutLearn(); requestAnimationFrame(layoutLearn);
@@ -2265,7 +2272,7 @@
   function goMenu(){ stopGameAudio(); voicePanel.classList.remove('open'); showScreen('menu'); }
   function chooseMode(mode){
     MODE=(mode==='learn')?'learn':'play';
-    menuTitle.textContent=(MODE==='learn')?I18N[LANG].learn:I18N[LANG].play;
+    menuTitle.textContent=(MODE==='learn')?TU().learn:TU().play;
     menuEl.classList.toggle('show-games', MODE==='play');
     showScreen('menu');
   }
@@ -2301,7 +2308,7 @@
   var countStreak=0, countLocked=false, countN=0, countItem=null, countRecent=[];
   for(var cs=0;cs<MAX_STARS;cs++){ var st=document.createElement('span'); st.className='star'; st.textContent=emo(0x2B50); countStarsEl.appendChild(st); }
   function paintCountStars(){ var n=countStarsEl.children; for(var i=0;i<n.length;i++){ if(i<countStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
-  function countLabel(num){ return (LANG==='ar') ? eastern(num) : String(num); }
+  function countLabel(num){ return String(num); }   // Lebanese Arabic uses Western digits
   function newCountRound(speakNow){
     countLocked=false;
     var max=Math.max(5, settings().countMax||9);   // 1–10 or 1–20 (Settings)
@@ -2362,7 +2369,7 @@
   }
   function launchCount(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
-    countPromptEl.textContent=I18N[LANG].prompts.count;
+    countPromptEl.textContent=TU().prompts.count;
     countStreak=0; countRecent=[]; paintCountStars();
     showScreen('count'); newCountRound(true);
   }
@@ -2408,7 +2415,7 @@
   }
   function launchMemory(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
-    memoryTitleEl.textContent=I18N[LANG].tiles.memory;
+    memoryTitleEl.textContent=TU().tiles.memory;
     newMemoryBoard(); showScreen('memory');
   }
 
@@ -2772,8 +2779,8 @@
   function setActivePerson(id){ activePersonId=id; lsSet(ACTIVE_KEY,id); setAttribution(id); renderPersonChips(); }
   function setAttribution(pid){
     if(!attributionEl) attributionEl=gid('attribution'); if(!attributionEl) return;
-    if(!pid || pid==='auto'){ attributionEl.textContent = I18N[LANG].enh.auto; return; }
-    var p=personById(pid); attributionEl.textContent = p ? (p.emoji+' '+p.name) : I18N[LANG].enh.auto;
+    if(!pid || pid==='auto'){ attributionEl.textContent = TU().enh.auto; return; }
+    var p=personById(pid); attributionEl.textContent = p ? (p.emoji+' '+p.name) : TU().enh.auto;
   }
 
   // ---- photo avatars for voices ----
@@ -2836,7 +2843,7 @@
   var wpKey=null;
   function openWordPhoto(item){
     wpKey=item.key;
-    var sheet=gid('wphotoSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    var sheet=gid('wphotoSheet'); sheet.setAttribute('dir', TU().dir);
     gid('wpTitle').textContent=gs('photoTitle').replace('{w}', item.say||item.key);
     gid('wpSub').textContent=gs('photoSub');
     gid('wpTake').textContent=gs('photoTake');
@@ -2974,10 +2981,10 @@
     loadPersons();
     studioLang=LANG;
     studioPersonId = persons.length ? (personById(studioPersonId)?studioPersonId:persons[0].id) : null;
-    gid('studio').setAttribute('dir', I18N[LANG].dir);
-    gid('studioTitle').textContent=I18N[LANG].enh.studioTitle;
-    gid('studioBack').textContent=I18N[LANG].back;
-    gid('studioTip').textContent=I18N[LANG].enh.studioTip;
+    gid('studio').setAttribute('dir', TU().dir);
+    gid('studioTitle').textContent=TU().enh.studioTitle;
+    gid('studioBack').textContent=TU().back;
+    gid('studioTip').textContent=TU().enh.studioTip;
     renderStudio();
     showScreen('studio');
   }
@@ -2989,7 +2996,7 @@
   function recDoneCount(games,cat){ var n=0; games[cat].items.forEach(function(it){ if(customIndex[customKey(studioLang,studioPersonId,it.key)]) n++; }); return n; }
   function updateStudioCounts(){
     var cs=gid('studioCat'); if(!cs || !studioPersonId) return;
-    var games=buildGames(studioLang), T=I18N[LANG];
+    var games=buildGames(studioLang), T=TU();
     for(var i=0;i<cs.options.length;i++){ var cat=cs.options[i].value; cs.options[i].textContent=T.tiles[cat]+' · '+recDoneCount(games,cat)+'/'+games[cat].items.length; }
   }
   function nextUnrecorded(afterKey){
@@ -3000,7 +3007,7 @@
     return null;
   }
   function renderStudio(){
-    var T=I18N[LANG];
+    var T=TU();
     if(studioCats().indexOf(studioCat)<0) studioCat='animals';   // e.g. Phrases exists only for Arabic
     // people row (tap the pencil to rename/delete a voice)
     var pr=gid('studioPersons'); pr.innerHTML='';
@@ -3042,7 +3049,7 @@
   function updateStudioHint(){
     var hint=gid('studioLangHint');
     var photoable = ['letters','numbers','colors','phrases'].indexOf(studioCat)<0;
-    var ph = photoable ? ' \u{1F4F7} '+gs('photoHint') : '';
+    var ph = photoable ? ' '+gs('photoHint') : '';
     if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr')+ph; hint.style.display=''; }
     else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint+ph; hint.style.display=''; }
     else if(photoable){ hint.textContent=ph.trim(); hint.style.display=''; }
@@ -3050,7 +3057,7 @@
   }
   function renderRecList(){
     var list=gid('recList'); list.innerHTML='';
-    if(!studioPersonId){ var note=document.createElement('p'); note.className='vp-tip'; note.style.textAlign='center'; note.textContent=I18N[LANG].enh.addSub; list.appendChild(note); return; }
+    if(!studioPersonId){ var note=document.createElement('p'); note.className='vp-tip'; note.style.textAlign='center'; note.textContent=TU().enh.addSub; list.appendChild(note); return; }
     var games=buildGames(studioLang); var g=games[studioCat]; if(!g) return;
     g.items.forEach(function(item){
       var ck=customKey(studioLang, studioPersonId, item.key);
@@ -3085,12 +3092,12 @@
   }
   function startRecItem(item){
     startRecording(studioLang, studioPersonId, item.key, function(state){
-      if(state==='recording'){ gid('studioTip').textContent=I18N[LANG].enh.tipRec; renderRecList(); }
+      if(state==='recording'){ gid('studioTip').textContent=TU().enh.tipRec; renderRecList(); }
       else if(state==='saved'){
         updateStudioCounts();
         if(studioAuto){
           var nx=nextUnrecorded(item.key);
-          gid('studioTip').textContent=I18N[LANG].enh.tipSaved;
+          gid('studioTip').textContent=TU().enh.tipSaved;
           if(nx){
             renderRecList();
             studioAutoTimer=setTimeout(function(){
@@ -3099,19 +3106,19 @@
             }, 700);
           } else { stopStudioAuto(); renderRecList(); }
         } else {
-          gid('studioTip').textContent = recordingKey ? I18N[LANG].enh.tipRec : I18N[LANG].enh.tipSaved;
+          gid('studioTip').textContent = recordingKey ? TU().enh.tipRec : TU().enh.tipSaved;
           renderRecList();
         }
       }
-      else if(state==='denied'){ stopStudioAuto(); gid('studioTip').textContent=I18N[LANG].enh.tipDenied; renderRecList(); }
-      else if(state==='unsupported'){ stopStudioAuto(); gid('studioTip').textContent=I18N[LANG].enh.tipUnsupported; renderRecList(); }
-      else { stopStudioAuto(); if(!recordingKey) gid('studioTip').textContent=I18N[LANG].enh.tipReady; renderRecList(); }
+      else if(state==='denied'){ stopStudioAuto(); gid('studioTip').textContent=TU().enh.tipDenied; renderRecList(); }
+      else if(state==='unsupported'){ stopStudioAuto(); gid('studioTip').textContent=TU().enh.tipUnsupported; renderRecList(); }
+      else { stopStudioAuto(); if(!recordingKey) gid('studioTip').textContent=TU().enh.tipReady; renderRecList(); }
     });
   }
 
   // ---- sticker book ----
   function openStickers(){
-    var T=I18N[LANG].enh; gid('stickerTitle').textContent=T.stickers;
+    var T=TU().enh; gid('stickerTitle').textContent=T.stickers;
     var got=loadStickers();
     gid('stickerSub').textContent = got.length ? T.stickersSub : T.stickersEmpty;
     gid('stickerClose').textContent=T.done;
@@ -3161,12 +3168,13 @@
     segRow(box,g.sfx, [{label:g.on,val:true},{label:g.off,val:false}], !!s.sounds, function(v){ setSetting('sounds',v); renderOptRows(); });
     segRow(box,g.bigText, [{label:g.off,val:false},{label:g.on,val:true}], !!s.bigText, function(v){ setSetting('bigText',v); renderOptRows(); });
     segRow(box,gs('latinHelper'), [{label:g.off,val:false},{label:g.on,val:true}], !!s.latin, function(v){ setSetting('latin',v); renderOptRows(); renderTodayCard(); });
+    segRow(box,gs('uiText'), [{label:gs('uiEn'),val:'en'},{label:gs('uiMatch'),val:'match'}], grownupLangPref(), function(v){ lsSet(UILANG_KEY,v); applyLang(LANG); openSettings(); });
     segRow(box,g.lefty, [{label:g.off,val:false},{label:g.on,val:true}], !!s.lefty, function(v){ setSetting('lefty',v); renderOptRows(); });
   }
   function openSettings(){
     var box=gid('langToggles'); if(!box) return; box.innerHTML='';
     var h=getHidden(), g=TG();
-    gid('settingsSheet').setAttribute('dir', I18N[LANG].dir);
+    gid('settingsSheet').setAttribute('dir', TU().dir);
     gid('settingsTitle').textContent=g.settings;
     gid('setThemeTitle').textContent=g.theme;
     gid('setLangsTitle').textContent=g.langsShown;
@@ -3209,7 +3217,7 @@
   }
   function renderGateRound(){
     var g=TG(), sheet=gid('gateSheet');
-    sheet.setAttribute('dir', I18N[LANG].dir);
+    sheet.setAttribute('dir', TU().dir);
     gid('gateTitle').textContent='🔒 '+g.grownups;
     gid('gateClose').textContent=g.done;
     var dots=''; for(var d=0;d<GATE_ROUNDS;d++){ dots+=(d<gateStep?'●':'○'); } gid('gateDots').textContent=dots;
@@ -3240,7 +3248,7 @@
   // ---- grown-ups welcome (one-time tips) ----
   function openIntro(){
     var g=TG(), sheet=gid('introSheet');
-    sheet.setAttribute('dir', I18N[LANG].dir);
+    sheet.setAttribute('dir', TU().dir);
     gid('introTitle').textContent=g.introTitle;
     gid('introRec').textContent=g.introRec;
     gid('introBi').textContent=g.introBi;
@@ -3253,7 +3261,7 @@
   function openParent(){
     if(!lsGet('tinyHandsParentIntro')){ openIntro(); return; }
     var p=curProfile(), g=TG();
-    gid('parentSheet').setAttribute('dir', I18N[LANG].dir);
+    gid('parentSheet').setAttribute('dir', TU().dir);
     gid('parentTitle').textContent=g.grownups;
     gid('parentSub').textContent=g.current+' '+((p.name||'').trim()||g.noname)+' '+p.emoji;
     gid('pmRecord').innerHTML='<span class="pmemo">🎙️</span>'+g.record;
@@ -3265,7 +3273,7 @@
     gid('pmCheat').innerHTML='<span class="pmemo">📖</span>'+gs('cheat');
     gid('pmRemind').innerHTML='<span class="pmemo">⏰</span>'+gs('remind');
     gid('pmPrivacy').innerHTML='<span class="pmemo">🔒</span>'+g.privacy;
-    gid('pmTerms').innerHTML='<span class="pmemo">📄</span>'+(TERMS[LANG]||TERMS.en).link;
+    gid('pmTerms').innerHTML='<span class="pmemo">📄</span>'+(TERMS[uiLang()]||TERMS.en).link;
     gid('parentClose').textContent=g.done;
     gid('parentSheet').classList.add('open');
   }
@@ -3314,7 +3322,7 @@
   function openDashboard(){
     addTime();
     var g=TG();
-    gid('dashSheet').setAttribute('dir', I18N[LANG].dir);
+    gid('dashSheet').setAttribute('dir', TU().dir);
     gid('dashTitle').textContent=g.progress;
     gid('dashCatTitle').textContent=g.byCat;
     gid('dashLimitTitle').textContent=g.dailyLimit;
@@ -3334,7 +3342,7 @@
     var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(cc[k]>maxc) maxc=cc[k]; }
     var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','count','memory','trace'];
     order.forEach(function(cat){ if(!cc[cat]) return; var row=document.createElement('div'); row.className='barRow';
-      row.innerHTML='<span class="bl">'+(I18N[LANG].tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
+      row.innerHTML='<span class="bl">'+(TU().tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
     if(!cats.children.length){ cats.innerHTML='<p class="vp-tip">'+g.noPlay+'</p>'; }
     var lb=gid('limitBtns'); lb.innerHTML=''; [[g.off,0],['15 '+g.min,15],['30 '+g.min,30],['45 '+g.min,45],['60 '+g.min,60]].forEach(function(o){ var b=document.createElement('button'); b.className='segbtn'+(((PD.dailyLimit||0)===o[1])?' on':''); b.textContent=o[0]; b.addEventListener('click', function(){ PD.dailyLimit=o[1]; flushPD(); openDashboard(); }); lb.appendChild(b); });
     var recCount=0; for(var ck in customIndex){ if(ck.indexOf('rec|')===0) recCount++; }
@@ -3347,7 +3355,7 @@
   function openProfiles(){
     var box=gid('profileList'); box.innerHTML='';
     var g=TG();
-    gid('profileSheet').setAttribute('dir', I18N[LANG].dir);
+    gid('profileSheet').setAttribute('dir', TU().dir);
     gid('profileTitle').textContent=g.children;
     gid('profileSub').textContent=g.chSub;
     gid('profileAdd').textContent=g.addChild;
@@ -3376,8 +3384,8 @@
   function songNames(){ try{ var m=JSON.parse(lsGet(SONG_NAMES_KEY)); return (m&&typeof m==='object'&&!Array.isArray(m))?m:{}; }catch(e){ return {}; } }
   function setSongName(slot,name){ var m=songNames(); if(name) m[slot]=String(name).slice(0,40); else delete m[slot]; lsSet(SONG_NAMES_KEY, JSON.stringify(m)); }
   function openSongs(){
-    var T=I18N[LANG].enh, g=TG();
-    gid('songsSheet').setAttribute('dir', I18N[LANG].dir);
+    var T=TU().enh, g=TG();
+    gid('songsSheet').setAttribute('dir', TU().dir);
     gid('songsTitle').textContent='🎵 '+g.songs;
     gid('songsSub').textContent=g.songsSub;
     gid('songsClose').textContent=T.done;
@@ -3489,7 +3497,7 @@
       gid('bkClose').addEventListener('click', function(){ sheet.classList.remove('open'); });
     }
     var g=TG();
-    sheet.setAttribute('dir', I18N[LANG].dir);
+    sheet.setAttribute('dir', TU().dir);
     gid('bkTitle').textContent=g.bkTitle;
     gid('bkSub').textContent=g.bkSub;
     gid('bkExport').textContent=g.bkSave;
@@ -3503,7 +3511,7 @@
   function openLegalDoc(docs, sheetId, titleId, updatedId, bodyId, closeId, emoji){
     var D=docs[LANG]||docs.en;
     var sheet=gid(sheetId);
-    sheet.setAttribute('dir', I18N[LANG].dir);
+    sheet.setAttribute('dir', TU().dir);
     gid(titleId).textContent=emoji+' '+D.title;
     gid(updatedId).textContent=D.updated;
     var body=gid(bodyId); body.innerHTML='';
@@ -3582,15 +3590,15 @@
     var all=items.length>0 && items.every(function(it){ return !!rec.heard[it.key]; });
     if(all && !rec.done){
       rec.done=true; PD.todayCount=(PD.todayCount||0)+1; flushPD();
-      setTimeout(function(){ showTransientToast(I18N[LANG].todayDone+' \u2b50'); celebrate(); }, 900);
+      setTimeout(function(){ showTransientToast(TU().todayDone+' \u2b50'); celebrate(); }, 900);
     } else { flushPD(); }
-    if(gid('learn').classList.contains('active')){ var hint=gid('learnHint'); if(hint){ var n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; }); hint.textContent=I18N[LANG].todayHint+'  \u00b7  '+n+'/'+items.length; } }
+    if(gid('learn').classList.contains('active')){ var hint=gid('learnHint'); if(hint){ var n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; }); hint.textContent=TU().todayHint+'  \u00b7  '+n+'/'+items.length; } }
   }
   function renderTodayCard(){
     var card=gid('todayCard'); if(!card) return;
     var items=todayItems(); if(!items.length){ card.style.display='none'; return; }
     card.style.display='';
-    var T=I18N[LANG], rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
+    var T=TU(), rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
     gid('tcAv').textContent=curProfile().emoji||'\u{1F423}';
     gid('tcTitle').textContent=T.todayTitle;
     var st=gid('tcStatus'); st.textContent=rec.done ? '\u2713' : (n+'/'+items.length); st.classList.toggle('done', !!rec.done);
@@ -3606,7 +3614,7 @@
   function openToday(){
     var items=todayItems(); if(!items.length) return;
     stopGameAudio();
-    var T=I18N[LANG], rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
+    var T=TU(), rec=todayRecord(), n=0; items.forEach(function(it){ if(rec.heard[it.key]) n++; });
     learnTitle.textContent=T.todayTitle;
     learnHint.textContent=T.todayHint+'  \u00b7  '+n+'/'+items.length;
     buildLearn('today', items);
@@ -3658,7 +3666,7 @@
   // ---- grown-ups' cheat sheet: every word (and everyday phrases) with how to say it ----
   var CHEAT_CATS=['everyday','family','food','animals','colors','shapes','house','clothes','body','numbers','letters'];
   function openCheat(){
-    var sheet=gid('cheatSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    var sheet=gid('cheatSheet'); sheet.setAttribute('dir', TU().dir);
     gid('cheatTitle').textContent='\u{1F4D6} '+(LANG==='ar' ? gs('cheatTitle') : gs('cheatTitleGen'));
     gid('cheatSub').textContent=gs('cheatSub');
     gid('cheatPrint').textContent=gs('cheatPrint');
@@ -3681,7 +3689,7 @@
     if(LANG==='ar' && g.phrases && g.phrases.items.length){ head(gs('cheatPhrases')); g.phrases.items.forEach(function(it){ row({text:'\u{1F4AC}'}, it.say, it.tr, it.en, it); }); }
     CHEAT_CATS.forEach(function(cat){
       var gc=g[cat]; if(!gc || !gc.items.length) return;
-      head(I18N[LANG].tiles[cat]);
+      head(TU().tiles[cat]);
       gc.items.forEach(function(it){
         var vis=chipVisual(it.key), sub='';
         if(cat==='letters'){ vis={text:''}; }
@@ -3739,7 +3747,7 @@
     if(!w){ var a=document.createElement('a'); a.href=googleCalendarURL(t); a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.parentNode.removeChild(a); }
   }
   function openReminder(){
-    var sheet=gid('remindSheet'); sheet.setAttribute('dir', I18N[LANG].dir);
+    var sheet=gid('remindSheet'); sheet.setAttribute('dir', TU().dir);
     gid('remindGoogle').textContent=gs('remindGoogle');
     gid('remindGoogleNote').textContent=gs('remindGoogleNote');
     gid('remindTitle').textContent='\u23f0 '+gs('remindTitle');
@@ -3780,7 +3788,7 @@
 
   // ---- refresh all enhancement UI text on language change ----
   function enhApplyLang(){
-    var T=I18N[LANG], EN=I18N.en;   // home hint follows the app language; settings UI stays English
+    var T=TU(), EN=I18N.en;   // home hint follows the app language; settings UI stays English
     var wl=gid('whoseLabel'); if(wl) wl.textContent=EN.enh.whose;
     var ro=gid('recOpen'); if(ro) ro.textContent=EN.enh.rec;
     var ht=document.querySelector('#homeHint .htxt'); if(ht) ht.textContent=T.enh.hint;
