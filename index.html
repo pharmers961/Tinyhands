@@ -651,6 +651,57 @@
     body.printcheat #cheatSheet .sheet-card{ max-height:none; overflow:visible; box-shadow:none; max-width:none; }
     body.printcheat .crow{ break-inside:avoid; }
   }
+  /* ---- Your turn · Do it · Photo stories · computer-voice pill ---- */
+  #menu.show-games .tile.t7{ grid-column:auto; }
+  #menu:not(.show-games) .tile.t13{ grid-column:auto; }
+  .tile.t17{ background:linear-gradient(160deg,#ffe08a,#f6b93b); }
+  .tile.t17 .name{ color:#5b4a00; text-shadow:0 1px 0 rgba(255,255,255,.45); }
+  .tile.t18{ background:linear-gradient(160deg,#a5d8ff,#4dabf7); }
+  .tile.t19{ background:linear-gradient(160deg,#d0bfff,#9775fa); }
+  .bigStage{ z-index:2; flex:1; min-height:0; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+  .bigCard{ position:relative; width:min(64vw,38vh,300px); aspect-ratio:1/1; border-radius:32px; border:none; padding:0; cursor:pointer; background:linear-gradient(160deg,#7fd8d4,#4fb8c9); box-shadow:0 10px 0 var(--shadow), 0 14px 24px rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .bigCard .bigEmoji{ font-size:min(34vw,20vh,160px); line-height:1; }
+  .bigCard .bigPhoto{ width:100%; height:100%; object-fit:cover; }
+  .bigCard .cardShape{ width:60%; height:60%; }
+  .bigCard.pop{ animation:pop .55s ease; box-shadow:0 0 0 7px var(--good), 0 14px 24px rgba(0,0,0,.12); }
+  .bigCard.bounce .bigEmoji{ animation:mascotBob 1.8s ease-in-out infinite; }
+  .waitBar{ width:min(64vw,300px); height:10px; border-radius:6px; background:rgba(59,58,82,.12); overflow:hidden; }
+  .waitBar span{ display:block; height:100%; width:100%; background:#ffd166; border-radius:6px; transform:scaleX(0); transform-origin:left center; }
+  [dir="rtl"] .waitBar span{ transform-origin:right center; }
+  .waitBar.run span{ animation:waitDown var(--wait,6s) linear forwards; }
+  @keyframes waitDown{ from{ transform:scaleX(1); } to{ transform:scaleX(0); } }
+  .ask{ margin:0; font-family:'Quicksand',sans-serif; font-weight:700; font-size:16px; color:var(--ink); unicode-bidi:plaintext; }
+  .actBtns{ z-index:2; display:flex; gap:10px; width:100%; max-width:480px; margin-top:8px; }
+  .actBtn{ flex:1; border:none; border-radius:20px; padding:14px 6px; font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(14px,3.8vw,17px); cursor:pointer; box-shadow:0 5px 0 rgba(59,58,82,.16); background:var(--surface); color:var(--ink); }
+  .actBtn.yes{ background:#7bd389; color:#fff; flex:1.5; }
+  .actBtn.yes.echo{ background:#4fb8c9; }
+  .actBtn:active{ transform:translateY(4px); box-shadow:none; }
+  .ttsSlot{ z-index:2; }
+  .ttsSlot:empty{ display:none; }
+  .ttsPill{ border:none; margin:6px auto 0; display:block; background:#fff1d6; color:#8a5a00; border-radius:999px; padding:6px 12px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:12px; cursor:pointer; box-shadow:0 3px 0 rgba(138,90,0,.15); max-width:100%; }
+  .storyGrid{ z-index:2; flex:1; min-height:0; width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding:4px; align-content:center; overflow:auto; }
+  .storyCover{ border:none; border-radius:24px; overflow:hidden; position:relative; padding:0; background:var(--surface); box-shadow:0 8px 0 var(--shadow); aspect-ratio:1/1; cursor:pointer; }
+  .storyCover img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .storyCover .scName{ position:absolute; left:0; right:0; bottom:0; padding:10px 8px; background:linear-gradient(transparent,rgba(0,0,0,.6)); color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:16px; text-align:center; }
+  .storyEmpty{ z-index:2; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--soft); font-family:'Quicksand',sans-serif; font-weight:700; padding:0 12px; gap:14px; max-width:420px; }
+  .storyEmpty .big{ font-size:72px; line-height:1; }
+  .storyPage{ z-index:2; flex:1; min-height:0; width:100%; display:flex; align-items:center; justify-content:center; }
+  .storyPage img{ max-width:100%; max-height:100%; border-radius:24px; box-shadow:0 10px 0 var(--shadow), 0 14px 24px rgba(0,0,0,.14); object-fit:contain; }
+  .storyNav{ z-index:2; display:flex; align-items:center; gap:14px; margin-top:12px; }
+  .navBtn{ width:72px; height:72px; border-radius:50%; border:none; background:var(--surface); color:var(--ink); font-size:30px; box-shadow:0 6px 0 var(--shadow); cursor:pointer; }
+  .navBtn:disabled{ opacity:.3; cursor:default; }
+  .navBtn:active{ transform:translateY(4px); box-shadow:none; }
+  .storyDots{ display:flex; gap:6px; }
+  .storyDots span{ width:10px; height:10px; border-radius:50%; background:rgba(59,58,82,.2); }
+  .storyDots span.on{ background:#ffae42; }
+  .speaker.small{ width:72px; height:72px; font-size:30px; box-shadow:0 6px 0 var(--shadow); }
+  .stChips{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+  .stName{ width:100%; padding:10px 12px; border-radius:12px; border:2px solid #e7e3f0; font-family:inherit; font-weight:700; font-size:15px; color:#3b3a52; background:#faf9ff; }
+  .stPage{ display:flex; align-items:center; gap:10px; background:#f4f2fb; border-radius:16px; padding:8px 10px; margin-top:8px; }
+  .stThumb{ width:58px; height:58px; border-radius:12px; border:2px dashed #c9c3e6; background:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; padding:0; cursor:pointer; flex:0 0 auto; }
+  .stThumb img{ width:100%; height:100%; object-fit:cover; }
+  .stLabel{ flex:1; font-weight:700; color:#3b3a52; min-width:0; }
+  .wchip.said{ background:#e3f7e8; }
 </style>
 </head>
 <body>
@@ -705,7 +756,10 @@
       <button class="tile t11" data-game="food"><span class="emoji">&#x1F34E;</span><span class="name"></span></button>
       <button class="tile t12" data-game="family"><span class="emoji">&#x1F46A;</span><span class="name"></span></button>
       <button class="tile t13 learnonly" data-game="everyday"><span class="emoji">&#x1F44B;</span><span class="name"></span></button>
+      <button class="tile t19 learnonly" data-game="stories"><span class="emoji">&#x1F4F8;</span><span class="name"></span></button>
       <button class="tile t4" data-game="numbers"><span class="emoji">&#x1F522;</span><span class="name"></span></button>
+      <button class="tile t17 playonly" data-game="say"><span class="emoji">&#x1F5E3;&#xFE0F;</span><span class="name"></span></button>
+      <button class="tile t18 playonly" data-game="act"><span class="emoji">&#x1F483;</span><span class="name"></span></button>
       <button class="tile t14 playonly" data-game="find"><span class="emoji">&#x1F50D;</span><span class="name"></span></button>
       <button class="tile t15 playonly" data-game="sounds"><span class="emoji">&#x1F42E;</span><span class="name"></span></button>
       <button class="tile t16 playonly" data-game="feed"><span class="emoji">&#x1F37C;</span><span class="name"></span></button>
@@ -726,6 +780,7 @@
       <button class="speaker" id="speaker" aria-label="Play again"><span class="ring"></span>&#x1F50A;</button>
       <div class="attribution" id="attribution"></div>
       <p class="grownup" id="grownupLine"></p>
+      <div class="ttsSlot" id="gameTts"></div>
     </div>
     <div class="cards" id="cards"></div>
     <div class="bottombar">
@@ -759,6 +814,7 @@
       <h2 class="menutitle" id="learnTitle"></h2>
     </div>
     <p class="learnhint" id="learnHint"></p>
+    <div class="ttsSlot" id="learnTts" style="margin:-4px 0 8px;"></div>
     <div class="learnGrid" id="learnGrid"></div>
   </div>
 
@@ -772,11 +828,51 @@
       <p id="scenePrompt"></p>
       <button class="speaker sceneSpeaker" id="sceneSpeaker" aria-label="Play again"><span class="ring"></span>&#x1F50A;</button>
       <p class="grownup" id="sceneGrownup"></p>
+      <div class="ttsSlot" id="sceneTts"></div>
     </div>
     <div class="sceneStage" id="sceneStage"></div>
     <div class="bottombar">
       <button class="mini" id="sceneNew"></button>
     </div>
+  </div>
+
+  <!-- YOUR TURN: the child names the picture; the grown-up taps when she says it -->
+  <div class="screen" id="say">
+    <div class="gametop">
+      <button class="homebtn" id="sayBack"></button>
+      <div class="stars" id="sayStars"></div>
+    </div>
+    <div class="prompt sceneprompt"><p id="sayPrompt"></p><p class="ask" id="sayAsk"></p></div>
+    <div class="bigStage"><div class="bigCard" id="sayCard" role="button"></div><div class="waitBar" id="sayWait"><span></span></div></div>
+    <p class="grownup" id="sayWord"></p>
+    <div class="ttsSlot" id="sayTts"></div>
+    <div class="actBtns"><button class="actBtn" id="sayHint"></button><button class="actBtn yes" id="saySaid"></button><button class="actBtn" id="sayNext"></button></div>
+  </div>
+
+  <!-- DO IT: hear it, do it (actions and "point to your…") -->
+  <div class="screen" id="act">
+    <div class="gametop">
+      <button class="homebtn" id="actBack"></button>
+      <div class="stars" id="actStars"></div>
+    </div>
+    <div class="prompt sceneprompt"><p id="actPrompt"></p></div>
+    <div class="bigStage"><button class="bigCard" id="actCard"></button></div>
+    <p class="grownup" id="actWord"></p>
+    <div class="ttsSlot" id="actTts"></div>
+    <div class="actBtns"><button class="actBtn" id="actAgain"></button><button class="actBtn yes" id="actDid"></button><button class="actBtn" id="actNext"></button></div>
+  </div>
+
+  <!-- PHOTO STORIES: little books from family photos, told in a family voice -->
+  <div class="screen" id="stories">
+    <div class="gametop">
+      <button class="homebtn" id="storiesBack"></button>
+      <h2 class="menutitle" id="storiesTitle"></h2>
+    </div>
+    <div class="storyGrid" id="storyGrid"></div>
+    <div class="storyEmpty" id="storyEmpty" style="display:none;"></div>
+    <div class="storyPage" id="storyPage" style="display:none;"></div>
+    <p class="grownup" id="storyTip" style="display:none;"></p>
+    <div class="storyNav" id="storyNav" style="display:none;"><button class="navBtn" id="storyPrev"></button><div class="storyDots" id="storyDots"></div><button class="speaker small" id="storySpeaker" aria-label="Play again">&#x1F50A;</button><button class="navBtn" id="storyNext"></button></div>
   </div>
 
   <!-- COUNT -->
@@ -874,6 +970,7 @@
       <div class="pmgrid">
         <button class="pmbtn pm-rec" id="pmRecord"><span class="pmemo">&#x1F399;&#xFE0F;</span>Record voices</button>
         <button class="pmbtn pm-songs" id="pmSongs"><span class="pmemo">&#x1F3B5;</span>Songs</button>
+        <button class="pmbtn pm-story" id="pmStories"><span class="pmemo">&#x1F4F8;</span>Photo stories</button>
         <button class="pmbtn pm-set" id="pmSettings"><span class="pmemo">&#x2699;&#xFE0F;</span>Settings</button>
         <button class="pmbtn pm-dash" id="pmDash"><span class="pmemo">&#x1F4CA;</span>Progress</button>
         <button class="pmbtn pm-prof" id="pmProfiles"><span class="pmemo">&#x1F9D2;</span>Children</button>
@@ -943,12 +1040,28 @@
     </div>
   </div>
 
+  <!-- PHOTO STORIES EDITOR (grown-ups) -->
+  <div class="sheet" id="storySheet" dir="ltr">
+    <div class="sheet-card">
+      <h2 id="stTitle"></h2>
+      <p class="sheet-sub" id="stSub"></p>
+      <div class="stChips" id="stChips"></div>
+      <input id="stName" class="stName" type="text" maxlength="40" autocomplete="off" />
+      <p class="vp-tip" id="stLang" style="text-align:start;"></p>
+      <div id="stPages"></div>
+      <p class="vp-tip" id="stTip" style="text-align:start;"></p>
+      <button class="mini sheet-close" id="stClose"></button>
+    </div>
+  </div>
+
   <!-- PROGRESS / DASHBOARD -->
   <div class="sheet" id="dashSheet" dir="ltr">
     <div class="sheet-card">
       <h2 id="dashTitle">Progress</h2>
       <p class="sheet-sub" id="dashSub"></p>
       <div class="statGrid" id="statGrid"></div>
+      <div class="settingsGroupTitle" id="dashSaidTitle"></div>
+      <div id="saidChips"></div>
       <div class="settingsGroupTitle" id="dashWordsTitle"></div>
       <div id="wordChips"></div>
       <p class="vp-tip" id="coplayTip" style="text-align:start;"></p>
@@ -1208,6 +1321,20 @@
     {key:"ph_bye",     en:"Bye bye",              ar:"باي باي / مع السلامة", tr:"bye bye · ma3 el saleme"},
     {key:"ph_want",    en:"I want…",              ar:"بدّي…",                tr:"baddi…"}
   ];
+  // Commands for the "Do it!" game: she hears it and does it (Total Physical Response).
+  // Arabic is the Lebanese girl form, with the boy form in the Latin spelling.
+  var ACTIONS = [
+    {key:"ac_clap",  emoji:0x1F44F, tr:"za22fe! · (boy) za22ef!",            say:{en:"Clap your hands!",  ar:"زقّفي!",          hy:"Ծափ տուր!",      es:"¡Aplaude!",              fr:"Tape des mains !"}},
+    {key:"ac_jump",  emoji:0x1F998, tr:"notte! · (boy) nott!",               say:{en:"Jump!",             ar:"نطّي!",           hy:"Ցատկի՛ր!",       es:"¡Salta!",                fr:"Saute !"}},
+    {key:"ac_dance", emoji:0x1F483, tr:"r2osi! · (boy) r2os!",               say:{en:"Dance!",            ar:"رقصي!",           hy:"Պարի՛ր!",        es:"¡Baila!",                fr:"Danse !"}},
+    {key:"ac_sit",   emoji:0x1FA91, tr:"2a3odi! · (boy) 2a3od!",             say:{en:"Sit down!",         ar:"قعودي!",          hy:"Նստի՛ր!",        es:"¡Siéntate!",             fr:"Assieds-toi !"}},
+    {key:"ac_stand", emoji:0x1F9CD, tr:"2oumi! · (boy) 2oum!",               say:{en:"Stand up!",         ar:"قومي!",           hy:"Վե՛ր կաց!",      es:"¡Levántate!",            fr:"Lève-toi !"}},
+    {key:"ac_turn",  emoji:0x1F300, tr:"douri! · (boy) dour!",               say:{en:"Turn around!",      ar:"دوري!",           hy:"Պտտվի՛ր!",       es:"¡Da una vuelta!",        fr:"Tourne !"}},
+    {key:"ac_wave",  emoji:0x1F44B, tr:"3emli bye bye! · (boy) 3mol bye bye!", say:{en:"Wave bye-bye!",   ar:"عملي باي باي!",   hy:"Ձեռքով արա՛!",   es:"¡Di adiós con la mano!", fr:"Fais coucou !"}},
+    {key:"ac_kiss",  emoji:0x1F618, tr:"3atini bawse!",                      say:{en:"Give me a kiss!",   ar:"عطيني بوسة!",     hy:"Պաչիկ տուր!",    es:"¡Dame un beso!",         fr:"Fais-moi un bisou !"}},
+    {key:"ac_hug",   emoji:0x1F917, tr:"3atini 3abta!",                      say:{en:"Give me a hug!",    ar:"عطيني عبطة!",     hy:"Գրկի՛ր ինձ!",    es:"¡Dame un abrazo!",       fr:"Fais-moi un câlin !"}},
+    {key:"ac_sleep", emoji:0x1F634, tr:"nemi! · (boy) nem!",                 say:{en:"Go to sleep!",      ar:"نامي!",           hy:"Քնի՛ր!",         es:"¡A dormir!",             fr:"Fais dodo !"}}
+  ];
   // How each Arabic word sounds, in the Latin "chat" spelling Lebanese families use
   // (2 = hamza/qaf, 3 = ʿayn, 7 = ḥa, kh, gh). Shown to grown-ups only.
   var AR_TR = {
@@ -1398,6 +1525,23 @@
 
   // Grown-up-facing UI strings (parent menu, settings, dashboard, children, backup).
   // Kept separate from I18N so the child-facing and parent-facing vocabularies can evolve independently.
+  // Newer activities, added to every language's tile names and grown-up prompts.
+  var NEW_TILES = {
+    en:{say:'Your turn', act:'Do it!', stories:'Stories', actions:'Actions', priority:'⭐ Record first'},
+    ar:{say:'دورك', act:'يلا نتحرّك', stories:'قصص', actions:'حركات', priority:'⭐ سجّل أولاً'},
+    hy:{say:'Քո հերթը', act:'Արա՛', stories:'Պատմություններ', actions:'Գործողություններ', priority:'⭐ Նախ ձայնագրիր'},
+    es:{say:'Tu turno', act:'¡Hazlo!', stories:'Cuentos', actions:'Acciones', priority:'⭐ Grabar primero'},
+    fr:{say:'À toi', act:'Fais-le !', stories:'Histoires', actions:'Actions', priority:'⭐ À enregistrer d’abord'}
+  };
+  var NEW_PROMPTS = {
+    en:{say:'Ask, then wait. Tap ✓ when your child says it.', act:'Say it, show it, do it together!'},
+    ar:{say:'اسأل وانتظر. اضغط ✓ لمّا يقولها الطفل.', act:'قولها، فرجيها، واعملوها سوا!'},
+    hy:{say:'Հարցրու և սպասիր։ Սեղմիր ✓, երբ երեխան ասի։', act:'Ասա, ցույց տուր, արեք միասին!'},
+    es:{say:'Pregunta y espera. Toca ✓ cuando lo diga.', act:'¡Dilo, enséñalo y hacedlo juntos!'},
+    fr:{say:'Demande, puis attends. Touche ✓ quand l’enfant le dit.', act:'Dis-le, montre-le, faites-le ensemble !'}
+  };
+  (function(){ for(var l in NEW_TILES){ if(!I18N[l]) continue; var k; for(k in NEW_TILES[l]) I18N[l].tiles[k]=NEW_TILES[l][k]; for(k in NEW_PROMPTS[l]) I18N[l].prompts[k]=NEW_PROMPTS[l][k]; } })();
+
   var GRO = {
     en:{
       grownups:'For grown-ups', current:'Current child:', noname:'(no name)', thisChild:'This child',
@@ -1516,6 +1660,42 @@
       timeUp:'Այսօրվա համար բավական է — կհանդիպենք վաղը!'
     }
   };
+  // Grown-up strings for the newer features (other languages fall back to English via gs()).
+  (function(){
+    var add={
+      ttsVoice:'🤖 Computer voice',
+      ttsPill:'🤖 {n} of {total} words here use a computer voice · Record yours',
+      priorityHint:'These words still play in a computer voice, most useful first: today’s words, family, food, everyday words and phrases. Tap ⏭ Record all to go through them in one go.',
+      priorityDone:'Every word in the games has a real voice now ✓',
+      ttsLeft:'🤖 {n} words still play in a computer voice, which can’t say them the way you do at home.',
+      recordFirst:'⭐ Record these first',
+      askLine:'Ask: {q}',
+      sayHint:'🔈 Hint', saySaid:'🗣️ Said it!', sayEcho:'🔁 Said it after you', sayNext:'⏭ Next',
+      actAgain:'🔊 Again', actDid:'✅ Did it!', actNext:'⏭ Next', actPoint:'👉 Point to your own:',
+      saidStat:'Says alone', echoStat:'Says after you',
+      saidTitle:'Words said out loud', saidOwn:'Says it alone', saidEcho:'Says it after you (almost there)',
+      saidNone:'Play “Your turn” together and tap ✓ whenever your child says a word. Words said out loud are what count most — this list grows from them.',
+      stories:'Photo stories', stTitle:'📸 Photo stories',
+      stSub:'Make a little book from your own photos and tell it in your voice: going to Teta’s, bath time, the park. Tell it the same way every time — that repetition is what makes the words stick.',
+      stLang:'Recording in: {lang}. To record another language, switch the language on the home screen first.',
+      stPage:'Page {n}', stName:'Story {n}', stNamePh:'Story name (e.g. Going to Teta’s)',
+      stTip:'Tap 📷 to add each page’s photo, then ● to tell that page (up to 30 seconds). Short sentences, and leave a pause to ask a question.',
+      stDelPage:'Delete this page’s photo and recording?',
+      storyEmpty:'No stories yet. A grown-up can make one from family photos.', storyMake:'📸 Make a story',
+      storyTip:'Pause on each page: point, ask, and wait.',
+      echoNoteAr:'Suggested: Off for Arabic. When English follows every Arabic word, children learn to wait for the English.'
+    };
+    for(var k in add){ if(GRO.en[k]==null) GRO.en[k]=add[k]; }
+    GRO.en.introBi='“Also say in” repeats each word in a second language. For Arabic, leave it off so your child listens to the Arabic instead of waiting for the English.';
+    GRO.en.tips=GRO.en.tips.concat([
+      'In “Your turn”, ask and then count to five in your head before helping. The waiting is the lesson.',
+      'If your child answers in English, say it back in Arabic and hand it over. No correcting — just the Arabic word, warmly.',
+      'Pick one routine (bath or bedtime) and use the same Arabic phrases every single night.',
+      'Give a choice in Arabic — “mayy aw 7alib?” — and wait for an answer before you help.',
+      'Video-call Teta or Jeddo in Arabic only. A live call counts; a recorded video does much less.'
+    ]);
+  })();
+
   // The child's language (LANG) drives the words and audio. Everything a grown-up reads — buttons,
   // sheets, prompts, hints, layout direction — follows the grown-up text preference (English by default),
   // so a parent who can't read Arabic script can still run Arabic lessons.
@@ -1531,11 +1711,11 @@
   // If any network feature is ever added, this policy (and the CSP in <head>) must change with it.
   var PRIVACY = {
     en:{
-      link:'Privacy', title:'Privacy Policy', updated:'Effective date: September 30, 2026',
+      link:'Privacy', title:'Privacy Policy', updated:'Effective date: November 8, 2026',
       sections:[
         ['The short version','Tiny Hands runs entirely on your device. We do not collect, receive, transmit, sell, or share any personal information — and we could not even if we wanted to, because the app has no server and makes no network requests. Everything it saves stays in your device’s own storage.'],
         ['Who we are','Tiny Hands is a learning app for young children. For privacy questions or requests, contact: akram.aboukhalil@gmail.com.'],
-        ['Information stored on your device','If you choose to use these features, the app stores locally: a child’s first name or nickname, names and optional photos of family members you add, photos you take of your child’s own things for the word cards, voice recordings you make in the recording studio, learning progress, and settings. All of it lives only in this browser’s storage on this device. It is never uploaded anywhere.'],
+        ['Information stored on your device','If you choose to use these features, the app stores locally: a child’s first name or nickname, names and optional photos of family members you add, photos you take of your child’s own things for the word cards and for photo stories, voice recordings you make in the recording studio or for photo stories, learning progress (including which words a grown-up marked as said out loud), and settings. All of it lives only in this browser’s storage on this device. It is never uploaded anywhere.'],
         ['What we never do','No accounts. No analytics. No advertising. No tracking cookies. No third-party services — fonts, sounds and pictures are built into the app itself. We do not sell or share personal information as those terms are defined in the California Consumer Privacy Act, and we never have.'],
         ['Payments (if you ever buy something)','The app currently has no paid features. If paid features are offered in the future, payment will be handled by your app store or a dedicated payment processor — the app itself will never see or store card numbers, purchases will only be possible for a grown-up behind the parent gate, and this policy will be updated before any payment feature launches. The processor’s handling of your payment information is described in its own privacy policy.'],
         ['Children’s privacy','Tiny Hands is made for young children to use together with their grown-ups. Because the app makes no network connections, no personal information is collected from children over the internet (COPPA, 16 CFR Part 312). The microphone is used only if a grown-up starts a recording behind the parent gate and grants the browser’s microphone permission; recordings are saved only on this device and can be played back or deleted at any time in the recording studio.'],
@@ -1881,6 +2061,7 @@
     }
     function L(arr){ return arr.map(function(it){ return {key:it.key, say:it.say[lang], tr:(lang==='ar')?AR_TR[it.key]:undefined, render:it.render}; }); }
     var sounds = SOUNDS.map(function(s){ var an=null; for(var a=0;a<ANIMALS.length;a++){ if(ANIMALS[a].key===s.animal) an=ANIMALS[a]; } return {key:s.key, animal:s.animal, say:s.say[lang]||s.say.en, tr:(lang==='ar')?s.say.tr:undefined, render:an?an.render:{type:'emoji',emoji:'\u{1F43E}'}}; });
+    var actions = ACTIONS.filter(function(a){ return !!a.say[lang]; }).map(function(a){ return {key:a.key, say:a.say[lang], tr:(lang==='ar')?a.tr:undefined, en:a.say.en, render:{type:'emoji',emoji:emo(a.emoji)}}; });
     var phrases = (lang==='ar') ? PHRASES.map(function(p){ return {key:p.key, say:p.ar, tr:p.tr, en:p.en, render:{type:'emoji',emoji:'\u{1F4AC}'}}; }) : [];
     var T = TU();   // prompts are read by the grown-up
     return {
@@ -1896,6 +2077,7 @@
       family:{prompt:T.prompts.family,   items:L(FAMILY)},
       everyday:{prompt:'',               items:L(EVERYDAY)},
       sounds:{prompt:'',                 items:sounds},
+      actions:{prompt:'',                items:actions},
       phrases:{prompt:'',                items:phrases}
     };
   }
@@ -2008,6 +2190,7 @@
   function stopGameAudio(){
     clearRoundTimers(); playEndCb=null; playToken++;
     biPending=null; if(biTimer){ clearTimeout(biTimer); biTimer=null; }
+    clearSayWait();
     if(onlineGuard){ clearTimeout(onlineGuard); onlineGuard=null; }
     if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
     if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
@@ -2045,7 +2228,7 @@
   var ES_PHONICS={A:'a',B:'ba',C:'ca',D:'da',E:'e',F:'fa',G:'ga',H:'ha',I:'i',J:'ja',K:'ka',L:'la',M:'ma',N:'na','Ñ':'ña',O:'o',P:'pa',Q:'que',R:'ra',S:'sa',T:'ta',U:'u',V:'va',W:'wa',X:'xa',Y:'ya',Z:'za'};
   function numberWord(n, lang){ return lang==='ar'?AR_NUMWORDS[n-1] : lang==='hy'?HY_NUMWORDS[n-1] : lang==='es'?ES_NUMWORDS[n-1] : lang==='fr'?FR_NUMWORDS[n-1] : String(n); }
   function wordFor(key, lang){
-    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE).concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY);
+    var src=ANIMALS.concat(COLORS).concat(SHAPES).concat(HOUSE).concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY).concat(ACTIONS);
     for(var i=0;i<src.length;i++){ if(src[i].key===key) return src[i].say[lang]||src[i].say.en; }
     var m=/^n([1-9]|10)$/.exec(key); if(m) return numberWord(+m[1], lang);
     return key;   // letters: the glyph itself
@@ -2070,7 +2253,7 @@
   var biTimer=null, biPending=null;
   function scheduleBilingual(item, tok){
     biPending=null;
-    var sec=settings().bilingual;
+    var sec=biSetting();
     if(!sec || sec==='off' || sec===LANG || getHidden().indexOf(sec)>=0) return;
     var w=wordFor(item.key, sec); if(!w) return;
     biPending={tok:tok, text:w, lang:sec};
@@ -2087,7 +2270,7 @@
     var b=ph?null:builtinClip(lang,key);
     if(b){ playSrcSmart('builtin|'+lang+'|'+key, b, 'auto', tok); }
     else {
-      setAttribution('auto');
+      setAttribution(ph ? 'auto' : 'tts');
       speak(ph||item.say, tok);
     }
   }
@@ -2168,7 +2351,8 @@
       cardsEl.appendChild(b);
     });
     updateGrownupLine(target);
-    if(speakNow!==false) roundTimers.push(setTimeout(function(){ playItem(target); }, 350));
+    renderTtsSlot('gameTts', G.items, curGameType, 'game');
+    if(speakNow!==false) roundTimers.push(setTimeout(speakTarget, 350));
   }
   function onPick(btn,item){
     if(locked) return;
@@ -2177,17 +2361,18 @@
       locked=true; btn.classList.add('correct');
       streak=Math.min(MAX_STARS,streak+1); paintStars(); bumpCorrect(); clearMiss(target.key); noteRight(target.key); buzz(18);
       playDing();   // instant "correct!" chime
-      roundTimers.push(setTimeout(function(){ playItem(target); }, 450));   // then reinforce with the word
+      var bravo=pickBravo(), tgt=target;
+      roundTimers.push(setTimeout(function(){ playItem(tgt, false, bravo?function(){ playItem(bravo,true); }:null); }, 450));   // then reinforce with the word (and sometimes a family "bravo")
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(cardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
         if(streak>=MAX_STARS){ celebrate(); streak=0; paintStars(); roundTimers.push(setTimeout(function(){ newRound(true); },1400)); }
         else { paintStars(); newRound(true); }
-      },1600));
+      }, bravo?2700:1600));
     } else {
       btn.classList.add('wrong'); buzz(45); noteMiss(target.key);
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); btn.classList.add('dimmed'); },460));
       roundTimers.push(setTimeout(function(){ playItem(item); },250));   // say what they actually tapped
-      roundTimers.push(setTimeout(function(){ if(!locked) playItem(target); },1300));   // then remind them of the target
+      roundTimers.push(setTimeout(function(){ if(!locked) speakTarget(); },1300));   // then remind them of the target
     }
   }
   // playful "magic sparkle" jingle for correct answers (synthesized, no audio file)
@@ -2261,7 +2446,7 @@
   }
 
   // ---- controls ----
-  speakerEl.addEventListener('click', function(){ if(target) playItem(target); });
+  speakerEl.addEventListener('click', function(){ clearRoundTimers(); speakTarget(); });
   newSetBtn.addEventListener('click', function(){ if(!locked) newRound(true); });
   function vpSample(){ return target ? target.say : (LANG==='ar'?'\u0627':LANG==='hy'?'\u0531':'B'); }
   voiceBtn.addEventListener('click', function(){ populateVoices(); updateNow(); voiceTip.textContent=''; if(typeof renderPersonChips==='function') renderPersonChips(); voicePanel.classList.add('open'); });
@@ -2377,6 +2562,7 @@
     learnTitle.textContent=TU().tiles[type];
     learnHint.textContent=TU().learnHint;
     buildLearn(type);
+    renderTtsSlot('learnTts', GAMESBYTYPE[type].items, type, 'learn');
     showScreen('learn');
     layoutLearn(); requestAnimationFrame(layoutLearn);
   }
@@ -2388,8 +2574,9 @@
     if(id==='home'||id==='menu') releaseWake(); else requestWake();
     if(ACTIVITY_SCREENS[id]){ noteVisit(); startTiming(); } else stopTiming();
   }
+  var curGameType=null;
   function launchGame(type){
-    G=GAMESBYTYPE[type]; if(!G) return;
+    G=GAMESBYTYPE[type]; if(!G) return; curGameType=type;
     promptEl.textContent=G.prompt;
     stopGameAudio(); noteCategory(type); if('speechSynthesis' in window){ pickVoice(); }
     streak=0; paintStars(); queue=[]; lastKey=null;
@@ -2410,6 +2597,9 @@
     if(type==='count'){ launchCount(); return; }
     if(type==='find'||type==='sounds'||type==='feed'){ launchScene(type); return; }
     if(type==='memory'){ launchMemory(); return; }
+    if(type==='say'){ launchSay(); return; }
+    if(type==='act'){ launchAct(); return; }
+    if(type==='stories'){ openStories(); return; }
     if(type==='trace'){ launchTrace(); return; }
     if(MODE==='learn') openLearn(type); else launchGame(type);
   }); })(tiles[k]); }
@@ -2755,8 +2945,12 @@
     if(s.countMax===undefined || s.countMax===9) s.countMax=10;   // 9 was saved by the old "1–10" button
     if(s.countAloud===undefined) s.countAloud=false;
     if(s.latin===undefined) s.latin=true;   // Latin spelling of Arabic words for grown-ups
+    if(!s.biByLang || typeof s.biByLang!=='object' || Array.isArray(s.biByLang)) s.biByLang={};
     return s;
   }
+  // "Also say in" is kept per language. Arabic starts Off even if an older shared setting was on:
+  // when English follows every Arabic word, a child learns to wait for the English.
+  function biSetting(){ var s=settings(); if(s.biByLang[LANG]!==undefined) return s.biByLang[LANG]; return LANG==='ar' ? 'off' : s.bilingual; }
   function setSetting(k,v){ settings()[k]=v; flushPD(); applyTheme(); }
 
   function totalCorrect(){ return PD.correct||0; }
@@ -2789,7 +2983,7 @@
   }
   // Play time counts only while an activity screen is showing and the app is visible.
   var sessionStart=0;
-  var ACTIVITY_SCREENS={game:1, learn:1, scene:1, count:1, memory:1, trace:1};
+  var ACTIVITY_SCREENS={game:1, learn:1, scene:1, count:1, memory:1, trace:1, say:1, act:1, stories:1};
   function inActivity(){ var a=document.querySelector('.screen.active'); return !!(a && ACTIVITY_SCREENS[a.id]) && document.visibilityState!=='hidden'; }
   function startTiming(){ if(!sessionStart && document.visibilityState!=='hidden') sessionStart=Date.now(); }
   function stopTiming(){ addTime(); sessionStart=0; }
@@ -2952,6 +3146,7 @@
   function setActivePerson(id){ activePersonId=id; lsSet(ACTIVE_KEY,id); setAttribution(id); renderPersonChips(); }
   function setAttribution(pid){
     if(!attributionEl) attributionEl=gid('attribution'); if(!attributionEl) return;
+    if(pid==='tts'){ attributionEl.textContent = gs('ttsVoice'); return; }
     if(!pid || pid==='auto'){ attributionEl.textContent = TU().enh.auto; return; }
     var p=personById(pid); attributionEl.textContent = p ? (p.emoji+' '+p.name) : TU().enh.auto;
   }
@@ -2992,8 +3187,8 @@
     });
   }
   // Downscale on-device (longest side 640px, JPEG) so a hundred photos stay a few megabytes.
-  function shrinkImage(file){
-    var MAX=640;
+  function shrinkImage(file, max){
+    var MAX=max||640;
     function draw(img, w, h){
       var s=Math.min(1, MAX/Math.max(w,h)), cw=Math.max(1,Math.round(w*s)), ch=Math.max(1,Math.round(h*s));
       var c=document.createElement('canvas'); c.width=cw; c.height=ch; c.getContext('2d').drawImage(img,0,0,cw,ch);
@@ -3011,7 +3206,7 @@
     });
   }
   function photoImg(key, cls){ var img=document.createElement('img'); img.className=cls; img.src=wordPhotoURLs[key]; img.alt=''; img.draggable=false; return img; }
-  function canHavePhoto(item, cat){ return !!item && item.render && (item.render.type==='emoji' || item.render.type==='shape') && cat!=='phrases' && cat!=='sounds'; }
+  function canHavePhoto(item, cat){ return !!item && item.render && (item.render.type==='emoji' || item.render.type==='shape') && cat!=='phrases' && cat!=='sounds' && cat!=='actions'; }
   // photo sheet (from the studio): preview, take/choose, remove
   var wpKey=null;
   function openWordPhoto(item){
@@ -3148,11 +3343,13 @@
 
   // ---- recording studio ----
   var studioLang='en', studioCat='animals', studioPersonId=null, studioReturn='home';
-  function openStudio(ret){
+  function openStudio(ret, cat){
     studioReturn=ret||'home';
     stopStudioAuto();
     loadPersons();
     studioLang=LANG;
+    studioPriority=null;
+    if(cat) studioCat=cat; else if(LANG==='ar'||LANG==='hy') studioCat='priority';
     studioPersonId = persons.length ? (personById(studioPersonId)?studioPersonId:persons[0].id) : null;
     gid('studio').setAttribute('dir', TU().dir);
     gid('studioTitle').textContent=TU().enh.studioTitle;
@@ -3161,16 +3358,33 @@
     renderStudio();
     showScreen('studio');
   }
-  function studioCats(){ var c=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','sounds']; if(studioLang==='ar') c.push('phrases'); return c; }
+  function studioCats(){ var c=['priority','letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','actions','sounds']; if(studioLang==='ar') c.push('phrases'); return c; }
   // record-all mode: after each save, automatically move on to the next unrecorded word
   var studioAuto=false, studioAutoTimer=null;
   function stopStudioAuto(){ studioAuto=false; if(studioAutoTimer){ clearTimeout(studioAutoTimer); studioAutoTimer=null; } var b=gid('studioAutoBtn'); if(b) b.classList.remove('vp-done'); }
-  function studioItems(){ var g=buildGames(studioLang)[studioCat]; return g?g.items:[]; }
-  function recDoneCount(games,cat){ var n=0; games[cat].items.forEach(function(it){ if(customIndex[customKey(studioLang,studioPersonId,it.key)]) n++; }); return n; }
+  function studioItems(){ if(studioCat==='priority') return studioPriorityList().map(function(x){ return x.item; }); var g=buildGames(studioLang)[studioCat]; return g?g.items:[]; }
+  function studioCatOf(item){ if(studioCat!=='priority') return studioCat; var l=studioPriorityList(); for(var i=0;i<l.length;i++){ if(l[i].item.key===item.key) return l[i].cat; } return studioCat; }
+  // "Record first": every word that still plays in the computer voice, most useful first. The list is
+  // fixed while the studio is open so rows don't jump away as soon as they're recorded.
+  var studioPriority=null;
+  var PRIORITY_CATS=['phrases','family','food','everyday','actions','body','clothes','house','animals','colors','sounds','shapes','numbers'];
+  function hasRealVoice(lang,key){ if(builtinClip(lang,key)) return true; for(var i=0;i<persons.length;i++){ if(hasCustom(lang,persons[i].id,key)) return true; } return false; }
+  function buildPriority(lang, noCap){
+    var games=buildGames(lang), out=[], seen={};
+    function add(cat,it){ if(!it || !it.key || !it.say || seen[it.key]) return; seen[it.key]=1; if(!hasRealVoice(lang,it.key)) out.push({cat:cat, item:it}); }
+    if(lang===LANG){ todayItems().forEach(function(t){ for(var i=0;i<PRIORITY_CATS.length;i++){ var g=games[PRIORITY_CATS[i]]; if(!g) continue; for(var j=0;j<g.items.length;j++){ if(g.items[j].key===t.key){ add(PRIORITY_CATS[i], g.items[j]); return; } } } }); }
+    PRIORITY_CATS.forEach(function(cat){ var g=games[cat]; if(g) g.items.forEach(function(it){ add(cat,it); }); });
+    return noCap ? out : out.slice(0,40);
+  }
+  function studioPriorityList(){ if(!studioPriority || studioPriority.lang!==studioLang) studioPriority={lang:studioLang, list:buildPriority(studioLang)}; return studioPriority.list; }
   function updateStudioCounts(){
     var cs=gid('studioCat'); if(!cs || !studioPersonId) return;
     var games=buildGames(studioLang), T=TU();
-    for(var i=0;i<cs.options.length;i++){ var cat=cs.options[i].value; cs.options[i].textContent=T.tiles[cat]+' · '+recDoneCount(games,cat)+'/'+games[cat].items.length; }
+    for(var i=0;i<cs.options.length;i++){
+      var cat=cs.options[i].value, items=(cat==='priority') ? studioPriorityList().map(function(x){ return x.item; }) : games[cat].items, n=0;
+      items.forEach(function(it){ if(customIndex[customKey(studioLang,studioPersonId,it.key)]) n++; });
+      cs.options[i].textContent=(T.tiles[cat]||I18N.en.tiles[cat])+' · '+n+'/'+items.length;
+    }
   }
   function nextUnrecorded(afterKey){
     var items=studioItems(); if(!items.length || !studioPersonId) return null;
@@ -3197,9 +3411,9 @@
     // language tabs
     var lt=gid('studioLangs'); lt.innerHTML=''; [['en','EN'],['ar','AR'],['hy','HY'],['es','ES'],['fr','FR']].forEach(function(pair){ var b=document.createElement('button'); b.className='mini'+(studioLang===pair[0]?' vp-done':''); b.textContent=pair[1]; b.addEventListener('click', function(){ stopStudioAuto(); stopRecording(); studioLang=pair[0]; renderStudio(); }); lt.appendChild(b); });
     // category select (with recorded/total counts for this person+language)
-    var cs=gid('studioCat'); cs.innerHTML=''; studioCats().forEach(function(cat){ var o=document.createElement('option'); o.value=cat; o.textContent=T.tiles[cat]; if(cat===studioCat) o.selected=true; cs.appendChild(o); });
+    var cs=gid('studioCat'); cs.innerHTML=''; studioCats().forEach(function(cat){ var o=document.createElement('option'); o.value=cat; o.textContent=T.tiles[cat]||I18N.en.tiles[cat]; if(cat===studioCat) o.selected=true; cs.appendChild(o); });
     updateStudioCounts();
-    cs.onchange=function(){ stopStudioAuto(); stopRecording(); studioCat=cs.value; updateStudioHint(); renderRecList(); };
+    cs.onchange=function(){ stopStudioAuto(); stopRecording(); studioCat=cs.value; studioPriority=null; updateStudioCounts(); updateStudioHint(); renderRecList(); };
     // record-all toggle
     var ab=gid('studioAutoBtn');
     ab.textContent=T.enh.recAll||I18N.en.enh.recAll;
@@ -3221,7 +3435,8 @@
   }
   function updateStudioHint(){
     var hint=gid('studioLangHint');
-    var photoable = ['letters','numbers','colors','phrases','sounds'].indexOf(studioCat)<0;
+    if(studioCat==='priority'){ hint.textContent='⭐ '+(studioPriorityList().length ? gs('priorityHint') : gs('priorityDone'))+(studioLang==='ar' ? ' 🇱🇧 '+gs('studioAr') : ''); hint.style.display=''; return; }
+    var photoable = ['letters','numbers','colors','phrases','sounds','actions'].indexOf(studioCat)<0;
     var ph = photoable ? ' '+gs('photoHint') : '';
     if(studioLang==='ar'){ hint.textContent='🇱🇧 '+gs('studioAr')+ph; hint.style.display=''; }
     else if(!catHasBuiltin(studioLang,studioCat)){ hint.textContent='💡 '+TG().recHint+ph; hint.style.display=''; }
@@ -3231,8 +3446,7 @@
   function renderRecList(){
     var list=gid('recList'); list.innerHTML='';
     if(!studioPersonId){ var note=document.createElement('p'); note.className='vp-tip'; note.style.textAlign='center'; note.textContent=TU().enh.addSub; list.appendChild(note); return; }
-    var games=buildGames(studioLang); var g=games[studioCat]; if(!g) return;
-    g.items.forEach(function(item){
+    studioItems().forEach(function(item){
       var ck=customKey(studioLang, studioPersonId, item.key);
       var row=document.createElement('div'); row.className='recItem';
       var word=document.createElement('div'); word.className='rword';
@@ -3257,7 +3471,7 @@
         if(recordingKey){ stopRecording(); }
         startRecItem(item);
       });
-      if(canHavePhoto(item, studioCat)){ var cam=document.createElement('button'); cam.className='iconBtn cam'+(hasWordPhoto(item.key)?' has':''); cam.textContent='\u{1F4F7}'; cam.setAttribute('aria-label', gs('photoTake')); cam.addEventListener('click', function(){ openWordPhoto(item); }); row.appendChild(cam); }
+      if(canHavePhoto(item, studioCatOf(item))){ var cam=document.createElement('button'); cam.className='iconBtn cam'+(hasWordPhoto(item.key)?' has':''); cam.textContent='\u{1F4F7}'; cam.setAttribute('aria-label', gs('photoTake')); cam.addEventListener('click', function(){ openWordPhoto(item); }); row.appendChild(cam); }
       row.appendChild(play); row.appendChild(del); row.appendChild(rec);
       list.appendChild(row);
     });
@@ -3335,7 +3549,8 @@
     segRow(box,g.choices, [{label:'2',val:2},{label:'3',val:3},{label:'4',val:4}], s.choices, function(v){ setSetting('choices',v); renderOptRows(); });
     segRow(box,g.speed, [{label:g.normal,val:'normal'},{label:g.slow,val:'slow'}], s.speed, function(v){ setSetting('speed',v); renderOptRows(); });
     var biOpts=[{label:g.off,val:'off'}]; visibleLangs().forEach(function(l){ if(l.code!==LANG) biOpts.push({label:l.name,val:l.code}); });
-    segRow(box,g.alsoSay, biOpts, s.bilingual, function(v){ setSetting('bilingual',v); renderOptRows(); });
+    segRow(box,g.alsoSay+' · '+langName(LANG), biOpts, biSetting(), function(v){ settings().biByLang[LANG]=v; flushPD(); renderOptRows(); });
+    if(LANG==='ar'){ var en=document.createElement('p'); en.className='vp-tip'; en.style.cssText='text-align:start;margin:0 0 8px;'; en.textContent=gs('echoNoteAr'); box.appendChild(en); }
     segRow(box,g.counting, [{label:'1–10',val:10},{label:'1–20',val:20}], s.countMax, function(v){ setSetting('countMax',v); renderOptRows(); });
     segRow(box,g.countAloud, [{label:g.off,val:false},{label:g.on,val:true}], !!s.countAloud, function(v){ setSetting('countAloud',v); renderOptRows(); });
     segRow(box,g.sfx, [{label:g.on,val:true},{label:g.off,val:false}], !!s.sounds, function(v){ setSetting('sounds',v); renderOptRows(); });
@@ -3439,6 +3654,7 @@
     gid('parentSub').textContent=g.current+' '+((p.name||'').trim()||g.noname)+' '+p.emoji;
     gid('pmRecord').innerHTML='<span class="pmemo">🎙️</span>'+g.record;
     gid('pmSongs').innerHTML='<span class="pmemo">🎵</span>'+g.songs;
+    gid('pmStories').innerHTML='<span class="pmemo">📸</span>'+gs('stories');
     gid('pmSettings').innerHTML='<span class="pmemo">⚙️</span>'+g.settings;
     gid('pmDash').innerHTML='<span class="pmemo">📊</span>'+g.progress;
     gid('pmProfiles').innerHTML='<span class="pmemo">🧒</span>'+g.children;
@@ -3459,6 +3675,7 @@
   function chipVisual(key){
     for(var i=0;i<ANIMALS.length;i++){ if(ANIMALS[i].key===key) return {text:ANIMALS[i].render.emoji}; }
     for(var s=0;s<SOUNDS.length;s++){ if(SOUNDS[s].key===key) return chipVisual(SOUNDS[s].animal); }
+    for(var a=0;a<ACTIONS.length;a++){ if(ACTIONS[a].key===key) return {text:emo(ACTIONS[a].emoji)}; }
     var hcb=HOUSE.concat(CLOTHES).concat(BODY).concat(FOOD).concat(FAMILY).concat(EVERYDAY);
     for(var h=0;h<hcb.length;h++){ if(hcb[h].key===key) return {text:hcb[h].render.emoji||hcb[h].render.chip}; }
     for(var j=0;j<COLORS.length;j++){ if(COLORS[j].key===key) return {text:'●', color:COLORS[j].render.color}; }
@@ -3503,7 +3720,10 @@
     gid('dashClose').textContent=g.done;
     var p=curProfile(); gid('dashSub').textContent=((p.name||'').trim()||g.thisChild)+' '+p.emoji;
     var grid=gid('statGrid'); grid.innerHTML='';
+    var saidN=Object.keys(langMap(PD.said)).length, saidMap=langMap(PD.said), echoN=Object.keys(langMap(PD.echoed)).filter(function(k){ return !(saidMap[k]>0); }).length;
     function stat(num,lbl){ var c=document.createElement('div'); c.className='statCard'; var n=document.createElement('div'); n.className='num'; n.textContent=String(num); var l=document.createElement('div'); l.className='lbl'; l.textContent=String(lbl); c.appendChild(n); c.appendChild(l); grid.appendChild(c); }
+    stat(saidN, gs('saidStat'));
+    stat(echoN, gs('echoStat'));
     stat(loadStickers().length,g.stickers);
     stat((PD.streak||0),g.dayStreak);
     stat(fmtMins(timeTodaySecs()),g.minToday);
@@ -3511,10 +3731,11 @@
     var tItems=todayItems(), tRec=todayRecord(), tN=0; tItems.forEach(function(it){ if(tRec.heard[it.key]) tN++; });
     stat(tRec.done ? '✓' : (tN+'/'+tItems.length), gs('todayStat'));
     stat((PD.todayCount||0), gs('daysDone'));
+    renderSaidChips();
     renderWordChips();
     renderVoiceCoverage();
     var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(+cc[k]>maxc) maxc=+cc[k]; }
-    var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','find','sounds','feed','count','memory','trace'];
+    var order=['say','act','stories','letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','find','sounds','feed','count','memory','trace'];
     order.forEach(function(cat){ var v=+cc[cat]||0; if(v<=0) return; var row=document.createElement('div'); row.className='barRow';
       var bl=document.createElement('span'); bl.className='bl'; bl.textContent=TU().tiles[cat]||cat;
       var tr=document.createElement('span'); tr.className='barTrack'; var fill=document.createElement('span'); fill.className='barFill'; fill.style.width=Math.min(100,Math.round(v/maxc*100))+'%';
@@ -3610,7 +3831,7 @@
       return chain.then(function(){
         flushPD();
         var prof={}; profilesArr.forEach(function(p){ prof[p.id]=loadPData(p.id); });
-        var data={ v:2, persons:persons, profiles:profilesArr, profileData:prof, hiddenLangs:getHidden(), songNames:songNames(),
+        var data={ v:2, persons:persons, profiles:profilesArr, profileData:prof, hiddenLangs:getHidden(), songNames:songNames(), storyNames:storyNames(),
           prefs:{ grownupLang:grownupLangPref(), activePerson:activePersonId, curProfile:curProfileId }, clips:clips };
         var blob=new Blob([JSON.stringify(data)],{type:'application/json'});
         var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='tiny-hands-backup.json'; document.body.appendChild(a); a.click();
@@ -3659,6 +3880,7 @@
     if([2,3,4].indexOf(o.choices)>=0) d.choices=o.choices;
     if(o.speed==='normal'||o.speed==='slow') d.speed=o.speed;
     if(o.bilingual==='off'||BK_LANGS.indexOf(o.bilingual)>=0) d.bilingual=o.bilingual;
+    if(o.biByLang && typeof o.biByLang==='object' && !Array.isArray(o.biByLang)){ d.biByLang={}; BK_LANGS.forEach(function(l){ var v=o.biByLang[l]; if(v==='off'||BK_LANGS.indexOf(v)>=0) d.biByLang[l]=v; }); }
     if(o.countMax===9||o.countMax===10) d.countMax=10; else if(o.countMax===20) d.countMax=20;
     ['lefty','bigText','sounds','countAloud','latin'].forEach(function(f){ if(typeof o[f]==='boolean') d[f]=o[f]; });
     return d;
@@ -3674,6 +3896,7 @@
     if(Array.isArray(o.stickers)) d.stickers=o.stickers.filter(function(x){ return STICKER_SET.indexOf(x)>=0; }).slice(0,5000);
     var WK=/^(?:[a-z]{2}\|)?[^<>&"'|]{1,64}$/;
     d.miss=bkCountMap(o.miss, WK, 1e6); d.right=bkCountMap(o.right, WK, 1e6); d.heard=bkCountMap(o.heard, WK, 1e6);
+    d.said=bkCountMap(o.said, WK, 1e6); d.echoed=bkCountMap(o.echoed, WK, 1e6); d.saidOn=bkCountMap(o.saidOn, WK, 1e13); d.echoOn=bkCountMap(o.echoOn, WK, 1e13);
     d.catCounts=bkCountMap(o.catCounts, /^[a-z]{2,12}$/, 1e9);
     d.timeByDate=bkCountMap(o.timeByDate, BK_DATE, 86400);
     if(o.todayLog && typeof o.todayLog==='object' && !Array.isArray(o.todayLog)){
@@ -3691,7 +3914,7 @@
   // Read and validate the whole file first; nothing on the device changes until the parent confirms.
   function planRestore(data){
     if(!data || typeof data!=='object' || Array.isArray(data)) return null;
-    var plan={ persons:bkPersons(data.persons), profiles:bkProfiles(data.profiles), profileData:{}, hiddenLangs:null, songNames:null, prefs:{}, clips:[], skipped:0 };
+    var plan={ persons:bkPersons(data.persons), profiles:bkProfiles(data.profiles), profileData:{}, hiddenLangs:null, songNames:null, storyNames:null, prefs:{}, clips:[], skipped:0 };
     var ids=(plan.profiles||profilesArr).map(function(p){ return p.id; });
     if(data.profileData && typeof data.profileData==='object' && !Array.isArray(data.profileData)){
       for(var pid in data.profileData){ var pd=data.profileData[pid]; if(ids.indexOf(pid)>=0 && pd && typeof pd==='object') plan.profileData[pid]=sanitizePD(pd); else plan.skipped++; }
@@ -3699,6 +3922,9 @@
     if(Array.isArray(data.hiddenLangs)) plan.hiddenLangs=data.hiddenLangs.filter(function(l){ return BK_LANGS.indexOf(l)>=0; });
     if(data.songNames && typeof data.songNames==='object' && !Array.isArray(data.songNames)){
       plan.songNames={}; for(var i=1;i<=SONG_SLOTS;i++){ var nm=data.songNames['song'+i]; if(typeof nm==='string' && nm.trim()) plan.songNames['song'+i]=nm.trim().slice(0,40); }
+    }
+    if(data.storyNames && typeof data.storyNames==='object' && !Array.isArray(data.storyNames)){
+      plan.storyNames={}; for(var si=1;si<=STORY_SLOTS;si++){ var snm=data.storyNames['st'+si]; if(typeof snm==='string' && snm.trim()) plan.storyNames['st'+si]=snm.trim().slice(0,40); }
     }
     var pr=data.prefs;
     if(pr && typeof pr==='object'){
@@ -3730,6 +3956,7 @@
       for(var pid in plan.profileData) w.push([pdataKey(pid), JSON.stringify(plan.profileData[pid])]);
       if(plan.hiddenLangs) w.push([HIDDEN_KEY, JSON.stringify(plan.hiddenLangs)]);
       if(plan.songNames) w.push([SONG_NAMES_KEY, JSON.stringify(plan.songNames)]);
+      if(plan.storyNames) w.push([STORY_NAMES_KEY, JSON.stringify(plan.storyNames)]);
       if(plan.prefs.grownupLang) w.push([UILANG_KEY, plan.prefs.grownupLang]);
       if(plan.prefs.activePerson) w.push([ACTIVE_KEY, plan.prefs.activePerson]);
       if(plan.prefs.curProfile) w.push([CURPROF_KEY, plan.prefs.curProfile]);
@@ -3900,6 +4127,7 @@
     learnTitle.textContent=T.todayTitle;
     learnHint.textContent=T.todayHint+'  \u00b7  '+n+'/'+items.length;
     buildLearn('today', items);
+    renderTtsSlot('learnTts', items, 'priority', 'learn');
     learnFrom='home';
     showScreen('learn');
     layoutLearn(); requestAnimationFrame(layoutLearn);
@@ -3919,7 +4147,7 @@
 
   // ---- family-voice coverage: how many of this language's words have a recording ----
   function voiceCoverage(){
-    var cats=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','sounds'], n=0, total=0;
+    var cats=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','actions','sounds'], n=0, total=0;
     cats.forEach(function(cat){ var g=GAMESBYTYPE&&GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ total++; for(var i=0;i<persons.length;i++){ if(hasCustom(LANG,persons[i].id,it.key)){ n++; break; } } }); });
     return {n:n, total:total};
   }
@@ -3934,7 +4162,9 @@
     var line=document.createElement('p'); line.className='vp-tip'; line.style.textAlign='start'; line.style.marginTop='4px';
     line.textContent = (c.n>=c.total && c.total) ? gs('voiceCovDone') : gs('voiceCovSub').replace('{n}', c.n).replace('{total}', c.total);
     box.appendChild(line);
-    if(c.n<c.total){ var btn=document.createElement('button'); btn.className='mini vp-rec'; btn.style.marginTop='10px'; btn.textContent=gs('recordRest'); btn.addEventListener('click', function(){ gid('dashSheet').classList.remove('open'); openStudio('home'); }); box.appendChild(btn); }
+    var ttsN=(LANG==='ar'||LANG==='hy') ? buildPriority(LANG, true).length : 0;
+    if(ttsN){ var tl=document.createElement('p'); tl.className='vp-tip'; tl.style.textAlign='start'; tl.style.marginTop='6px'; tl.textContent=gs('ttsLeft').replace('{n}', ttsN); box.appendChild(tl); }
+    if(c.n<c.total){ var btn=document.createElement('button'); btn.className='mini vp-rec'; btn.style.marginTop='10px'; btn.textContent=ttsN ? gs('recordFirst') : gs('recordRest'); btn.addEventListener('click', function(){ gid('dashSheet').classList.remove('open'); openStudio('home', ttsN ? 'priority' : null); }); box.appendChild(btn); }
     var pc=photoCoverage(), ppct=pc.total?Math.round(pc.n/pc.total*100):0;
     var pt=document.createElement('div'); pt.className='settingsGroupTitle'; pt.textContent=gs('photoCov'); box.appendChild(pt);
     var prow=document.createElement('div'); prow.className='barRow';
@@ -3946,7 +4176,7 @@
   }
 
   // ---- grown-ups' cheat sheet: every word (and everyday phrases) with how to say it ----
-  var CHEAT_CATS=['everyday','family','food','animals','sounds','colors','shapes','house','clothes','body','numbers','letters'];
+  var CHEAT_CATS=['everyday','actions','family','food','animals','sounds','colors','shapes','house','clothes','body','numbers','letters'];
   function openCheat(){
     var sheet=gid('cheatSheet'); sheet.setAttribute('dir', TU().dir);
     gid('cheatTitle').textContent='\u{1F4D6} '+(LANG==='ar' ? gs('cheatTitle') : gs('cheatTitleGen'));
@@ -4128,7 +4358,7 @@
   for(var ss=0;ss<MAX_STARS;ss++){ var sst=document.createElement('span'); sst.className='star'; sst.textContent=emo(0x2B50); sceneStarsEl.appendChild(sst); }
   function paintSceneStars(){ var n=sceneStarsEl.children; for(var i=0;i<n.length;i++){ if(i<sceneStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
   function findItemByKey(key){
-    var cats=['animals','colors','shapes','house','clothes','body','food','family','everyday','sounds','phrases'];
+    var cats=['animals','colors','shapes','house','clothes','body','food','family','everyday','sounds','phrases','actions'];
     for(var i=0;i<cats.length;i++){ var g=GAMESBYTYPE[cats[i]]; if(!g) continue; for(var j=0;j<g.items.length;j++){ if(g.items[j].key===key) return g.items[j]; } }
     return null;
   }
@@ -4187,6 +4417,7 @@
       sceneStageEl.appendChild(grid);
     }
     updateSceneGrownup();
+    renderTtsSlot('sceneTts', sceneMode==='sounds' ? pool.map(function(it){ return soundFor(it.key); }) : pool, sceneMode==='sounds' ? 'sounds' : (sceneMode==='feed' ? 'food' : 'priority'), 'scene');
     roundTimers.push(setTimeout(sceneSpeak, 400));
   }
   function updateSceneGrownup(){
@@ -4211,12 +4442,13 @@
       sceneStreak=Math.min(MAX_STARS,sceneStreak+1); paintSceneStars(); bumpCorrect(); clearMiss(item.key); noteRight(item.key); buzz(18);
       playDing();
       if(sceneMode==='feed'){ btn.classList.add('eaten'); var f=gid('babyFace'); if(f) f.classList.add('happy'); }
-      roundTimers.push(setTimeout(function(){ playItem(sceneTarget); }, 450));   // the name, in the family voice
+      var sBravo=pickBravo(), sTgt=sceneTarget;
+      roundTimers.push(setTimeout(function(){ playItem(sTgt, false, sBravo?function(){ playItem(sBravo,true); }:null); }, 450));   // the name, in the family voice
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(sceneStageEl.querySelectorAll('.scard,.loose'),function(c){ c.classList.add('fade'); }); }, 1000));
       roundTimers.push(setTimeout(function(){
         if(sceneStreak>=MAX_STARS){ celebrate(); sceneStreak=0; paintSceneStars(); roundTimers.push(setTimeout(newSceneRound,1400)); }
         else { if(sceneMode==='find' && Math.random()<0.34){ sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; sceneQueue=[]; } newSceneRound(); }
-      }, 1700));
+      }, sBravo?2800:1700));
     } else {
       btn.classList.add('wrong'); buzz(45); noteMiss(sceneTarget.key);
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); btn.classList.add('dimmed'); }, 460));
@@ -4235,6 +4467,419 @@
   gid('sceneBack').addEventListener('click', goMenu);
   gid('sceneNew').addEventListener('click', function(){ if(!sceneLocked){ if(sceneMode==='find'){ sceneRoomIdx=(sceneRoomIdx+1)%ROOMS.length; sceneQueue=[]; } newSceneRound(); } });
   sceneSpeakerEl.addEventListener('click', function(){ clearRoundTimers(); sceneSpeak(); });
+
+  // ============================================================
+  //  SHARED: computer-voice pill · family "bravo" · big picture card
+  // ============================================================
+  // Built-in clips exist for only some words; everything else falls back to the device's speech
+  // engine, which can't say Lebanese (or most Armenian) the way the family does. Say so, and link
+  // straight to the studio.
+  function usesComputerVoice(item){
+    if(!item || !item.key) return false;
+    if(phonicsSay(LANG,item.key,item)) return false;
+    if(builtinClip(LANG,item.key)) return false;
+    return !resolveVoicePerson(LANG,item.key);
+  }
+  var ttsRefresh=null;
+  function renderTtsSlot(slotId, items, cat, ret){
+    var slot=gid(slotId); if(!slot) return;
+    slot.innerHTML='';
+    ttsRefresh=function(){ renderTtsSlot(slotId, items, cat, ret); };
+    if(LANG!=='ar' && LANG!=='hy') return;   // English, Spanish and French device voices are fine
+    var n=0, total=0;
+    (items||[]).forEach(function(it){ if(!it || !it.key) return; total++; if(usesComputerVoice(it)) n++; });
+    if(!n) return;
+    var b=document.createElement('button'); b.className='ttsPill';
+    b.textContent=gs('ttsPill').replace('{n}', n).replace('{total}', total);
+    b.addEventListener('click', function(){ requestParentAccess(function(){ stopGameAudio(); openStudio(ret, cat); }); });
+    slot.appendChild(b);
+  }
+  // "Bravo!" in a family voice after a right answer: the first time, then every third time.
+  var bravoN=0;
+  function pickBravo(){
+    var b=findItemByKey('ph_bravo'); if(!b || !hasAnyRecording(b)) return null;
+    bravoN++; return (bravoN%3===1) ? b : null;
+  }
+  // Quiz prompt: "wen el…?" first when the family recorded it (for things you can point at).
+  var PHRASE_CATS={animals:1, house:1, clothes:1, body:1, food:1, family:1};
+  function speakTarget(){
+    if(!target) return;
+    var ph=PHRASE_CATS[curGameType] ? findItemByKey('ph_where') : null;
+    if(ph && hasAnyRecording(ph)){ var tgt=target; playItem(ph, true, function(){ if(target===tgt && !locked) playItem(tgt); }); }
+    else playItem(target);
+  }
+  function makeStars(el){ for(var i=0;i<MAX_STARS;i++){ var s=document.createElement('span'); s.className='star'; s.textContent=emo(0x2B50); el.appendChild(s); } }
+  function paintStarsIn(el,n){ var c=el.children; for(var i=0;i<c.length;i++) c[i].classList.toggle('on', i<n); }
+  function fillBigCard(card, item){
+    card.innerHTML=''; card.classList.remove('pop'); card.style.background='';
+    card.setAttribute('aria-label', item.say||item.key||'');
+    if(hasWordPhoto(item.key)){ card.appendChild(photoImg(item.key,'bigPhoto')); return; }
+    var r=item.render||{};
+    if(r.type==='color'){ card.style.background=r.color; return; }
+    if(r.type==='shape'){ var sh=document.createElement('span'); sh.className='cardShape'; sh.innerHTML=r.svg; card.appendChild(sh); return; }
+    var e=document.createElement('span'); e.className='bigEmoji'; e.textContent=(r.type==='emoji') ? r.emoji : (r.label||''); card.appendChild(e);
+  }
+  // Grown-up line: the word, how it sounds, and the English meaning when the controls are in English.
+  function grownupWord(el, item, lead){
+    el.textContent=''; if(!item) return;
+    if(lead) el.appendChild(document.createTextNode(lead+' '));
+    var b=document.createElement('b'); b.textContent=item.say||''; el.appendChild(b);
+    if(item.tr && settings().latin) el.appendChild(document.createTextNode(' · '+item.tr));
+    if(LANG!=='en' && uiLang()==='en'){ var en=item.en || wordFor(item.key,'en'); if(en && en!==item.key && en!==item.say) el.appendChild(document.createTextNode(' ('+en+')')); }
+  }
+
+  // ============================================================
+  //  YOUR TURN: the child names the picture, the grown-up taps when she says it.
+  //  Ask, wait (the bar counts down), then model the word. Saying it alone and saying it after a
+  //  model are counted separately — spoken words, not taps, lead the Progress screen.
+  // ============================================================
+  var SAY_CATS=['animals','food','family','body','clothes','house','colors'], SAY_WAIT_MS=6000;
+  var sayTarget=null, sayHinted=false, sayLocked=false, sayStreak=0, sayRecent=[], sayWaitTimer=null, sayWaitOn=false;
+  var sayStarsEl=gid('sayStars'), actStarsEl=gid('actStars');
+  makeStars(sayStarsEl); makeStars(actStarsEl);
+  var WHATS_THIS={en:'What’s this?', es:'¿Qué es esto?', fr:'C’est quoi ?', hy:'Սա ի՞նչ է'};
+  function askText(){
+    if(LANG==='ar'){ var ph=findItemByKey('ph_what'); return ph ? (ph.say+' · '+ph.tr) : ''; }
+    return WHATS_THIS[LANG]||WHATS_THIS.en;
+  }
+  // The question in a family voice when one is recorded; the device voice only where it sounds right.
+  function playAsk(done){
+    var ph=findItemByKey('ph_what');
+    if(ph && hasAnyRecording(ph)){ playItem(ph, true, done); return; }
+    if(LANG==='en'||LANG==='es'||LANG==='fr'){ var tok=++playToken; biPending=null; playEndCb={tok:tok, fn:done}; speak(WHATS_THIS[LANG], tok); return; }
+    if(done) done();   // no family recording yet: the grown-up asks
+  }
+  function sayPool(){ var out=[]; SAY_CATS.forEach(function(c){ var g=GAMESBYTYPE[c]; if(g) g.items.forEach(function(it){ if(it.say) out.push(it); }); }); return out; }
+  // Favour words she already understands but hasn't said yet, today's words and her own photos.
+  function pickSayTarget(){
+    var pool=sayPool(); if(!pool.length) return null;
+    var right=langMap(PD.right), heard=langMap(PD.heard), said=langMap(PD.said), echo=langMap(PD.echoed), today={};
+    todayItems().forEach(function(t){ today[t.key]=1; });
+    var cand=pool.filter(function(it){ return sayRecent.indexOf(it.key)<0; }); if(!cand.length) cand=pool;
+    var scored=cand.map(function(it){
+      var k=it.key, sc=Math.random()*4;
+      if((right[k]||0)>0 || (heard[k]||0)>2) sc+=6;   // she knows it when she hears it: ready to try saying it
+      if(today[k]) sc+=4;
+      if(hasWordPhoto(k)) sc+=2;                      // her own things are the easiest to name
+      sc-=Math.min(3, said[k]||0)*3;                  // already says it: show it less often
+      if(!(said[k]>0) && (echo[k]||0)>0) sc+=2;       // says it after you: almost there
+      return {it:it, sc:sc};
+    }).sort(function(a,b){ return b.sc-a.sc; });
+    var top=scored.slice(0,6), pick=top[Math.floor(Math.random()*top.length)].it;
+    sayRecent.push(pick.key); if(sayRecent.length>4) sayRecent.shift();
+    return pick;
+  }
+  function clearSayWait(){
+    if(sayWaitTimer){ clearTimeout(sayWaitTimer); sayWaitTimer=null; }
+    sayWaitOn=false;
+    var w=gid('sayWait'); if(w) w.classList.remove('run');
+  }
+  function startSayWait(){
+    if(sayWaitOn || sayLocked || sayHinted || !gid('say').classList.contains('active')) return;
+    clearSayWait(); sayWaitOn=true;
+    var w=gid('sayWait'); void w.offsetWidth; w.style.setProperty('--wait', (SAY_WAIT_MS/1000)+'s'); w.classList.add('run');
+    sayWaitTimer=setTimeout(function(){ sayWaitTimer=null; if(!sayLocked && !sayHinted) sayModel(); }, SAY_WAIT_MS);
+  }
+  // The model: say the word so she can copy it. After this, ✓ counts as "said it after you".
+  function sayModel(){
+    if(!sayTarget || sayLocked) return;
+    clearSayWait(); clearRoundTimers();
+    sayHinted=true; updateSaidBtn();
+    playItem(sayTarget);
+  }
+  function updateSaidBtn(){ var b=gid('saySaid'); b.textContent = sayHinted ? gs('sayEcho') : gs('saySaid'); b.classList.toggle('echo', sayHinted); }
+  function newSayRound(){
+    if(limitReached()) return;
+    clearSayWait(); clearRoundTimers();
+    sayLocked=false; sayHinted=false; updateSaidBtn();
+    sayTarget=pickSayTarget(); if(!sayTarget) return;
+    fillBigCard(gid('sayCard'), sayTarget);
+    var q=askText(); gid('sayAsk').textContent = q ? gs('askLine').replace('{q}', q) : '';
+    grownupWord(gid('sayWord'), sayTarget);
+    renderTtsSlot('sayTts', sayPool(), 'priority', 'say');
+    var tgt=sayTarget;
+    roundTimers.push(setTimeout(function(){ if(sayTarget===tgt) playAsk(function(){ if(sayTarget===tgt) startSayWait(); }); }, 450));
+    roundTimers.push(setTimeout(function(){ if(sayTarget===tgt) startSayWait(); }, 3500));   // in case the voice never reports it finished
+  }
+  function noteSaid(key, own){
+    var k=pk(key), now=Date.now();
+    if(own){ PD.said=PD.said||{}; PD.said[k]=(PD.said[k]||0)+1; PD.saidOn=PD.saidOn||{}; if(!PD.saidOn[k]) PD.saidOn[k]=now; }
+    else { PD.echoed=PD.echoed||{}; PD.echoed[k]=(PD.echoed[k]||0)+1; PD.echoOn=PD.echoOn||{}; if(!PD.echoOn[k]) PD.echoOn[k]=now; }
+    flushPD();
+  }
+  function onSaySaid(){
+    if(!sayTarget || sayLocked) return;
+    sayLocked=true; clearSayWait(); clearRoundTimers();
+    noteSaid(sayTarget.key, !sayHinted);
+    sayStreak=Math.min(MAX_STARS, sayStreak+1); paintStarsIn(sayStarsEl, sayStreak); bumpCorrect(); buzz(18); playDing();
+    gid('sayCard').classList.add('pop');
+    var tgt=sayTarget, bravo=pickBravo();
+    // say it back: confirms the word in the family voice, and recasts it if she said it her own way
+    roundTimers.push(setTimeout(function(){ playItem(tgt, false, bravo?function(){ playItem(bravo,true); }:null); }, 450));
+    roundTimers.push(setTimeout(function(){
+      if(sayStreak>=MAX_STARS){ celebrate(); sayStreak=0; paintStarsIn(sayStarsEl,0); roundTimers.push(setTimeout(newSayRound,1400)); }
+      else newSayRound();
+    }, bravo?2900:1900));
+  }
+  function launchSay(){
+    stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
+    noteCategory('say'); sayStreak=0; paintStarsIn(sayStarsEl,0); sayRecent=[];
+    var T=TU();
+    gid('sayBack').textContent=T.back; gid('sayPrompt').textContent=T.prompts.say||'';
+    gid('sayHint').textContent=gs('sayHint'); gid('sayNext').textContent=gs('sayNext');
+    showScreen('say'); newSayRound();
+  }
+  gid('sayBack').addEventListener('click', goMenu);
+  gid('sayCard').addEventListener('click', sayModel);   // a tap on the picture asks for the word
+  gid('sayHint').addEventListener('click', sayModel);
+  gid('saySaid').addEventListener('click', onSaySaid);
+  gid('sayNext').addEventListener('click', function(){ if(!sayLocked) newSayRound(); });
+
+  // ============================================================
+  //  DO IT: hear a command, do it (clap, jump, dance…) — or hear "wen el…?" and point to it on
+  //  her own body. The grown-up taps ✓ when she does it.
+  // ============================================================
+  var actTarget=null, actIsBody=false, actLocked=false, actStreak=0, actRecent=[];
+  function actPool(){ return (GAMESBYTYPE.actions && GAMESBYTYPE.actions.items) || []; }
+  function bodyPool(){ return GAMESBYTYPE.body.items.filter(function(it){ return !!it.say; }); }
+  function pickAct(){
+    var acts=actPool(), body=bodyPool();
+    var useBody = !acts.length || (body.length>0 && Math.random()<0.3);
+    var src = useBody ? body : acts; if(!src.length) return null;
+    var cand=src.filter(function(it){ return actRecent.indexOf(it.key)<0; }); if(!cand.length) cand=src;
+    var it=cand[Math.floor(Math.random()*cand.length)];
+    actRecent.push(it.key); if(actRecent.length>4) actRecent.shift();
+    actIsBody=useBody; return it;
+  }
+  function actSpeak(){
+    if(!actTarget) return;
+    clearRoundTimers();
+    if(actIsBody){
+      var ph=findItemByKey('ph_where'), tgt=actTarget;
+      if(ph && hasAnyRecording(ph)){ playItem(ph, true, function(){ if(actTarget===tgt && !actLocked) playItem(tgt); }); return; }
+      if(LANG==='en' && !hasAnyRecording(tgt)){ var tok=++playToken; biPending=null; playEndCb=null; noteWordHeard(tgt.key); speak('Where is your '+tgt.say+'?', tok); return; }
+    }
+    playItem(actTarget);
+  }
+  function newActRound(){
+    if(limitReached()) return;
+    clearRoundTimers(); actLocked=false;
+    actTarget=pickAct(); if(!actTarget) return;
+    var card=gid('actCard'); fillBigCard(card, actTarget); card.classList.toggle('bounce', !actIsBody);
+    grownupWord(gid('actWord'), actTarget, actIsBody ? gs('actPoint') : '');
+    renderTtsSlot('actTts', actPool().concat(bodyPool()), 'actions', 'act');
+    roundTimers.push(setTimeout(actSpeak, 450));
+  }
+  function onActDid(){
+    if(!actTarget || actLocked) return;
+    actLocked=true; clearRoundTimers();
+    noteRight(actTarget.key); bumpCorrect(); buzz(18); playDing();
+    actStreak=Math.min(MAX_STARS, actStreak+1); paintStarsIn(actStarsEl, actStreak);
+    gid('actCard').classList.add('pop');
+    var bravo=pickBravo();
+    if(bravo) roundTimers.push(setTimeout(function(){ playItem(bravo,true); }, 500));
+    roundTimers.push(setTimeout(function(){
+      if(actStreak>=MAX_STARS){ celebrate(); actStreak=0; paintStarsIn(actStarsEl,0); roundTimers.push(setTimeout(newActRound,1400)); }
+      else newActRound();
+    }, bravo?2600:1400));
+  }
+  function launchAct(){
+    stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
+    noteCategory('act'); actStreak=0; paintStarsIn(actStarsEl,0); actRecent=[];
+    var T=TU();
+    gid('actBack').textContent=T.back; gid('actPrompt').textContent=T.prompts.act||'';
+    gid('actAgain').textContent=gs('actAgain'); gid('actDid').textContent=gs('actDid'); gid('actNext').textContent=gs('actNext');
+    showScreen('act'); newActRound();
+  }
+  gid('actBack').addEventListener('click', goMenu);
+  gid('actCard').addEventListener('click', actSpeak);
+  gid('actAgain').addEventListener('click', actSpeak);
+  gid('actDid').addEventListener('click', onActDid);
+  gid('actNext').addEventListener('click', function(){ if(!actLocked) newActRound(); });
+
+  // ============================================================
+  //  PHOTO STORIES: up to 4 little books, 8 pages each. Each page is a family photo
+  //  (wphoto|stNpM, shared by every language) and a narration recorded per language
+  //  (rec|<lang>|story|stNpM). No computer voice here: a page without a recording is quiet.
+  // ============================================================
+  var STORY_SLOTS=4, STORY_PAGES=8, STORY_NAMES_KEY='tinyHandsStoryNames';
+  var stEdit=1, storyCur=0, storyPageIdx=0, storyPageList=[];
+  function storyNames(){ try{ var m=JSON.parse(lsGet(STORY_NAMES_KEY)); return (m&&typeof m==='object'&&!Array.isArray(m))?m:{}; }catch(e){ return {}; } }
+  function setStoryName(slot,name){ var m=storyNames(); if(name) m['st'+slot]=String(name).slice(0,40); else delete m['st'+slot]; lsSet(STORY_NAMES_KEY, JSON.stringify(m)); }
+  function storyTitle(s){ return storyNames()['st'+s] || gs('stName').replace('{n}', s); }
+  function pageKey(s,p){ return 'st'+s+'p'+p; }
+  function storyRecKey(key){ return customKey(LANG,'story',key); }
+  function storyPages(s){ var out=[]; for(var p=1;p<=STORY_PAGES;p++){ if(hasWordPhoto(pageKey(s,p))) out.push(p); } return out; }
+
+  // ---- grown-up editor (sheet) ----
+  function openStoryEditor(){ stopGameAudio(); renderStoryEditor(); gid('storySheet').classList.add('open'); }
+  function closeStoryEditor(){
+    stopRecording(); stopAllAudio();
+    var nm=gid('stName'); if(nm) setStoryName(stEdit, (nm.value||'').trim());
+    gid('storySheet').classList.remove('open');
+    if(gid('stories').classList.contains('active') && !storyCur) renderStoryPicker();
+  }
+  function renderStoryEditor(){
+    var g=TG(), sheet=gid('storySheet');
+    sheet.setAttribute('dir', TU().dir);
+    gid('stTitle').textContent=gs('stTitle');
+    gid('stSub').textContent=gs('stSub');
+    gid('stLang').textContent=gs('stLang').replace('{lang}', langName(LANG));
+    gid('stTip').textContent=gs('stTip');
+    gid('stClose').textContent=g.done;
+    var chips=gid('stChips'); chips.innerHTML='';
+    for(var s=1;s<=STORY_SLOTS;s++){ (function(s){
+      var b=document.createElement('button'); b.className='pchip'+(s===stEdit?' active':'');
+      b.textContent=storyTitle(s)+' · '+storyPages(s).length;
+      b.addEventListener('click', function(){ var nm=gid('stName'); setStoryName(stEdit, (nm.value||'').trim()); stopRecording(); stEdit=s; renderStoryEditor(); });
+      chips.appendChild(b);
+    })(s); }
+    var name=gid('stName'); name.value=storyNames()['st'+stEdit]||''; name.placeholder=gs('stNamePh');
+    name.onchange=function(){ setStoryName(stEdit, (name.value||'').trim()); renderStoryChipsOnly(); };
+    var list=gid('stPages'); list.innerHTML='';
+    var last=0; for(var p=1;p<=STORY_PAGES;p++){ if(hasWordPhoto(pageKey(stEdit,p)) || customIndex[storyRecKey(pageKey(stEdit,p))]) last=p; }
+    var shown=Math.min(STORY_PAGES, last+1);
+    for(var q=1;q<=shown;q++){ (function(p){
+      var key=pageKey(stEdit,p), ck=storyRecKey(key), hasPh=hasWordPhoto(key), hasRec=!!customIndex[ck];
+      var row=document.createElement('div'); row.className='stPage';
+      var th=document.createElement('button'); th.className='stThumb'; th.setAttribute('aria-label', gs('photoTake'));
+      if(hasPh) th.appendChild(photoImg(key,'')); else th.textContent='\u{1F4F7}';
+      th.addEventListener('click', function(){ pickStoryPhoto(key); });
+      var lb=document.createElement('span'); lb.className='stLabel'; lb.textContent=gs('stPage').replace('{n}', p);
+      var play=document.createElement('button'); play.className='iconBtn'+(hasRec?'':' hidden'); play.textContent='▶';
+      play.addEventListener('click', function(){ idbGet(ck).then(function(b){ if(b){ stopAllAudio(); playBlob(b,'cust|'+ck); } }); });
+      var del=document.createElement('button'); del.className='iconBtn'+((hasPh||hasRec)?'':' hidden'); del.textContent='\u{1F5D1}️';
+      del.addEventListener('click', function(){
+        if(!window.confirm(gs('stDelPage'))) return;
+        var jobs=[];
+        if(hasPh) jobs.push(deleteWordPhoto(key).catch(function(){}));
+        if(hasRec) jobs.push(idbDelete(ck).then(function(){ delete customIndex[ck]; delete waBufCache['cust|'+ck]; }).catch(function(){}));
+        Promise.all(jobs).then(renderStoryEditor);
+      });
+      var rec=document.createElement('button'); rec.className='recBtn'+(hasRec?' has':'')+(recordingKey===ck?' recording':''); rec.textContent=(recordingKey===ck)?'■':'●';
+      rec.addEventListener('click', function(){
+        if(recordingKey===ck){ stopRecording(); return; }
+        if(!recordingKey && Date.now()-lastRecStopAt<500) return;
+        if(recordingKey) stopRecording();
+        startRecording(LANG, 'story', key, function(state){
+          if(state==='denied') showTransientToast(TU().enh.tipDenied);
+          else if(state==='unsupported') showTransientToast(TU().enh.tipUnsupported);
+          if(gid('storySheet').classList.contains('open')) renderStoryEditor();
+        }, 30000);
+      });
+      row.appendChild(th); row.appendChild(lb); row.appendChild(play); row.appendChild(del); row.appendChild(rec);
+      list.appendChild(row);
+    })(q); }
+  }
+  function renderStoryChipsOnly(){ var c=gid('stChips').children; for(var i=0;i<c.length;i++){ c[i].textContent=storyTitle(i+1)+' · '+storyPages(i+1).length; } }
+  function pickStoryPhoto(key){
+    var inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+    inp.addEventListener('change', function(){
+      var f=inp.files&&inp.files[0]; if(!f) return;
+      shrinkImage(f, 1280).then(function(blob){ return setWordPhoto(key, blob); })
+        .then(function(){ renderStoryEditor(); showTransientToast(gs('photoSaved')); })
+        .catch(function(){ showTransientToast(gs('photoFail')); });
+    });
+    inp.click();
+  }
+
+  // ---- child's reader ----
+  function openStories(){
+    stopGameAudio(); noteCategory('stories');
+    gid('storiesBack').textContent=TU().back;
+    gid('storiesTitle').textContent=TU().tiles.stories;
+    var rtl=TU().dir==='rtl';
+    gid('storyPrev').textContent=rtl?'▶':'◀'; gid('storyNext').textContent=rtl?'◀':'▶';
+    storyCur=0; renderStoryPicker();
+    showScreen('stories');
+  }
+  function storyShow(picker){
+    gid('storyGrid').style.display=picker?'':'none';
+    gid('storyPage').style.display=picker?'none':'';
+    gid('storyNav').style.display=picker?'none':'';
+    gid('storyTip').style.display=picker?'none':'';
+  }
+  function renderStoryPicker(){
+    storyCur=0; storyShow(true);
+    var grid=gid('storyGrid'), empty=gid('storyEmpty'); grid.innerHTML=''; empty.innerHTML='';
+    var any=false;
+    for(var s=1;s<=STORY_SLOTS;s++){ (function(s){
+      var pages=storyPages(s); if(!pages.length) return; any=true;
+      var b=document.createElement('button'); b.className='storyCover'; b.setAttribute('aria-label', storyTitle(s));
+      b.appendChild(photoImg(pageKey(s,pages[0]),''));
+      var nm=document.createElement('span'); nm.className='scName'; nm.textContent=storyTitle(s); b.appendChild(nm);
+      b.addEventListener('click', function(){ openStory(s); });
+      grid.appendChild(b);
+    })(s); }
+    grid.style.display=any?'':'none';
+    empty.style.display=any?'none':'';
+    if(!any){
+      var big=document.createElement('div'); big.className='big'; big.textContent='\u{1F4F8}'; empty.appendChild(big);
+      var t=document.createElement('p'); t.style.margin='0'; t.textContent=gs('storyEmpty'); empty.appendChild(t);
+      var mk=document.createElement('button'); mk.className='mini vp-rec'; mk.textContent=gs('storyMake');
+      mk.addEventListener('click', function(){ requestParentAccess(openStoryEditor); });
+      empty.appendChild(mk);
+    }
+  }
+  function openStory(s){
+    if(limitReached()) return;
+    storyPageList=storyPages(s); if(!storyPageList.length) return;
+    storyCur=s; storyPageIdx=0;
+    gid('storyEmpty').style.display='none'; storyShow(false);
+    gid('storyTip').textContent=gs('storyTip');
+    showStoryPage();
+  }
+  function showStoryPage(){
+    var p=storyPageList[storyPageIdx], box=gid('storyPage'); box.innerHTML='';
+    box.appendChild(photoImg(pageKey(storyCur,p),''));
+    var dots=gid('storyDots'); dots.innerHTML='';
+    storyPageList.forEach(function(_,i){ var d=document.createElement('span'); if(i===storyPageIdx) d.className='on'; dots.appendChild(d); });
+    gid('storyPrev').disabled = storyPageIdx===0;
+    playStoryPage();
+  }
+  function playStoryPage(){
+    var p=storyPageList[storyPageIdx]; if(p==null) return;
+    var ck=storyRecKey(pageKey(storyCur,p)), tok=++playToken;
+    playEndCb=null; biPending=null; stopAllAudio();
+    if(!customIndex[ck]) return;
+    idbGet(ck).then(function(b){ if(tok!==playToken) return; if(b) playBlob(b,'cust|'+ck,tok); }).catch(function(){});
+  }
+  gid('storyPrev').addEventListener('click', function(){ if(storyPageIdx>0){ storyPageIdx--; showStoryPage(); } });
+  gid('storyNext').addEventListener('click', function(){
+    if(storyPageIdx<storyPageList.length-1){ storyPageIdx++; showStoryPage(); }
+    else { stopGameAudio(); renderStoryPicker(); }   // the end: back to the bookshelf
+  });
+  gid('storySpeaker').addEventListener('click', playStoryPage);
+  gid('storyPage').addEventListener('click', playStoryPage);
+  gid('storiesBack').addEventListener('click', function(){ if(storyCur){ stopGameAudio(); renderStoryPicker(); } else goMenu(); });
+  gid('pmStories').addEventListener('click', function(){ closeParent(); openStoryEditor(); });
+  gid('stClose').addEventListener('click', closeStoryEditor);
+  gid('storySheet').addEventListener('click', function(e){ if(e.target===gid('storySheet')) closeStoryEditor(); });
+
+  // ---- Progress: words said out loud (the number that matters most) ----
+  function renderSaidChips(){
+    var box=gid('saidChips'); if(!box) return; box.innerHTML='';
+    gid('dashSaidTitle').textContent=gs('saidTitle');
+    var own=langMap(PD.said), echo=langMap(PD.echoed), ownOn=langMap(PD.saidOn), echoOn=langMap(PD.echoOn);
+    var ownKeys=Object.keys(own).filter(function(k){ return own[k]>0; }).sort(function(a,b){ return (ownOn[b]||0)-(ownOn[a]||0); });
+    var echoKeys=Object.keys(echo).filter(function(k){ return echo[k]>0 && !(own[k]>0); }).sort(function(a,b){ return (echoOn[b]||0)-(echoOn[a]||0); });
+    function row(label, keys){
+      if(!keys.length) return;
+      var sub=document.createElement('div'); sub.className='wsub'; sub.textContent=label+' · '+keys.length; box.appendChild(sub);
+      var r=document.createElement('div'); r.className='wchips';
+      keys.slice(0,30).forEach(function(k){
+        var chip=document.createElement('span'); chip.className='wchip said';
+        var vis=chipVisual(k), word=wordFor(k, LANG);
+        var v=document.createElement('span'); v.className='wv'; v.textContent=vis.text; if(vis.color) v.style.color=vis.color; chip.appendChild(v);
+        if(word && word!==vis.text) chip.appendChild(document.createTextNode(word));
+        r.appendChild(chip);
+      });
+      box.appendChild(r);
+    }
+    row(gs('saidOwn'), ownKeys);
+    row(gs('saidEcho'), echoKeys);
+    if(!ownKeys.length && !echoKeys.length){ var e=document.createElement('p'); e.className='vp-tip'; e.style.textAlign='start'; e.textContent=gs('saidNone'); box.appendChild(e); }
+  }
 
   // ---- mascot ----
   function setMascot(){ var m=gid('mascot'); if(!m) return; var em=curProfile().emoji||'🐣'; m.textContent=em; }
@@ -4273,7 +4918,7 @@
   function wireEnhancements(){
     // record voices (from the in-game voice panel)
     gid('recOpen').addEventListener('click', function(){ voicePanel.classList.remove('open'); requestParentAccess(function(){ openStudio('game'); }); });
-    gid('studioBack').addEventListener('click', function(){ stopStudioAuto(); stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); });
+    gid('studioBack').addEventListener('click', function(){ stopStudioAuto(); stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); else if(ttsRefresh) ttsRefresh(); });
     // home corner buttons
     gid('grownupsFab').addEventListener('click', function(){ requestParentAccess(openParent); });
     gid('settingsFab').addEventListener('click', function(){ requestParentAccess(openSettings); });
