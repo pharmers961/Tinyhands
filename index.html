@@ -1419,6 +1419,13 @@
       timeUp:'That’s enough for today — see you tomorrow!',
       cheat:'Cheat sheet', cheatTitle:'Lebanese cheat sheet', cheatTitleGen:'Word list', cheatSub:'Everything the app teaches, with how to say it. Keep it handy at meals, bath time and getting dressed — that’s where the words stick.', cheatPhrases:'Everyday phrases', cheatPrint:'🖨️ Print', cheatRec:'▶ plays a family recording when one exists, otherwise a device voice.',
       remind:'Daily reminder', remindTitle:'A little Arabic every day', remindSub:'Two minutes a day beats an hour on Sunday. Pick a time and add a repeating reminder to the calendar you actually look at.', remindTime:'Remind me at', remindAdd:'💾 Save a calendar file (Apple Calendar and others)', remindTip:'The file (.ics) works with Apple Calendar and most others: on iPhone tap it and choose Add to Calendar. Or simply set a daily phone alarm named “Arabic with {name}”.', remindSaved:'Reminder file ready ✓',
+      bkPreview:'This backup has {kids} children, {voices} family voices and {clips} recordings/photos. Restoring replaces the children, progress and settings on this device and adds the recordings. Continue?',
+      bkSkipped:'{n} items in the file were not valid and will be skipped.',
+      bkPartial:'Restore failed. Your children, progress and settings were not changed.',
+      bkExportPartial:'Backup saved, but {n} recordings could not be read and are missing from it.',
+      bkEraseFail:'Could not delete everything. Please try again.',
+      bkEraseBlocked:'Close Tiny Hands in any other tabs or windows to finish deleting.',
+      offlineReady:'Tiny Hands is ready to use offline ✓',
       latinHelper:'Grown-up helper text', todayStat:'Today’s words', daysDone:'Days practised', voiceCov:'Family voice', voiceCovSub:'{n} of {total} words have a family recording', recordRest:'🎙️ Record the rest', voiceCovDone:'Every word has a family voice ✓',
       studioAr:'Say each word the way you say it at home (Lebanese). The Latin spelling under each word is your guide.',
       remindGoogle:'📅 Add to Google Calendar', remindGoogleNote:'Opens Google Calendar with a daily event filled in (the time, and your child’s name if you entered one). That is the only moment anything leaves the app, and only because you tapped.', remindIcs:'💾 Save a calendar file (Apple Calendar and others)',
@@ -1963,7 +1970,24 @@
   // Games can chain sounds ("wen el…" then the word). playItem hands out a token; whichever
   // backend finishes calls endedFor(token), and only the newest token's callback fires.
   var playToken=0, playEndCb=null;
-  function endedFor(tok){ ringOff(); if(playEndCb && playEndCb.tok===tok){ var f=playEndCb.fn; playEndCb=null; if(f) f(); } }
+  // When bilingual echo is on, the second-language word plays after the first one finishes,
+  // and the caller's onend runs only after the echo (so chained sounds don't talk over it).
+  function endedFor(tok){
+    ringOff();
+    if(biPending && biPending.tok===tok){
+      var b=biPending; biPending=null;
+      if(biTimer) clearTimeout(biTimer);
+      biTimer=setTimeout(function(){
+        biTimer=null;
+        if(tok!==playToken) return;
+        ringOn();
+        speakWordLang(b.text, b.lang, function(){ ringOff(); finishPlay(tok); });
+      }, 300);
+      return;
+    }
+    finishPlay(tok);
+  }
+  function finishPlay(tok){ if(playEndCb && playEndCb.tok===tok){ var f=playEndCb.fn; playEndCb=null; if(f) f(); } }
   function speakLocal(text, tok){
     if(!('speechSynthesis' in window)){ endedFor(tok); return; }
     try{
@@ -1983,6 +2007,7 @@
   // Halt every pending game sound/timer on navigation so audio never bleeds onto the home screen.
   function stopGameAudio(){
     clearRoundTimers(); playEndCb=null; playToken++;
+    biPending=null; if(biTimer){ clearTimeout(biTimer); biTimer=null; }
     if(onlineGuard){ clearTimeout(onlineGuard); onlineGuard=null; }
     if('speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
     if(onlineAudio){ try{ onlineAudio.pause(); }catch(e){} onlineAudio=null; }
@@ -2026,34 +2051,44 @@
     return key;   // letters: the glyph itself
   }
   // Bilingual echo uses the device speech engine in the second language — no network involved.
-  function speakWordLang(text, lang){
-    if(!text || !('speechSynthesis' in window)) return;
+  function speakWordLang(text, lang, done){
+    var called=false, guard=null;
+    function fin(){ if(called) return; called=true; if(guard) clearTimeout(guard); if(done) done(); }
+    if(!text || !('speechSynthesis' in window)){ fin(); return; }
     try{
       var u=new SpeechSynthesisUtterance(text);
       u.lang=lang;
       var v=window.speechSynthesis.getVoices().find(function(x){ return !!x.lang && x.lang.toLowerCase().indexOf(lang)===0; });
       if(v) u.voice=v;
       u.rate=(settings().speed==='slow')?0.6:0.82; u.pitch=1.1; u.volume=1;
+      u.onend=fin; u.onerror=fin;
+      guard=setTimeout(fin, 4000);   // some browsers never fire onend
       window.speechSynthesis.speak(u);
-    }catch(e){}
+    }catch(e){ fin(); }
   }
-  var biTimer=null;
-  function scheduleBilingual(item){
-    if(biTimer){ clearTimeout(biTimer); biTimer=null; }
+  // The echo is queued against the play token and started by endedFor once the first word ends.
+  var biTimer=null, biPending=null;
+  function scheduleBilingual(item, tok){
+    biPending=null;
     var sec=settings().bilingual;
     if(!sec || sec==='off' || sec===LANG || getHidden().indexOf(sec)>=0) return;
     var w=wordFor(item.key, sec); if(!w) return;
-    biTimer=setTimeout(function(){ speakWordLang(w, sec); }, 1150);
+    biPending={tok:tok, text:w, lang:sec};
+  }
+  // In "letter sounds" mode, recordings (which say the letter name) are skipped for letters
+  // that have a phonics sound, so the setting is always honoured.
+  function phonicsSay(lang,key,item){
+    var PHON = lang==='en'?EN_PHONICS : lang==='es'?ES_PHONICS : null;
+    if(PHON && settings().letterMode==='sound' && item.render && item.render.type==='glyph' && !/^n\d/.test(key) && PHON[key]) return PHON[key];
+    return null;
   }
   function fallbackBuiltin(lang,key,item,tok){
-    var b=builtinClip(lang,key);
+    var ph=phonicsSay(lang,key,item);
+    var b=ph?null:builtinClip(lang,key);
     if(b){ playSrcSmart('builtin|'+lang+'|'+key, b, 'auto', tok); }
     else {
       setAttribution('auto');
-      var say=item.say;
-      var PHON = lang==='en'?EN_PHONICS : lang==='es'?ES_PHONICS : null;
-      if(PHON && settings().letterMode==='sound' && item.render && item.render.type==='glyph' && !/^n\d/.test(key) && PHON[key]) say=PHON[key];
-      speak(say, tok);
+      speak(ph||item.say, tok);
     }
   }
   // Resolution order: the selected person's own recording -> built-in family clip -> device/online TTS.
@@ -2073,8 +2108,8 @@
     if(!item) return;
     var lang=LANG, key=item.key, tok=++playToken;
     playEndCb = onend ? {tok:tok, fn:onend} : null;
-    if(!quiet){ noteWordHeard(key); scheduleBilingual(item); }
-    var pid=resolveVoicePerson(lang,key);
+    if(!quiet){ noteWordHeard(key); scheduleBilingual(item, tok); }
+    var pid=phonicsSay(lang,key,item) ? null : resolveVoicePerson(lang,key);
     if(pid){
       setAttribution(pid);
       stopAllAudio();
@@ -2115,6 +2150,7 @@
     else if(r.type==='color'){ card.style.background=r.color; }
   }
   function newRound(speakNow){
+    if(limitReached()) return;
     locked=false;
     target=nextTarget();
     var n=Math.min(cardCount(), G.items.length);
@@ -2279,6 +2315,7 @@
   var learnSpeakTimer=null, learnSpeakingEl=null;
   function clearLearnSpeak(){ if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; } if(learnSpeakingEl){ learnSpeakingEl.classList.remove('speaking'); learnSpeakingEl=null; } }
   function learnSpeak(item, el){
+    if(limitReached()) return;
     if(learnSpeakTimer){ clearTimeout(learnSpeakTimer); learnSpeakTimer=null; }
     if(learnSpeakingEl && learnSpeakingEl!==el) learnSpeakingEl.classList.remove('speaking');
     el.classList.add('speaking'); learnSpeakingEl=el;
@@ -2348,8 +2385,8 @@
   // ---- navigation ----
   function showScreen(id){
     var sc=document.querySelectorAll('.screen'); for(var i=0;i<sc.length;i++) sc[i].classList.remove('active'); document.getElementById(id).classList.add('active');
-    if(id==='home'||id==='menu'){ addTime&&addTime(); releaseWake(); }
-    else { requestWake(); noteVisit&&noteVisit(); startTiming&&startTiming(); }
+    if(id==='home'||id==='menu') releaseWake(); else requestWake();
+    if(ACTIVITY_SCREENS[id]){ noteVisit(); startTiming(); } else stopTiming();
   }
   function launchGame(type){
     G=GAMESBYTYPE[type]; if(!G) return;
@@ -2401,8 +2438,9 @@
   function paintCountStars(){ var n=countStarsEl.children; for(var i=0;i<n.length;i++){ if(i<countStreak) n[i].classList.add('on'); else n[i].classList.remove('on'); } }
   function countLabel(num){ return String(num); }   // Lebanese Arabic uses Western digits
   function newCountRound(speakNow){
+    if(limitReached()) return;
     countLocked=false;
-    var max=Math.max(5, settings().countMax||9);   // 1–10 or 1–20 (Settings)
+    var max=Math.max(5, settings().countMax||10);   // 1–10 or 1–20 (Settings)
     // pick a number but avoid repeating recent answers so it feels more random
     do{ countN=1+Math.floor(Math.random()*max); }while(countRecent.indexOf(countN)>=0);
     countRecent.push(countN); if(countRecent.length>2) countRecent.shift();
@@ -2441,6 +2479,7 @@
     if(num===countN){
       countLocked=true; btn.classList.add('correct');
       countStreak=Math.min(MAX_STARS,countStreak+1); paintCountStars(); bumpCorrect(); buzz(18);
+      if(countN<=10){ clearMiss('n'+countN); noteRight('n'+countN); }
       playDing();
       roundTimers.push(setTimeout(function(){ Array.prototype.forEach.call(countCardsEl.children,function(c){ c.classList.add('fade'); }); },900));
       roundTimers.push(setTimeout(function(){
@@ -2448,7 +2487,7 @@
         else { newCountRound(true); }
       },1600));
     } else {
-      btn.classList.add('wrong'); buzz(45);
+      btn.classList.add('wrong'); buzz(45); if(countN<=10) noteMiss('n'+countN);
       roundTimers.push(setTimeout(function(){ btn.classList.remove('wrong'); btn.classList.add('dimmed'); },460));
     }
   }
@@ -2460,6 +2499,7 @@
   }
   function launchCount(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
+    noteCategory('count');
     countPromptEl.textContent=TU().prompts.count;
     countStreak=0; countRecent=[]; paintCountStars();
     showScreen('count'); newCountRound(true);
@@ -2468,6 +2508,7 @@
   // ---- memory ----
   var MEM_PAIRS=3, memFirst=null, memLock=false, memMatched=0;
   function newMemoryBoard(){
+    if(limitReached()) return;
     memFirst=null; memLock=false; memMatched=0;
     // draw pairs from every picture category (emoji renders only — the table is an SVG)
     var mix=GAMESBYTYPE.animals.items.concat(GAMESBYTYPE.house.items, GAMESBYTYPE.clothes.items, GAMESBYTYPE.body.items, GAMESBYTYPE.food.items, GAMESBYTYPE.family.items)
@@ -2506,8 +2547,9 @@
   }
   function launchMemory(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
+    noteCategory('memory');
     memoryTitleEl.textContent=TU().tiles.memory;
-    newMemoryBoard(); showScreen('memory');
+    showScreen('memory'); newMemoryBoard();
   }
 
   // ---- tracing ----
@@ -2632,7 +2674,7 @@
   tcanvas.addEventListener('pointerleave', endTraceStroke);
   function launchTrace(){
     stopGameAudio(); if('speechSynthesis' in window){ pickVoice(); }
-    traceSet='letters'; traceIdx=0; setTraceSwitch();
+    traceSet='letters'; traceIdx=0; setTraceSwitch(); noteCategory('trace');
     showScreen('trace');
     requestAnimationFrame(function(){ sizeTraceCanvas(); showTrace(); });
     if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){
@@ -2645,7 +2687,7 @@
   memoryBack.addEventListener('click', goMenu);
   traceBack.addEventListener('click', goMenu);
   traceClearBtn.addEventListener('click', clearTrace);
-  traceNextBtn.addEventListener('click', function(){ var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } });
+  traceNextBtn.addEventListener('click', function(){ if(limitReached()) return; var n=traceItems().length; if(n){ traceIdx=(traceIdx+1)%n; showTrace(); } });
   traceSpeakerBtn.addEventListener('click', function(){ var items=traceItems(); if(items&&items[traceIdx]) playItem(items[traceIdx]); });
   traceLettersBtn.addEventListener('click', function(){ traceSet='letters'; traceIdx=0; setTraceSwitch(); sizeTraceCanvas(); showTrace(); });
   traceNumbersBtn.addEventListener('click', function(){ traceSet='numbers'; traceIdx=0; setTraceSwitch(); sizeTraceCanvas(); showTrace(); });
@@ -2669,8 +2711,19 @@
   var KID_AVATARS=['\u{1F423}','\u{1F436}','\u{1F431}','\u{1F438}','\u{1F981}','\u{1F43c}','\u{1F984}','\u{1F427}','\u{1F435}','\u{1F430}','\u{1F98A}','\u{1F989}'];
   var profilesArr=[], curProfileId='default', PD={};
   function pdataKey(id){ return 'tinyTapsP::'+id; }
-  function loadPData(id){ try{ var o=JSON.parse(lsGet(pdataKey(id))); if(o&&typeof o==='object') return o; }catch(e){} return {}; }
-  function flushPD(){ lsSet(pdataKey(curProfileId), JSON.stringify(PD)); }
+  function loadPData(id){ try{ var o=JSON.parse(lsGet(pdataKey(id))); if(o&&typeof o==='object') return migratePD(o); }catch(e){} return {progV:2}; }
+  // v1 stored word progress without a language; move it under the child's last-used language.
+  function migratePD(o){
+    if(o.progV>=2) return o;
+    var lang=(typeof o.lastLang==='string' && /^[a-z]{2}$/.test(o.lastLang)) ? o.lastLang : 'en';
+    ['miss','right','heard'].forEach(function(f){
+      var m=o[f]; if(!m || typeof m!=='object') return;
+      var n={}; for(var k in m){ n[k.indexOf('|')>0 ? k : lang+'|'+k]=m[k]; } o[f]=n;
+    });
+    o.progV=2; return o;
+  }
+  var noFlush=false;   // set during restore/erase so in-memory data can't overwrite the new state
+  function flushPD(){ if(noFlush) return; lsSet(pdataKey(curProfileId), JSON.stringify(PD)); }
   function curProfile(){ for(var i=0;i<profilesArr.length;i++) if(profilesArr[i].id===curProfileId) return profilesArr[i]; return profilesArr[0]||{id:'default',name:'',emoji:'\u{1F423}'}; }
   function saveProfiles(){ lsSet(PROFILES_KEY, JSON.stringify(profilesArr)); }
   function initProfiles(){
@@ -2699,7 +2752,7 @@
     if(s.lefty===undefined) s.lefty=false;
     if(s.bigText===undefined) s.bigText=false;
     if(s.sounds===undefined) s.sounds=true;
-    if(s.countMax===undefined) s.countMax=9;
+    if(s.countMax===undefined || s.countMax===9) s.countMax=10;   // 9 was saved by the old "1–10" button
     if(s.countAloud===undefined) s.countAloud=false;
     if(s.latin===undefined) s.latin=true;   // Latin spelling of Arabic words for grown-ups
     return s;
@@ -2734,22 +2787,51 @@
       PD.streakDate=t; flushPD();
     }
   }
+  // Play time counts only while an activity screen is showing and the app is visible.
   var sessionStart=0;
-  function startTiming(){ sessionStart=Date.now(); }
+  var ACTIVITY_SCREENS={game:1, learn:1, scene:1, count:1, memory:1, trace:1};
+  function inActivity(){ var a=document.querySelector('.screen.active'); return !!(a && ACTIVITY_SCREENS[a.id]) && document.visibilityState!=='hidden'; }
+  function startTiming(){ if(!sessionStart && document.visibilityState!=='hidden') sessionStart=Date.now(); }
+  function stopTiming(){ addTime(); sessionStart=0; }
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') stopTiming(); else if(inActivity()) startTiming(); });
+  window.addEventListener('pagehide', stopTiming);
   function addTime(){ if(!sessionStart) return; var secs=Math.round((Date.now()-sessionStart)/1000); sessionStart=Date.now(); if(secs<=0||secs>3600) return; PD.timeByDate=PD.timeByDate||{}; var t=todayStr(); PD.timeByDate[t]=(PD.timeByDate[t]||0)+secs; PD.timeTotal=(PD.timeTotal||0)+secs; flushPD(); }
   function timeTodaySecs(){ PD.timeByDate=PD.timeByDate||{}; return PD.timeByDate[todayStr()]||0; }
   function overDailyLimit(){ addTime(); var lim=PD.dailyLimit||0; return lim>0 && timeTodaySecs() >= lim*60; }
+  // Between rounds: if today's limit is used up, stop with a gentle "all done" card.
+  function limitReached(){
+    if(!overDailyLimit()) return false;
+    showTimeUp(); return true;
+  }
+  function showTimeUp(){
+    var sheet=gid('timeUpSheet');
+    if(!sheet){
+      sheet=document.createElement('div'); sheet.className='sheet'; sheet.id='timeUpSheet';
+      sheet.innerHTML='<div class="sheet-card" style="text-align:center"><div style="font-size:72px;line-height:1.1" aria-hidden="true">\u{1F319}</div><h2 id="timeUpText"></h2><button class="mini sheet-close" id="timeUpOk"></button></div>';
+      (document.querySelector('.stage')||document.body).appendChild(sheet);
+      gid('timeUpOk').addEventListener('click', function(){ sheet.classList.remove('open'); });
+    }
+    sheet.setAttribute('dir', TU().dir);
+    gid('timeUpText').textContent=gs('timeUp');
+    gid('timeUpOk').textContent='\u{1F44B} '+gs('done');
+    goHome();
+    sheet.classList.add('open');
+  }
   function showTransientToast(msg){
     var t=gid('genToast'); if(!t){ t=document.createElement('div'); t.className='toast'; t.id='genToast'; (document.querySelector('.stage')||document.body).appendChild(t); }
     t.textContent=msg; t.classList.add('show');
     if(t._tm) clearTimeout(t._tm); t._tm=setTimeout(function(){ t.classList.remove('show'); }, 2600);
   }
-  function noteWordHeard(key){ PD.wordsHeard=(PD.wordsHeard||0)+1; if(key){ PD.heard=PD.heard||{}; PD.heard[key]=(PD.heard[key]||0)+1; } flushPD(); }
+  // Word progress is stored per language ("ar|dog"), so knowing a word in one language
+  // doesn't count for another.
+  function pk(key){ return LANG+'|'+key; }
+  function langMap(m){ var out={}, pre=LANG+'|'; if(m) for(var k in m){ if(k.indexOf(pre)===0) out[k.slice(pre.length)]=m[k]; } return out; }
+  function noteWordHeard(key){ PD.wordsHeard=(PD.wordsHeard||0)+1; if(key){ PD.heard=PD.heard||{}; PD.heard[pk(key)]=(PD.heard[pk(key)]||0)+1; } flushPD(); }
   function noteCategory(cat){ if(!cat) return; PD.catCounts=PD.catCounts||{}; PD.catCounts[cat]=(PD.catCounts[cat]||0)+1; flushPD(); }
-  function noteMiss(key){ PD.miss=PD.miss||{}; PD.miss[key]=(PD.miss[key]||0)+1; flushPD(); }
-  function noteRight(key){ PD.right=PD.right||{}; PD.right[key]=(PD.right[key]||0)+1; flushPD(); }
-  function clearMiss(key){ if(PD.miss&&PD.miss[key]){ PD.miss[key]=Math.max(0,PD.miss[key]-1); flushPD(); } }
-  function missWeight(key){ return 1 + Math.min(4,(PD.miss&&PD.miss[key])||0)*2; }   // missed items appear more often
+  function noteMiss(key){ PD.miss=PD.miss||{}; PD.miss[pk(key)]=(PD.miss[pk(key)]||0)+1; flushPD(); }
+  function noteRight(key){ PD.right=PD.right||{}; PD.right[pk(key)]=(PD.right[pk(key)]||0)+1; flushPD(); }
+  function clearMiss(key){ var k=pk(key); if(PD.miss&&PD.miss[k]){ PD.miss[k]=Math.max(0,PD.miss[k]-1); flushPD(); } }
+  function missWeight(key){ return 1 + Math.min(4,(PD.miss&&PD.miss[pk(key)])||0)*2; }   // missed items appear more often
 
   // ---- screen wake lock ----
   var wakeLockObj=null;
@@ -2844,7 +2926,7 @@
       if(!window.indexedDB) return rej();
       var req=window.indexedDB.open('tinyTaps',1);
       req.onupgradeneeded=function(){ var db=req.result; if(!db.objectStoreNames.contains('clips')) db.createObjectStore('clips'); };
-      req.onsuccess=function(){ IDB=req.result; res(IDB); };
+      req.onsuccess=function(){ var db=req.result; db.onversionchange=function(){ try{ db.close(); }catch(e){} if(IDB===db) IDB=null; }; IDB=db; res(IDB); };
       req.onerror=function(){ rej(req.error); };
     });
   }
@@ -3254,7 +3336,7 @@
     segRow(box,g.speed, [{label:g.normal,val:'normal'},{label:g.slow,val:'slow'}], s.speed, function(v){ setSetting('speed',v); renderOptRows(); });
     var biOpts=[{label:g.off,val:'off'}]; visibleLangs().forEach(function(l){ if(l.code!==LANG) biOpts.push({label:l.name,val:l.code}); });
     segRow(box,g.alsoSay, biOpts, s.bilingual, function(v){ setSetting('bilingual',v); renderOptRows(); });
-    segRow(box,g.counting, [{label:'1–10',val:9},{label:'1–20',val:20}], s.countMax, function(v){ setSetting('countMax',v); renderOptRows(); });
+    segRow(box,g.counting, [{label:'1–10',val:10},{label:'1–20',val:20}], s.countMax, function(v){ setSetting('countMax',v); renderOptRows(); });
     segRow(box,g.countAloud, [{label:g.off,val:false},{label:g.on,val:true}], !!s.countAloud, function(v){ setSetting('countAloud',v); renderOptRows(); });
     segRow(box,g.sfx, [{label:g.on,val:true},{label:g.off,val:false}], !!s.sounds, function(v){ setSetting('sounds',v); renderOptRows(); });
     segRow(box,g.bigText, [{label:g.off,val:false},{label:g.on,val:true}], !!s.bigText, function(v){ setSetting('bigText',v); renderOptRows(); });
@@ -3387,7 +3469,7 @@
   function renderWordChips(){
     var g=TG(), box=gid('wordChips'); box.innerHTML='';
     gid('dashWordsTitle').textContent=g.wordsLearning;
-    var miss=PD.miss||{}, right=PD.right||{};
+    var miss=langMap(PD.miss), right=langMap(PD.right);
     var working=Object.keys(miss).filter(function(k){ return miss[k]>0; }).sort(function(a,b){ return miss[b]-miss[a]; }).slice(0,8);
     var knows=Object.keys(right).filter(function(k){ return right[k]>=3 && !(miss[k]>0); }).sort(function(a,b){ return right[b]-right[a]; }).slice(0,8);
     function chipRow(label, keys, extraClass){
@@ -3421,7 +3503,7 @@
     gid('dashClose').textContent=g.done;
     var p=curProfile(); gid('dashSub').textContent=((p.name||'').trim()||g.thisChild)+' '+p.emoji;
     var grid=gid('statGrid'); grid.innerHTML='';
-    function stat(num,lbl){ var c=document.createElement('div'); c.className='statCard'; c.innerHTML='<div class="num">'+num+'</div><div class="lbl">'+lbl+'</div>'; grid.appendChild(c); }
+    function stat(num,lbl){ var c=document.createElement('div'); c.className='statCard'; var n=document.createElement('div'); n.className='num'; n.textContent=String(num); var l=document.createElement('div'); l.className='lbl'; l.textContent=String(lbl); c.appendChild(n); c.appendChild(l); grid.appendChild(c); }
     stat(loadStickers().length,g.stickers);
     stat((PD.streak||0),g.dayStreak);
     stat(fmtMins(timeTodaySecs()),g.minToday);
@@ -3431,11 +3513,13 @@
     stat((PD.todayCount||0), gs('daysDone'));
     renderWordChips();
     renderVoiceCoverage();
-    var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(cc[k]>maxc) maxc=cc[k]; }
+    var cats=gid('catBars'); cats.innerHTML=''; var cc=PD.catCounts||{}; var maxc=1; for(var k in cc){ if(+cc[k]>maxc) maxc=+cc[k]; }
     var order=['letters','numbers','animals','colors','shapes','house','clothes','body','food','family','everyday','find','sounds','feed','count','memory','trace'];
-    order.forEach(function(cat){ if(!cc[cat]) return; var row=document.createElement('div'); row.className='barRow';
-      row.innerHTML='<span class="bl">'+(TU().tiles[cat]||cat)+'</span><span class="barTrack"><span class="barFill" style="width:'+Math.round(cc[cat]/maxc*100)+'%"></span></span>'; cats.appendChild(row); });
-    if(!cats.children.length){ cats.innerHTML='<p class="vp-tip">'+g.noPlay+'</p>'; }
+    order.forEach(function(cat){ var v=+cc[cat]||0; if(v<=0) return; var row=document.createElement('div'); row.className='barRow';
+      var bl=document.createElement('span'); bl.className='bl'; bl.textContent=TU().tiles[cat]||cat;
+      var tr=document.createElement('span'); tr.className='barTrack'; var fill=document.createElement('span'); fill.className='barFill'; fill.style.width=Math.min(100,Math.round(v/maxc*100))+'%';
+      tr.appendChild(fill); row.appendChild(bl); row.appendChild(tr); cats.appendChild(row); });
+    if(!cats.children.length){ var np=document.createElement('p'); np.className='vp-tip'; np.textContent=g.noPlay; cats.appendChild(np); }
     var lb=gid('limitBtns'); lb.innerHTML=''; [[g.off,0],['15 '+g.min,15],['30 '+g.min,30],['45 '+g.min,45],['60 '+g.min,60]].forEach(function(o){ var b=document.createElement('button'); b.className='segbtn'+(((PD.dailyLimit||0)===o[1])?' on':''); b.textContent=o[0]; b.addEventListener('click', function(){ PD.dailyLimit=o[1]; flushPD(); openDashboard(); }); lb.appendChild(b); });
     var recCount=0; for(var ck in customIndex){ if(ck.indexOf('rec|')===0) recCount++; }
     var line=gid('storageLine'); line.textContent=g.recSaved+': '+recCount;
@@ -3491,22 +3575,24 @@
       var rt=document.createElement('span'); rt.className='rt'; rt.textContent=songNames()['song'+i]||('Song '+i);
       word.appendChild(rg); word.appendChild(rt); row.appendChild(word);
       var ren=document.createElement('button'); ren.className='iconBtn'; ren.textContent='✏️';
-      ren.addEventListener('click', function(){
+      ren.addEventListener('click', function(){ requestParentAccess(function(){
         var inp=document.createElement('input'); inp.type='text'; inp.className='songNameInput';
         inp.value=songNames()['song'+i]||''; inp.placeholder='Song '+i; inp.maxLength=40;
         word.replaceChild(inp, rt); inp.focus();
         inp.addEventListener('keydown', function(e){ if(e.key==='Enter') inp.blur(); });
         inp.addEventListener('blur', function(){ setSongName('song'+i, (inp.value||'').trim()); openSongs(); });
-      });
+      }); });
       row.appendChild(ren);
       var play=document.createElement('button'); play.className='iconBtn'+(customIndex[ck]?'':' hidden'); play.textContent='▶'; play.addEventListener('click', function(){ idbGet(ck).then(function(b){ if(b) playBlob(b,'cust|'+ck); }); });
-      var del=document.createElement('button'); del.className='iconBtn'+(customIndex[ck]?'':' hidden'); del.textContent='🗑️'; del.addEventListener('click', function(){ idbDelete(ck).then(function(){ delete customIndex[ck]; delete waBufCache['cust|'+ck]; openSongs(); }); });
+      var del=document.createElement('button'); del.className='iconBtn'+(customIndex[ck]?'':' hidden'); del.textContent='🗑️'; del.addEventListener('click', function(){ requestParentAccess(function(){ idbDelete(ck).then(function(){ delete customIndex[ck]; delete waBufCache['cust|'+ck]; openSongs(); }); }); });
       var rec=document.createElement('button'); rec.className='recBtn'+(customIndex[ck]?' has':'')+(recordingKey===ck?' recording':''); rec.textContent=(recordingKey===ck)?'■':'●';
       rec.addEventListener('click', function(){
         if(recordingKey===ck){ stopRecording(); return; }
         if(!recordingKey && Date.now()-lastRecStopAt<500) return;
-        if(recordingKey){ stopRecording(); }
-        startRecording('songs','all','song'+i, function(){ openSongs(); }, 40000);
+        requestParentAccess(function(){
+          if(recordingKey){ stopRecording(); }
+          startRecording('songs','all','song'+i, function(){ openSongs(); }, 40000);
+        });
       });
       row.appendChild(play); row.appendChild(del); row.appendChild(rec); list.appendChild(row);
     })(i); }
@@ -3519,15 +3605,17 @@
   function exportBackup(){
     showTransientToast('Preparing backup…');
     idbAllKeys().then(function(keys){
-      var clips={}, chain=Promise.resolve();
-      keys.forEach(function(k){ chain=chain.then(function(){ return idbGet(k).then(function(b){ if(b&&b.size!=null) return blobToDataURL(b).then(function(u){ if(u) clips[k]=u; }); }); }); });
+      var clips={}, chain=Promise.resolve(), missed=0;
+      keys.forEach(function(k){ chain=chain.then(function(){ return idbGet(k).then(function(b){ if(b&&b.size!=null) return blobToDataURL(b).then(function(u){ if(u) clips[k]=u; else missed++; }); }).catch(function(){ missed++; }); }); });
       return chain.then(function(){
+        flushPD();
         var prof={}; profilesArr.forEach(function(p){ prof[p.id]=loadPData(p.id); });
-        var data={ v:1, persons:persons, profiles:profilesArr, profileData:prof, hiddenLangs:getHidden(), clips:clips };
+        var data={ v:2, persons:persons, profiles:profilesArr, profileData:prof, hiddenLangs:getHidden(), songNames:songNames(),
+          prefs:{ grownupLang:grownupLangPref(), activePerson:activePersonId, curProfile:curProfileId }, clips:clips };
         var blob=new Blob([JSON.stringify(data)],{type:'application/json'});
         var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='tiny-hands-backup.json'; document.body.appendChild(a); a.click();
         setTimeout(function(){ URL.revokeObjectURL(url); if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
-        showTransientToast(TG().bkSaved);
+        showTransientToast(missed ? gs('bkExportPartial').replace('{n}',missed) : TG().bkSaved);
       });
     }).catch(function(){ showTransientToast(TG().bkFail); });
   }
@@ -3547,7 +3635,7 @@
     return out.length?out:null;
   }
   function bkClipEntry(k,u){
-    var isRec=/^rec\|[a-z]{2}\|[A-Za-z0-9_.-]{1,64}\|[^|]{1,64}$/.test(k);
+    var isRec=/^rec\|(?:[a-z]{2}|songs)\|[A-Za-z0-9_.-]{1,64}\|[^|]{1,64}$/.test(k);   // songs live under rec|songs|all|songN
     var isPhoto=/^w?photo\|[A-Za-z0-9_.-]{1,64}$/.test(k);
     if(!isRec && !isPhoto) return null;
     if(typeof u!=='string' || u.length>15*1024*1024) return null;
@@ -3557,22 +3645,115 @@
     if(isPhoto && m[1].toLowerCase().indexOf('image/')!==0) return null;
     return u;
   }
+  // Child progress from a backup: only known fields, with the expected types and sane ranges.
+  var BK_LANGS=['en','es','fr','ar','hy'], BK_DATE=/^\d{4}-\d{1,2}-\d{1,2}$/;
+  function bkNum(v,max){ v=+v; return (isFinite(v) && v>=0) ? Math.min(Math.floor(v), max) : 0; }
+  function bkCountMap(m, keyRe, max){
+    var out={}, n=0; if(!m || typeof m!=='object' || Array.isArray(m)) return out;
+    for(var k in m){ if(n>=5000) break; if(k.length<=80 && keyRe.test(k)){ var v=bkNum(m[k],max); if(v>0){ out[k]=v; n++; } } }
+    return out;
+  }
+  function bkSettings(o){
+    var d={}; if(!o || typeof o!=='object') return d;
+    if(o.letterMode==='name'||o.letterMode==='sound') d.letterMode=o.letterMode;
+    if([2,3,4].indexOf(o.choices)>=0) d.choices=o.choices;
+    if(o.speed==='normal'||o.speed==='slow') d.speed=o.speed;
+    if(o.bilingual==='off'||BK_LANGS.indexOf(o.bilingual)>=0) d.bilingual=o.bilingual;
+    if(o.countMax===9||o.countMax===10) d.countMax=10; else if(o.countMax===20) d.countMax=20;
+    ['lefty','bigText','sounds','countAloud','latin'].forEach(function(f){ if(typeof o[f]==='boolean') d[f]=o[f]; });
+    return d;
+  }
+  function sanitizePD(o){
+    var d={}; if(!o || typeof o!=='object') return {progV:2};
+    ['correct','celebN','streak','todayCount','timeTotal','wordsHeard'].forEach(function(f){ if(o[f]!=null) d[f]=bkNum(o[f],1e9); });
+    if([0,15,30,45,60].indexOf(o.dailyLimit)>=0) d.dailyLimit=o.dailyLimit;
+    if(typeof o.streakDate==='string' && BK_DATE.test(o.streakDate)) d.streakDate=o.streakDate;
+    if(BK_LANGS.indexOf(o.lastLang)>=0) d.lastLang=o.lastLang;
+    if(o.theme==='auto' || THEMES.some(function(t){ return t.id===o.theme; })) d.theme=o.theme;
+    if(typeof o.remindAt==='string' && /^\d{2}:\d{2}$/.test(o.remindAt)) d.remindAt=o.remindAt;
+    if(Array.isArray(o.stickers)) d.stickers=o.stickers.filter(function(x){ return STICKER_SET.indexOf(x)>=0; }).slice(0,5000);
+    var WK=/^(?:[a-z]{2}\|)?[^<>&"'|]{1,64}$/;
+    d.miss=bkCountMap(o.miss, WK, 1e6); d.right=bkCountMap(o.right, WK, 1e6); d.heard=bkCountMap(o.heard, WK, 1e6);
+    d.catCounts=bkCountMap(o.catCounts, /^[a-z]{2,12}$/, 1e9);
+    d.timeByDate=bkCountMap(o.timeByDate, BK_DATE, 86400);
+    if(o.todayLog && typeof o.todayLog==='object' && !Array.isArray(o.todayLog)){
+      d.todayLog={}; var tk=Object.keys(o.todayLog).filter(function(k){ return /^\d{4}-\d{1,2}-\d{1,2}\|[a-z]{2}$/.test(k); }).sort().slice(-40);
+      tk.forEach(function(k){ var r=o.todayLog[k]; if(!r || typeof r!=='object') return;
+        var heard={}, hm=bkCountMap(r.heard, WK, 1); for(var h in hm) heard[h]=1;
+        var e={heard:heard, done:r.done===true};
+        if(Array.isArray(r.keys)) e.keys=r.keys.filter(function(x){ return typeof x==='string' && WK.test(x); }).slice(0,10);
+        d.todayLog[k]=e; });
+    }
+    d.settings=bkSettings(o.settings);
+    d.progV=(o.progV===2)?2:1;
+    return migratePD(d);
+  }
+  // Read and validate the whole file first; nothing on the device changes until the parent confirms.
+  function planRestore(data){
+    if(!data || typeof data!=='object' || Array.isArray(data)) return null;
+    var plan={ persons:bkPersons(data.persons), profiles:bkProfiles(data.profiles), profileData:{}, hiddenLangs:null, songNames:null, prefs:{}, clips:[], skipped:0 };
+    var ids=(plan.profiles||profilesArr).map(function(p){ return p.id; });
+    if(data.profileData && typeof data.profileData==='object' && !Array.isArray(data.profileData)){
+      for(var pid in data.profileData){ var pd=data.profileData[pid]; if(ids.indexOf(pid)>=0 && pd && typeof pd==='object') plan.profileData[pid]=sanitizePD(pd); else plan.skipped++; }
+    }
+    if(Array.isArray(data.hiddenLangs)) plan.hiddenLangs=data.hiddenLangs.filter(function(l){ return BK_LANGS.indexOf(l)>=0; });
+    if(data.songNames && typeof data.songNames==='object' && !Array.isArray(data.songNames)){
+      plan.songNames={}; for(var i=1;i<=SONG_SLOTS;i++){ var nm=data.songNames['song'+i]; if(typeof nm==='string' && nm.trim()) plan.songNames['song'+i]=nm.trim().slice(0,40); }
+    }
+    var pr=data.prefs;
+    if(pr && typeof pr==='object'){
+      if(pr.grownupLang==='en'||pr.grownupLang==='match') plan.prefs.grownupLang=pr.grownupLang;
+      var pids=(plan.persons||persons).map(function(p){ return p.id; });
+      if(pr.activePerson==='auto' || pids.indexOf(pr.activePerson)>=0) plan.prefs.activePerson=pr.activePerson;
+      if(ids.indexOf(pr.curProfile)>=0) plan.prefs.curProfile=pr.curProfile;
+    }
+    var clips=(data.clips && typeof data.clips==='object' && !Array.isArray(data.clips)) ? data.clips : {};
+    Object.keys(clips).forEach(function(k){
+      var u=bkClipEntry(k,clips[k]); if(!u){ plan.skipped++; return; }
+      try{ plan.clips.push([k, dataURLToBlob(u)]); }catch(e){ plan.skipped++; }
+    });
+    if(!plan.persons && !plan.profiles && !Object.keys(plan.profileData).length && !plan.clips.length) return null;
+    return plan;
+  }
+  // Recordings go in one IndexedDB transaction (all or nothing), then the settings are written
+  // with a snapshot so a failed write is rolled back.
+  function applyRestore(plan){
+    return idbOpen().then(function(db){ return new Promise(function(res,rej){
+      if(!plan.clips.length) return res();
+      var tx=db.transaction('clips','readwrite'), st=tx.objectStore('clips');
+      plan.clips.forEach(function(c){ st.put(c[1], c[0]); });
+      tx.oncomplete=function(){ res(); }; tx.onerror=function(){ rej(tx.error); }; tx.onabort=function(){ rej(tx.error); };
+    }); }, function(e){ if(plan.clips.length) throw e; }).then(function(){
+      var w=[];
+      if(plan.persons) w.push([PERSONS_KEY, JSON.stringify(plan.persons)]);
+      if(plan.profiles) w.push([PROFILES_KEY, JSON.stringify(plan.profiles)]);
+      for(var pid in plan.profileData) w.push([pdataKey(pid), JSON.stringify(plan.profileData[pid])]);
+      if(plan.hiddenLangs) w.push([HIDDEN_KEY, JSON.stringify(plan.hiddenLangs)]);
+      if(plan.songNames) w.push([SONG_NAMES_KEY, JSON.stringify(plan.songNames)]);
+      if(plan.prefs.grownupLang) w.push([UILANG_KEY, plan.prefs.grownupLang]);
+      if(plan.prefs.activePerson) w.push([ACTIVE_KEY, plan.prefs.activePerson]);
+      if(plan.prefs.curProfile) w.push([CURPROF_KEY, plan.prefs.curProfile]);
+      var old=w.map(function(x){ return [x[0], lsGet(x[0])]; });
+      noFlush=true;
+      try{ w.forEach(function(x){ window.localStorage.setItem(x[0], x[1]); }); }
+      catch(e){
+        old.forEach(function(o){ try{ if(o[1]==null) window.localStorage.removeItem(o[0]); else window.localStorage.setItem(o[0], o[1]); }catch(_){} });
+        noFlush=false; throw e;
+      }
+    });
+  }
   function importBackup(file){
     var fr=new FileReader();
+    fr.onerror=function(){ showTransientToast(TG().bkBad); };
     fr.onload=function(){
-      try{
-        var data=JSON.parse(fr.result);
-        if(!data || typeof data!=='object') throw new Error('bad');
-        var ps=bkPersons(data.persons); if(ps){ persons=ps; savePersons(); }
-        var pf=bkProfiles(data.profiles); if(pf){ profilesArr=pf; saveProfiles(); }
-        if(data.profileData && typeof data.profileData==='object'){
-          for(var pid in data.profileData){ if(bkId(pid) && data.profileData[pid] && typeof data.profileData[pid]==='object'){ lsSet(pdataKey(pid), JSON.stringify(data.profileData[pid])); } }
-        }
-        if(Array.isArray(data.hiddenLangs)){ setHidden(data.hiddenLangs.filter(function(l){ return ['en','es','fr','ar','hy'].indexOf(l)>=0; })); }
-        var clips=(data.clips&&typeof data.clips==='object')?data.clips:{}, chain=Promise.resolve(), n=0;
-        Object.keys(clips).forEach(function(k){ var u=bkClipEntry(k,clips[k]); if(!u) return; chain=chain.then(function(){ return idbPut(k, dataURLToBlob(u)).then(function(){ customIndex[k]=1; n++; }); }); });
-        chain.then(function(){ showTransientToast(TG().bkRestored); setTimeout(function(){ location.reload(); }, 900); });
-      }catch(e){ showTransientToast(TG().bkBad); }
+      var plan=null;
+      try{ plan=planRestore(JSON.parse(fr.result)); }catch(e){ plan=null; }
+      if(!plan){ showTransientToast(TG().bkBad); return; }
+      var msg=gs('bkPreview').replace('{kids}', plan.profiles?plan.profiles.length:0).replace('{voices}', plan.persons?plan.persons.length:0).replace('{clips}', plan.clips.length);
+      if(plan.skipped) msg+='\n\n'+gs('bkSkipped').replace('{n}', plan.skipped);
+      if(!window.confirm(msg)) return;
+      applyRestore(plan).then(function(){ showTransientToast(TG().bkRestored); setTimeout(function(){ location.reload(); }, 900); })
+        .catch(function(){ showTransientToast(gs('bkPartial')); });
     };
     fr.readAsText(file);
   }
@@ -3623,13 +3804,22 @@
   function eraseAllData(){
     var g=TG();
     if(!window.confirm(g.bkEraseAsk)) return;
-    try{ window.localStorage.clear(); }catch(e){}
+    noFlush=true;
     try{ if(IDB){ IDB.close(); IDB=null; } }catch(e){}
-    function fin(){ try{ showTransientToast(g.bkErased); }catch(e){} setTimeout(function(){ location.reload(); }, 700); }
+    var finished=false;
+    function ok(){
+      if(finished) return; finished=true;
+      try{ window.localStorage.clear(); }catch(e){}
+      showTransientToast(g.bkErased); setTimeout(function(){ location.reload(); }, 700);
+    }
+    function fail(){ if(finished) return; finished=true; noFlush=false; showTransientToast(gs('bkEraseFail')); }
+    if(!window.indexedDB){ ok(); return; }
     try{
       var req=window.indexedDB.deleteDatabase('tinyTaps');
-      req.onsuccess=fin; req.onerror=fin; req.onblocked=fin;
-    }catch(e){ fin(); }
+      req.onsuccess=ok; req.onerror=fail;
+      // another open tab is holding the database: deletion finishes (onsuccess) once it closes
+      req.onblocked=function(){ showTransientToast(gs('bkEraseBlocked')); };
+    }catch(e){ fail(); }
   }
 
   // ============================================================
@@ -3657,7 +3847,7 @@
     var rec=todayRecord(), items=[];
     if(rec.keys && rec.keys.length){ rec.keys.forEach(function(k){ var it=findTodayItem(k); if(it && it.say) items.push(it); }); }
     if(!items.length){
-      var rnd=seededRandom(key), miss=PD.miss||{}, heard=PD.heard||{}, pool=[];
+      var rnd=seededRandom(key), miss=langMap(PD.miss), heard=langMap(PD.heard), pool=[];
       TODAY_CATS.forEach(function(cat){ var g=GAMESBYTYPE[cat]; if(!g) return; g.items.forEach(function(it){ if(!it.say) return; pool.push({cat:cat, item:it, score:(miss[it.key]||0)*10 - Math.min(heard[it.key]||0,8) + rnd()*3}); }); });
       pool.sort(function(a,b){ return b.score-a.score; });
       var perCat={};
@@ -3978,6 +4168,7 @@
     var e=document.createElement('span'); e.className='babyEmoji'; e.textContent='\u{1F476}'; return e;
   }
   function newSceneRound(){
+    if(limitReached()) return;
     sceneLocked=false; clearRoundTimers();
     var pool=scenePool(); if(pool.length<2){ sceneStageEl.innerHTML=''; return; }
     sceneTarget=sceneNext(pool);
@@ -4081,7 +4272,7 @@
   // ---- wire enhancement controls ----
   function wireEnhancements(){
     // record voices (from the in-game voice panel)
-    gid('recOpen').addEventListener('click', function(){ voicePanel.classList.remove('open'); openStudio('game'); });
+    gid('recOpen').addEventListener('click', function(){ voicePanel.classList.remove('open'); requestParentAccess(function(){ openStudio('game'); }); });
     gid('studioBack').addEventListener('click', function(){ stopStudioAuto(); stopRecording(); stopAllAudio(); showScreen(studioReturn); if(studioReturn==='home') maybeHint(); });
     // home corner buttons
     gid('grownupsFab').addEventListener('click', function(){ requestParentAccess(openParent); });
@@ -4181,6 +4372,12 @@
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
       try{ navigator.serviceWorker.register('sw.js').then(function(reg){
+        // say "ready offline" only after the service worker installed (which needs every file cached)
+        if(!lsGet('tinyHandsOfflineOk') && window.caches){
+          navigator.serviceWorker.ready.then(function(){ return caches.match('./index.html'); }).then(function(hit){
+            if(hit){ lsSet('tinyHandsOfflineOk','1'); showTransientToast(gs('offlineReady')); }
+          }).catch(function(){});
+        }
         reg.addEventListener('updatefound', function(){ var nw=reg.installing; if(!nw) return; nw.addEventListener('statechange', function(){ if(nw.state==='installed' && navigator.serviceWorker.controller){ gid('updateToast').classList.add('show'); } }); });
       }).catch(function(){}); }catch(e){}
     });

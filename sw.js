@@ -1,5 +1,5 @@
 /* Tiny Hands service worker — makes the app work fully offline once installed. */
-var CACHE = 'tinyhands-v12';
+var CACHE = 'tinyhands-v13';
 var ASSETS = [
   './',
   './index.html',
@@ -12,7 +12,9 @@ var ASSETS = [
 
 self.addEventListener('install', function (e) {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ASSETS).catch(function () {}); }));
+  // No catch: if any file fails to cache, install fails and the browser retries on the next visit,
+  // so the app never claims to work offline with missing files.
+  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ASSETS); }));
 });
 
 self.addEventListener('activate', function (e) {
